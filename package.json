@@ -1,18 +1,21 @@
 {
   "scripts": {
-    "dev": "ts-node src/index.ts",
+    "start": "ts-node src/index.ts",
     "lint": "eslint . --ext .ts",
-    "oapi": "openapi-typescript ./openapi.yaml --output ./src/types/api.ts"
+    "oapi": "openapi-typescript ./openapi.yaml --output ./src/types/api.d.ts"
   },
   "devDependencies": {
     "@eslint/js": "^9.35.0",
-    "@hapi/hapi": "^21.4.3",
     "@openapitools/openapi-generator-cli": "^2.23.1",
+    "@types/express": "^5.0.3",
     "@types/node": "^24.3.1",
     "eslint": "^9.35.0",
     "openapi-typescript": "^7.9.1",
     "ts-node": "^10.9.2",
     "typescript": "^5.9.2",
     "typescript-eslint": "^8.42.0"
+  },
+  "dependencies": {
+    "express": "^5.1.0"
   }
 }

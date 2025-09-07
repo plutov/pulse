@@ -1,24 +1,32 @@
-import Hapi from "@hapi/hapi";
+import express, { Request, Response } from "express";
+import { paths } from "./types/api";
 
-const server: Hapi.Server = Hapi.server({
-  port: process.env["PORT"] || 3000,
-  host: process.env["HOST"] || "localhost",
-});
+const app = express();
+app.use(express.json());
 
-async function start(): Promise<Hapi.Server> {
-  await server.start();
-  return server;
-}
+app.get(
+  "/repos",
+  (
+    _req: Request,
+    res: Response<
+      paths["/repos"]["get"]["responses"]["200"]["content"]["application/json"]
+    >,
+  ) => {
+    const repos: paths["/repos"]["get"]["responses"]["200"]["content"]["application/json"] =
+      [
+        { id: 1, name: "repo1" },
+        { id: 2, name: "repo2" },
+      ];
+    res.json(repos);
+  },
+);
 
-process.on("unhandledRejection", async (err) => {
-  console.log(err);
-  process.exit(1);
-});
-
-start()
-  .then((server) => {
-    console.log(`server started at: ${server.info.uri}`);
+const port = process.env["PORT"] || 3000;
+app
+  .listen(port, () => {
+    console.log(`server is running at http://127.0.0.1:${port}`);
   })
-  .catch((err) => {
-    console.log(err);
+  .on("error", (err) => {
+    console.error("failed to start server:", err);
+    process.exit(1);
   });
