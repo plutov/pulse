@@ -1,0 +1,17 @@
+.gitignore
+.npmignore
+api.ts
+base.ts
+clients/repo-api.ts
+common.ts
+configuration.ts
+docs/CreateRepoRequest.md
+docs/ErrorResponse.md
+docs/Repo.md
+docs/RepoApi.md
+git_push.sh
+index.ts
+models/create-repo-request.ts
+models/error-response.ts
+models/index.ts
+models/repo.ts

@@ -1,5 +1,5 @@
 import express, { Request, Response } from "express";
-import { paths } from "./types/api";
+import { Repo, CreateRepoRequest } from "./apigen";
 
 const app = express();
 app.use(express.json());
@@ -8,16 +8,28 @@ app.get(
   "/repos",
   (
     _req: Request,
-    res: Response<
-      paths["/repos"]["get"]["responses"]["200"]["content"]["application/json"]
-    >,
+    res: Response<Repo[]>,
   ) => {
-    const repos: paths["/repos"]["get"]["responses"]["200"]["content"]["application/json"] =
-      [
-        { id: 1, name: "repo1" },
-        { id: 2, name: "repo2" },
-      ];
+    const repos: Repo[] = [
+      { id: 1, name: "repo1" },
+      { id: 2, name: "repo2" },
+    ];
     res.json(repos);
+  },
+);
+
+app.post(
+  "/repos",
+  (
+    req: Request<CreateRepoRequest>,
+    res: Response<Repo>,
+  ) => {
+    const { name } = req.body;
+    const newRepo: Repo = {
+      id: Math.floor(Math.random() * 1000),
+      name,
+    };
+    res.status(201).json(newRepo);
   },
 );
 

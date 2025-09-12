@@ -1,0 +1,9 @@
+# Based on https://openapi-generator.tech/docs/generators/typescript-axios#config-options
+
+additionalProperties:
+  apiPackage: clients
+  modelPackage: models
+  ensureUniqueParams: true
+  withInterfaces: true
+  withNodeImports: true
+  withSeparateModelsAndApi: true

@@ -21,6 +21,22 @@ paths:
                   $ref: "#/components/schemas/Repo"
         "500":
           $ref: "#/components/responses/InternalServerError"
+    post:
+      tags:
+        - repo
+      summary: Create Repo
+      operationId: createRepo
+      requestBody:
+        $ref: "#/components/requestBodies/CreateRepoPayload"
+      responses:
+        "201":
+          description: ok
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Repo"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
 components:
   schemas:
     Repo:
@@ -39,7 +55,19 @@ components:
       properties:
         message:
           type: string
-  requestBodies: {}
+  requestBodies:
+    CreateRepoPayload:
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            required:
+              - name
+            properties:
+              name:
+                type: string
+                example: my-repo
   responses:
     InternalServerError:
       description: "500"
