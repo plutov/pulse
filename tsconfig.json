@@ -1,14 +1,21 @@
 {
   "include": [
     "src/**/*",
-    "tests/**/*"
+    "tests/**/*",
+    "database/**/*",
+    "knexfile.ts",
+    "kanel.config.ts"
   ],
   "compilerOptions": {
     "outDir": "./dist",
     "module": "nodenext",
     "target": "esnext",
-    "lib": ["esnext"],
-    "types": ["node"],
+    "lib": [
+      "esnext"
+    ],
+    "types": [
+      "node"
+    ],
     "noUncheckedIndexedAccess": true,
     "exactOptionalPropertyTypes": true,
     "noImplicitReturns": true,

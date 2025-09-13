@@ -5,6 +5,28 @@ import { defineConfig } from "eslint/config";
 import tseslint from "typescript-eslint";
 
 export default defineConfig(
-  eslint.configs.recommended,
-  tseslint.configs.recommended,
+  {
+    files: ["**/*.{js,ts}"],
+    extends: [eslint.configs.recommended],
+    languageOptions: {
+      globals: {
+        module: "readonly",
+        require: "readonly",
+        process: "readonly",
+      },
+    },
+  },
+  {
+    files: ["**/*.ts"],
+    extends: [...tseslint.configs.recommendedTypeChecked],
+    languageOptions: {
+      parserOptions: {
+        project: true,
+        tsconfigRootDir: import.meta.dirname,
+      },
+    },
+  },
+  {
+    ignores: ["dist/**", "node_modules/**", "eslint.config.mjs", "src/apigen/**"],
+  }
 );
