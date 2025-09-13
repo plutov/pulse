@@ -1,44 +1,25 @@
-import express, { Request, Response } from "express";
-import { Repo, CreateRepoRequest } from "./apigen";
+import * as Hapi from "@hapi/hapi";
+import reposPlugin from "./plugins/repos";
 
-const app = express();
-app.use(express.json());
-
-app.get(
-  "/repos",
-  (
-    _req: Request,
-    res: Response<Repo[]>,
-  ) => {
-    const repos: Repo[] = [
-      { id: 1, name: "repo1" },
-      { id: 2, name: "repo2" },
-    ];
-    res.json(repos);
-  },
-);
-
-app.post(
-  "/repos",
-  (
-    req: Request<CreateRepoRequest>,
-    res: Response<Repo>,
-  ) => {
-    const { name } = req.body;
-    const newRepo: Repo = {
-      id: Math.floor(Math.random() * 1000),
-      name,
-    };
-    res.status(201).json(newRepo);
-  },
-);
-
-const port = process.env["PORT"] || 3000;
-app
-  .listen(port, () => {
-    console.log(`server is running at http://127.0.0.1:${port}`);
-  })
-  .on("error", (err) => {
-    console.error("failed to start server:", err);
-    process.exit(1);
+const init = async (): Promise<Hapi.Server> => {
+  const server = Hapi.server({
+    port: process.env["PORT"] || 3000,
+    host: "localhost",
   });
+
+  await server.register([reposPlugin]);
+
+  await server.start();
+  console.log(`server is running at http://127.0.0.1:${server.info.port}`);
+  return server;
+};
+
+process.on("unhandledRejection", (err) => {
+  console.error("unhandled rejection:", err);
+  process.exit(1);
+});
+
+init().catch((err) => {
+  console.error("failed to start server:", err);
+  process.exit(1);
+});
