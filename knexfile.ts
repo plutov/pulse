@@ -1,7 +1,4 @@
 import type { Knex } from "knex";
-import dotenv from "dotenv";
-
-dotenv.config();
 
 const config: Knex.Config = {
   client: "postgresql",
@@ -11,7 +8,7 @@ const config: Knex.Config = {
     user: process.env["DB_USER"]!,
     password: process.env["DB_PASSWORD"]!,
     database: process.env["DB_NAME"]!,
-    ssl: process.env["DB_SSL"] === "true" ? { rejectUnauthorized: false } : false
+    ssl: process.env["DB_SSL"] === "true",
   },
   pool: {
     min: 2,

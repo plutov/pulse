@@ -1,13 +1,13 @@
 {
   "scripts": {
-    "dev": "ts-node src/index.ts",
+    "dev": "dotenv -e .env -- ts-node src/index.ts",
     "lint": "eslint . --ext .ts",
     "lint:fix": "eslint . --ext .ts --fix",
     "oapi": "openapi-generator-cli generate -i openapi.yaml -g typescript-axios -o ./src/apigen -c openapi.config.yaml",
-    "db:migrate": "knex migrate:latest --knexfile knexfile.ts",
-    "db:seed": "knex seed:run --knexfile knexfile.ts",
+    "db:migrate": "dotenv -e .env -- knex migrate:latest --knexfile knexfile.ts",
+    "db:seed": "dotenv -e .env -- knex seed:run --knexfile knexfile.ts",
     "db:setup": "npm run db:migrate && npm run db:seed",
-    "types:generate": "dotenv -e .env -- kanel"
+    "types:generate": "dotenv -e .env -- kanel --config .kanelrc.js"
   },
   "devDependencies": {
     "@eslint/js": "^9.35.0",
@@ -24,7 +24,6 @@
     "@hapi/boom": "^10.0.1",
     "@hapi/hapi": "^21.4.3",
     "@types/hapi": "^18.0.14",
-    "dotenv": "^17.2.2",
     "kanel": "^3.14.4",
     "knex": "^3.1.0",
     "pg": "^8.16.3"
