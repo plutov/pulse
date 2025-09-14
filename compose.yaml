@@ -3,19 +3,16 @@ services:
     image: postgres:latest
     container_name: tsar_postgres
     environment:
-      POSTGRES_DB: tsar_dev
+      POSTGRES_DB: tsar
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
     ports:
       - "5432:5432"
     volumes:
-      - postgres_data:/var/lib/postgresql/data
+      - ./postgres_data:/var/lib/postgresql/data
     restart: unless-stopped
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U postgres"]
       interval: 10s
       timeout: 5s
       retries: 5
-
-volumes:
-  postgres_data:

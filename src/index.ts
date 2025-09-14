@@ -10,7 +10,7 @@ const init = async (): Promise<Hapi.Server> => {
   await server.register([reposPlugin]);
 
   await server.start();
-  console.log(`server is running at http://127.0.0.1:${server.info.port}`);
+  console.log(`server is running at http://localhost:${server.info.port}`);
   return server;
 };
 

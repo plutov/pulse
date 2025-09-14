@@ -3,8 +3,7 @@
     "src/**/*",
     "tests/**/*",
     "database/**/*",
-    "knexfile.ts",
-    "kanel.config.ts"
+    "knexfile.ts"
   ],
   "compilerOptions": {
     "outDir": "./dist",
