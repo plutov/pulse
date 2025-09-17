@@ -10,11 +10,14 @@
     "module": "nodenext",
     "target": "esnext",
     "lib": [
-      "esnext"
-    ],
+      "esnext"  
+    ],  
     "types": [
       "node"
     ],
+    "strict": true,
+    "noImplicitAny": true,
+    "strictNullChecks": true,
     "noUncheckedIndexedAccess": true,
     "exactOptionalPropertyTypes": true,
     "noImplicitReturns": true,
@@ -23,12 +26,10 @@
     "noUnusedParameters": true,
     "noFallthroughCasesInSwitch": true,
     "noPropertyAccessFromIndexSignature": true,
-    "strict": true,
     "jsx": "react-jsx",
     "isolatedModules": true,
     "noUncheckedSideEffectImports": true,
     "moduleDetection": "force",
-    "skipLibCheck": true,
-    "strictNullChecks": true,
+    "skipLibCheck": true
   }
 }

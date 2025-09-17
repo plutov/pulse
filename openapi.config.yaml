@@ -1,5 +1,4 @@
 # Based on https://openapi-generator.tech/docs/generators/typescript-axios#config-options
-
 additionalProperties:
   apiPackage: clients
   modelPackage: models
@@ -7,3 +6,4 @@ additionalProperties:
   withInterfaces: true
   withNodeImports: true
   withSeparateModelsAndApi: true
+

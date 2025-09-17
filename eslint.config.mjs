@@ -27,6 +27,11 @@ export default defineConfig(
     },
   },
   {
-    ignores: ["dist/**", "node_modules/**", "eslint.config.mjs", "src/apigen/**"],
-  }
+    ignores: [
+      "dist/**",
+      "node_modules/**",
+      "eslint.config.mjs",
+      "src/apigen/**",
+    ],
+  },
 );
