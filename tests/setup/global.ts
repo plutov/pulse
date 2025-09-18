@@ -2,19 +2,25 @@ import {
   PostgreSqlContainer,
   StartedPostgreSqlContainer,
 } from "@testcontainers/postgresql";
+import { RedisContainer, StartedRedisContainer } from "@testcontainers/redis";
 import { execSync } from "child_process";
 import * as path from "path";
 
 let postgresContainer: StartedPostgreSqlContainer;
+let redisContainer: StartedRedisContainer;
 
 export async function setup() {
-  console.log("Setting up test database container...");
+  console.log("Setting up test containers...");
 
+  // Start PostgreSQL container
   postgresContainer = await new PostgreSqlContainer("postgres:15-alpine")
     .withDatabase("test_db")
     .withUsername("test_user")
     .withPassword("test_password")
     .start();
+
+  // Start Redis container
+  redisContainer = await new RedisContainer("redis:7-alpine").start();
 
   // Set environment variables for tests
   process.env["DB_HOST"] = postgresContainer.getHost();
@@ -22,6 +28,9 @@ export async function setup() {
   process.env["DB_USER"] = "test_user";
   process.env["DB_PASSWORD"] = "test_password";
   process.env["DB_NAME"] = "test_db";
+  process.env["REDIS_HOST"] = redisContainer.getHost();
+  process.env["REDIS_PORT"] = redisContainer.getPort().toString();
+  process.env["REDIS_DB"] = "0";
   process.env["JWT_SECRET"] = "test-jwt-secret-for-testing-purposes-only";
 
   console.log("Running migrations...");
@@ -48,13 +57,18 @@ export async function setup() {
     throw error;
   }
 
-  console.log("Test database setup complete");
+  console.log("Test setup complete");
 }
 
 export async function teardown() {
+  console.log("Stopping test containers...");
+  
   if (postgresContainer) {
-    console.log("Stopping test database container...");
     await postgresContainer.stop();
+  }
+  
+  if (redisContainer) {
+    await redisContainer.stop();
   }
 }
 
