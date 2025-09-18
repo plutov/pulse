@@ -47,7 +47,7 @@ describe("Repos API", () => {
       const repos: Repo[] = JSON.parse(response.payload) as Repo[];
       expect(repos).toHaveLength(1);
       expect(repos[0]).toMatchObject({
-        id: expect.any(Number) as number,
+        id: expect.any(String) as string,
         name: "test-repo",
       });
     });
@@ -64,7 +64,7 @@ describe("Repos API", () => {
       expect(response.statusCode).toBe(201);
       const repo: Repo = JSON.parse(response.payload) as Repo;
       expect(repo).toMatchObject({
-        id: expect.any(Number) as number,
+        id: expect.any(String) as string,
         name: "new-repo",
       });
     });
@@ -115,7 +115,7 @@ describe("Repos API", () => {
     it("should return 404 when repo does not exist", async () => {
       const response = await server.inject({
         method: "GET",
-        url: "/repos/999",
+        url: "/repos/550e8400-e29b-41d4-a716-446655440000",
       });
 
       expect(response.statusCode).toBe(404);
@@ -135,7 +135,7 @@ describe("Repos API", () => {
       const error: ErrorResponse = JSON.parse(
         response.payload,
       ) as ErrorResponse;
-      expect(error.message).toContain("Invalid repository ID");
+      expect(error.message).toContain("Invalid repository ID format");
     });
   });
 
@@ -168,7 +168,7 @@ describe("Repos API", () => {
     it("should return 404 when trying to delete non-existent repo", async () => {
       const response = await server.inject({
         method: "DELETE",
-        url: "/repos/999",
+        url: "/repos/550e8400-e29b-41d4-a716-446655440000",
       });
 
       expect(response.statusCode).toBe(404);
@@ -188,7 +188,7 @@ describe("Repos API", () => {
       const error: ErrorResponse = JSON.parse(
         response.payload,
       ) as ErrorResponse;
-      expect(error.message).toContain("Invalid repository ID");
+      expect(error.message).toContain("Invalid repository ID format");
     });
   });
 });

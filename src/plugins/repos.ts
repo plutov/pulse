@@ -5,6 +5,11 @@ import { RepoRepository } from "../database/repositories/repo-repository";
 
 const repoRepository = new RepoRepository();
 
+function isValidUUID(uuid: string): boolean {
+  const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
+  return uuidRegex.test(uuid);
+}
+
 const reposPlugin: Hapi.Plugin<null> = {
   name: "app/repos",
   register: function (server: Hapi.Server) {
@@ -86,10 +91,14 @@ async function createRepoHandler(request: Hapi.Request, h: Hapi.ResponseToolkit)
 
 async function getRepoByIdHandler(request: Hapi.Request) {
   try {
-    const id = parseInt(request.params["id"] as string);
+    const id = request.params["id"] as string;
     
-    if (isNaN(id)) {
-      throw Boom.badRequest("Invalid repository ID");
+    if (!id) {
+      throw Boom.badRequest("Repository ID is required");
+    }
+
+    if (!isValidUUID(id)) {
+      throw Boom.badRequest("Invalid repository ID format");
     }
 
     const repoRow = await repoRepository.findById(id);
@@ -114,10 +123,14 @@ async function getRepoByIdHandler(request: Hapi.Request) {
 
 async function deleteRepoHandler(request: Hapi.Request, h: Hapi.ResponseToolkit) {
   try {
-    const id = parseInt(request.params["id"] as string);
+    const id = request.params["id"] as string;
     
-    if (isNaN(id)) {
-      throw Boom.badRequest("Invalid repository ID");
+    if (!id) {
+      throw Boom.badRequest("Repository ID is required");
+    }
+
+    if (!isValidUUID(id)) {
+      throw Boom.badRequest("Invalid repository ID format");
     }
 
     const deleted = await repoRepository.delete(id);

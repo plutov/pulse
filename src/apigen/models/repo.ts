@@ -22,10 +22,10 @@
 export interface Repo {
     /**
      * 
-     * @type {number}
+     * @type {string}
      * @memberof Repo
      */
-    'id'?: number;
+    'id'?: string;
     /**
      * 
      * @type {string}

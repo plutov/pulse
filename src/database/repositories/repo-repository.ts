@@ -1,11 +1,17 @@
 import { Knex } from "knex";
 import db from "../connection";
-import type Repos from "../../types/database/public/Repos";
-import type { ReposInitializer } from "../../types/database/public/Repos";
+import { randomUUID } from "crypto";
 
-export type RepoRow = Repos;
-export type CreateRepoData = Pick<ReposInitializer, "name" | "description">;
-export type UpdateRepoData = Partial<Pick<ReposInitializer, "name" | "description">>;
+export interface RepoRow {
+  id: string;
+  name: string;
+  description: string | null;
+  created_at: Date | null;
+  updated_at: Date | null;
+}
+
+export type CreateRepoData = Pick<RepoRow, "name"> & { description?: string | null };
+export type UpdateRepoData = Partial<Pick<RepoRow, "name" | "description">>;
 
 export class RepoRepository {
   private db: Knex;
@@ -19,7 +25,7 @@ export class RepoRepository {
     return this.db(this.tableName).select("*").orderBy("created_at", "desc");
   }
 
-  async findById(id: number): Promise<RepoRow | undefined> {
+  async findById(id: string): Promise<RepoRow | undefined> {
     return this.db(this.tableName).where({ id }).first<RepoRow>();
   }
 
@@ -28,8 +34,13 @@ export class RepoRepository {
   }
 
   async create(data: CreateRepoData): Promise<RepoRow> {
+    const repoWithId = {
+      ...data,
+      id: randomUUID(),
+    };
+    
     const [repo] = await this.db(this.tableName)
-      .insert(data)
+      .insert(repoWithId)
       .returning<RepoRow[]>("*");
     
     if (!repo) {
@@ -39,7 +50,7 @@ export class RepoRepository {
     return repo;
   }
 
-  async update(id: number, data: UpdateRepoData): Promise<RepoRow | undefined> {
+  async update(id: string, data: UpdateRepoData): Promise<RepoRow | undefined> {
     const [repo] = await this.db(this.tableName)
       .where({ id })
       .update(data)
@@ -47,7 +58,7 @@ export class RepoRepository {
     return repo;
   }
 
-  async delete(id: number): Promise<boolean> {
+  async delete(id: string): Promise<boolean> {
     const deletedCount = await this.db(this.tableName)
       .where({ id })
       .del();
