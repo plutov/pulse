@@ -1,4 +1,5 @@
 import * as Hapi from '@hapi/hapi';
+import authPlugin from '../../src/plugins/auth';
 import reposPlugin from '../../src/plugins/repos';
 
 export async function createTestServer(): Promise<Hapi.Server> {
@@ -7,7 +8,7 @@ export async function createTestServer(): Promise<Hapi.Server> {
     host: 'localhost',
   });
 
-  await server.register([reposPlugin]);
+  await server.register([authPlugin, reposPlugin]);
 
   return server;
 }

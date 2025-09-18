@@ -1,4 +1,5 @@
 import * as Hapi from "@hapi/hapi";
+import authPlugin from "./plugins/auth";
 import reposPlugin from "./plugins/repos";
 
 const init = async (): Promise<Hapi.Server> => {
@@ -7,7 +8,7 @@ const init = async (): Promise<Hapi.Server> => {
     host: "localhost",
   });
 
-  await server.register([reposPlugin]);
+  await server.register([authPlugin, reposPlugin]);
 
   await server.start();
   console.log(`server is running at http://localhost:${server.info.port}`);

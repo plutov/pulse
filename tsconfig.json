@@ -3,7 +3,8 @@
     "src/**/*",
     "tests/**/*",
     "database/**/*",
-    "knexfile.ts"
+    "knexfile.ts",
+    "vitest.config.ts"
   ],
   "compilerOptions": {
     "outDir": "./dist",

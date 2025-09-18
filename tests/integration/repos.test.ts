@@ -3,6 +3,7 @@ import * as Hapi from "@hapi/hapi";
 import { createTestServer } from "../setup/server";
 import { cleanupTestDb, closeTestDb } from "../setup/database";
 import { ErrorResponse, Repo } from "../../src/apigen";
+import { getAuthHeaders } from "../utils/auth";
 
 describe("Repos API", () => {
   let server: Hapi.Server;
@@ -24,6 +25,7 @@ describe("Repos API", () => {
       const response = await server.inject({
         method: "GET",
         url: "/repos",
+        headers: getAuthHeaders(),
       });
 
       expect(response.statusCode).toBe(200);
@@ -36,11 +38,13 @@ describe("Repos API", () => {
         method: "POST",
         url: "/repos",
         payload: { name: "test-repo" },
+        headers: getAuthHeaders(),
       });
 
       const response = await server.inject({
         method: "GET",
         url: "/repos",
+        headers: getAuthHeaders(),
       });
 
       expect(response.statusCode).toBe(200);
@@ -59,6 +63,7 @@ describe("Repos API", () => {
         method: "POST",
         url: "/repos",
         payload: { name: "new-repo" },
+        headers: getAuthHeaders(),
       });
 
       expect(response.statusCode).toBe(201);
@@ -75,6 +80,7 @@ describe("Repos API", () => {
         method: "POST",
         url: "/repos",
         payload: { name: "duplicate-repo" },
+        headers: getAuthHeaders(),
       });
 
       // Try to create repo with same name
@@ -82,6 +88,7 @@ describe("Repos API", () => {
         method: "POST",
         url: "/repos",
         payload: { name: "duplicate-repo" },
+        headers: getAuthHeaders(),
       });
 
       expect(response.statusCode).toBe(409);
@@ -99,12 +106,14 @@ describe("Repos API", () => {
         method: "POST",
         url: "/repos",
         payload: { name: "test-repo" },
+        headers: getAuthHeaders(),
       });
       const createdRepo: Repo = JSON.parse(createResponse.payload) as Repo;
 
       const response = await server.inject({
         method: "GET",
         url: `/repos/${createdRepo.id}`,
+        headers: getAuthHeaders(),
       });
 
       expect(response.statusCode).toBe(200);
@@ -116,6 +125,7 @@ describe("Repos API", () => {
       const response = await server.inject({
         method: "GET",
         url: "/repos/550e8400-e29b-41d4-a716-446655440000",
+        headers: getAuthHeaders(),
       });
 
       expect(response.statusCode).toBe(404);
@@ -129,6 +139,7 @@ describe("Repos API", () => {
       const response = await server.inject({
         method: "GET",
         url: "/repos/invalid",
+        headers: getAuthHeaders(),
       });
 
       expect(response.statusCode).toBe(400);
@@ -146,12 +157,14 @@ describe("Repos API", () => {
         method: "POST",
         url: "/repos",
         payload: { name: "to-delete-repo" },
+        headers: getAuthHeaders(),
       });
       const createdRepo: Repo = JSON.parse(createResponse.payload) as Repo;
 
       const response = await server.inject({
         method: "DELETE",
         url: `/repos/${createdRepo.id}`,
+        headers: getAuthHeaders(),
       });
 
       expect(response.statusCode).toBe(204);
@@ -161,6 +174,7 @@ describe("Repos API", () => {
       const getResponse = await server.inject({
         method: "GET",
         url: `/repos/${createdRepo.id}`,
+        headers: getAuthHeaders(),
       });
       expect(getResponse.statusCode).toBe(404);
     });
@@ -169,6 +183,7 @@ describe("Repos API", () => {
       const response = await server.inject({
         method: "DELETE",
         url: "/repos/550e8400-e29b-41d4-a716-446655440000",
+        headers: getAuthHeaders(),
       });
 
       expect(response.statusCode).toBe(404);
@@ -182,6 +197,7 @@ describe("Repos API", () => {
       const response = await server.inject({
         method: "DELETE",
         url: "/repos/invalid",
+        headers: getAuthHeaders(),
       });
 
       expect(response.statusCode).toBe(400);

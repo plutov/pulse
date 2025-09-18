@@ -22,6 +22,7 @@ export async function setup() {
   process.env["DB_USER"] = "test_user";
   process.env["DB_PASSWORD"] = "test_password";
   process.env["DB_NAME"] = "test_db";
+  process.env["JWT_SECRET"] = "test-jwt-secret-for-testing-purposes-only";
 
   console.log("Running migrations...");
   try {
