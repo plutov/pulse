@@ -1,5 +1,6 @@
 import * as Hapi from "@hapi/hapi";
 import { Engine as CatboxRedis } from "@hapi/catbox-redis";
+import HapiPino from "hapi-pino";
 import authPlugin from "./plugins/auth";
 import reposPlugin from "./plugins/repos";
 
@@ -22,10 +23,23 @@ const init = async (): Promise<Hapi.Server> => {
     ],
   });
 
+  // Register logging first
+  await server.register({
+    plugin: HapiPino,
+    options: {
+      redact: ["req.headers.authorization"],
+      logRequestComplete: true,
+      logRequestStart: false,
+    },
+  });
+
   await server.register([authPlugin, reposPlugin]);
 
   await server.start();
-  console.log(`server is running at http://localhost:${server.info.port}`);
+  server.log(
+    "info",
+    `server is running at http://localhost:${server.info.port}`,
+  );
   return server;
 };
 

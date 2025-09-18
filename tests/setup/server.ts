@@ -1,12 +1,13 @@
-import * as Hapi from '@hapi/hapi';
-import { Engine as CatboxRedis } from '@hapi/catbox-redis';
-import authPlugin from '../../src/plugins/auth';
-import reposPlugin from '../../src/plugins/repos';
+import * as Hapi from "@hapi/hapi";
+import { Engine as CatboxRedis } from "@hapi/catbox-redis";
+import HapiPino from "hapi-pino";
+import authPlugin from "../../src/plugins/auth";
+import reposPlugin from "../../src/plugins/repos";
 
 export async function createTestServer(): Promise<Hapi.Server> {
   const server = Hapi.server({
     port: 0, // Use random available port for testing
-    host: 'localhost',
+    host: "localhost",
     cache: [
       {
         name: "redis_cache",
@@ -22,7 +23,17 @@ export async function createTestServer(): Promise<Hapi.Server> {
     ],
   });
 
+  await server.register({
+    plugin: HapiPino,
+    options: {
+      logRequestComplete: false,
+      logRequestStart: false,
+      level: "silent", // Suppress logs during testing
+    },
+  });
+
   await server.register([authPlugin, reposPlugin]);
 
   return server;
 }
+
