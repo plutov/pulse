@@ -25,3 +25,16 @@ npm run dev
 ```
 
 ### Generate
+
+```
+npm run types:generate
+npm run oapi
+```
+
+### Test
+
+Using testcontainers:
+
+```
+npm run test
+```

@@ -3,6 +3,8 @@
     "dev": "dotenv -e .env -- ts-node src/index.ts",
     "lint": "eslint . --ext .ts",
     "lint:fix": "eslint . --ext .ts --fix",
+    "test": "vitest run",
+    "test:watch": "vitest",
     "oapi": "openapi-generator-cli generate -i openapi.yaml -g typescript-axios -o ./src/apigen -c openapi.config.yaml",
     "db:migrate": "dotenv -e .env -- knex migrate:latest --knexfile knexfile.ts",
     "db:seed": "dotenv -e .env -- knex seed:run --knexfile knexfile.ts",
@@ -12,13 +14,18 @@
   "devDependencies": {
     "@eslint/js": "^9.35.0",
     "@openapitools/openapi-generator-cli": "^2.23.1",
+    "@testcontainers/postgresql": "^11.6.0",
     "@types/node": "^24.3.3",
     "@types/pg": "^8.15.5",
+    "@types/supertest": "^6.0.3",
     "dotenv-cli": "^10.0.0",
     "eslint": "^9.35.0",
+    "supertest": "^7.1.4",
+    "testcontainers": "^11.6.0",
     "ts-node": "^10.9.2",
     "typescript": "^5.9.2",
-    "typescript-eslint": "^8.43.0"
+    "typescript-eslint": "^8.43.0",
+    "vitest": "^3.2.4"
   },
   "dependencies": {
     "@hapi/boom": "^10.0.1",
