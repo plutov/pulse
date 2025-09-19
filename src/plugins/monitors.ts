@@ -1,9 +1,9 @@
 import * as Hapi from "@hapi/hapi";
 import * as Boom from "@hapi/boom";
 import { Monitor, CreateMonitorPayload } from "../apigen";
-import { MonitorMonitorsitory } from "../database/repositories/monitor-repository";
+import { MonitorRepository } from "../database/repositories/monitor-repository";
 
-const monitorMonitorsitory = new MonitorMonitorsitory();
+const monitorRepository = new MonitorRepository();
 
 function isValidUUID(uuid: string): boolean {
   const uuidRegex =
@@ -52,7 +52,7 @@ export default monitorsPlugin;
 
 async function getAllMonitorsHandler() {
   try {
-    const monitorRows = await monitorMonitorsitory.findAll();
+    const monitorRows = await monitorRepository.findAll();
     const monitors: Monitor[] = monitorRows.map((row) => ({
       id: row.id,
       name: row.name,
@@ -71,13 +71,12 @@ async function createMonitorHandler(
   try {
     const { name } = request.payload as CreateMonitorPayload;
 
-    // Check if monitor already exists
-    const existingMonitor = await monitorMonitorsitory.findByName(name);
+    const existingMonitor = await monitorRepository.findByName(name);
     if (existingMonitor) {
-      throw Boom.conflict(`Monitorsitory with name '${name}' already exists`);
+      throw Boom.conflict(`Monitor with name '${name}' already exists`);
     }
 
-    const monitorRow = await monitorMonitorsitory.create({ name });
+    const monitorRow = await monitorRepository.create({ name });
     const newMonitor: Monitor = {
       id: monitorRow.id,
       name: monitorRow.name,
@@ -89,7 +88,7 @@ async function createMonitorHandler(
       throw error;
     }
     console.error("Error creating monitor:", error);
-    throw Boom.internal("Failed to create monitorsitory");
+    throw Boom.internal("Failed to create monitor");
   }
 }
 
@@ -98,16 +97,16 @@ async function getMonitorByIdHandler(request: Hapi.Request) {
     const id = request.params["id"] as string;
 
     if (!id) {
-      throw Boom.badRequest("Monitorsitory ID is required");
+      throw Boom.badRequest("Monitor ID is required");
     }
 
     if (!isValidUUID(id)) {
-      throw Boom.badRequest("Invalid monitorsitory ID format");
+      throw Boom.badRequest("Invalid monitor ID format");
     }
 
-    const monitorRow = await monitorMonitorsitory.findById(id);
+    const monitorRow = await monitorRepository.findById(id);
     if (!monitorRow) {
-      throw Boom.notFound(`Monitorsitory with ID ${id} not found`);
+      throw Boom.notFound(`Monitor with ID ${id} not found`);
     }
 
     const monitor: Monitor = {
@@ -121,7 +120,7 @@ async function getMonitorByIdHandler(request: Hapi.Request) {
       throw error;
     }
     console.error("Error fetching monitor by ID:", error);
-    throw Boom.internal("Failed to fetch monitorsitory");
+    throw Boom.internal("Failed to fetch monitor");
   }
 }
 
@@ -133,16 +132,16 @@ async function deleteMonitorHandler(
     const id = request.params["id"] as string;
 
     if (!id) {
-      throw Boom.badRequest("Monitorsitory ID is required");
+      throw Boom.badRequest("Monitor ID is required");
     }
 
     if (!isValidUUID(id)) {
-      throw Boom.badRequest("Invalid monitorsitory ID format");
+      throw Boom.badRequest("Invalid monitor ID format");
     }
 
-    const deleted = await monitorMonitorsitory.delete(id);
+    const deleted = await monitorRepository.delete(id);
     if (!deleted) {
-      throw Boom.notFound(`Monitorsitory with ID ${id} not found`);
+      throw Boom.notFound(`Monitor with ID ${id} not found`);
     }
 
     return h.response().code(204);
@@ -151,6 +150,6 @@ async function deleteMonitorHandler(
       throw error;
     }
     console.error("Error deleting monitor:", error);
-    throw Boom.internal("Failed to delete monitorsitory");
+    throw Boom.internal("Failed to delete monitor");
   }
 }

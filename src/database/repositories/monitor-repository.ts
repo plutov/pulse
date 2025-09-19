@@ -17,7 +17,7 @@ export type UpdateMonitorData = Partial<
   Pick<MonitorRow, "name" | "description">
 >;
 
-export class MonitorMonitorsitory {
+export class MonitorRepository {
   private db: Knex;
   private tableName = "monitors";
 
@@ -48,7 +48,7 @@ export class MonitorMonitorsitory {
       .returning<MonitorRow[]>("*");
 
     if (!monitor) {
-      throw new Error("Failed to create monitorsitory");
+      throw new Error("Failed to create monitor");
     }
 
     return monitor;
