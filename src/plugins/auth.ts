@@ -33,16 +33,11 @@ const authPlugin: Hapi.Plugin<null> = {
 
     server.auth.default("jwt");
 
-    const userRepository = new UserRepository();
-
     server.route({
       method: "POST",
       path: "/auth/login",
       options: {
         auth: false,
-        tags: ["api", "auth"],
-        description: "User login",
-        notes: "Authenticate user with username and password",
         validate: {
           payload: Joi.object({
             username: Joi.string().required(),
@@ -50,45 +45,50 @@ const authPlugin: Hapi.Plugin<null> = {
           }),
         },
       },
-      handler: async (request) => {
-        const { username, password } = request.payload as {
-          username: string;
-          password: string;
-        };
-
-        try {
-          const user = await userRepository.verifyPassword(username, password);
-
-          if (!user) {
-            throw Boom.unauthorized("Invalid username or password");
-          }
-
-          const token = sign(
-            {
-              id: user.id,
-              username: user.username,
-            },
-            jwtSecret,
-            { expiresIn: "24h" },
-          );
-
-          return {
-            token,
-            user: {
-              id: user.id,
-              username: user.username,
-            },
-          };
-        } catch (error) {
-          if (Boom.isBoom(error)) {
-            throw error;
-          }
-
-          throw Boom.internal("Authentication failed");
-        }
-      },
+      handler: loginHandler,
     });
   },
 };
+
+async function loginHandler(request: Hapi.Request) {
+  const { username, password } = request.payload as {
+    username: string;
+    password: string;
+  };
+
+  const userRepository = new UserRepository();
+  const jwtSecret = process.env["JWT_SECRET"];
+
+  try {
+    const user = await userRepository.verifyPassword(username, password);
+
+    if (!user) {
+      throw Boom.unauthorized("Invalid username or password");
+    }
+
+    const token = sign(
+      {
+        id: user.id,
+        username: user.username,
+      },
+      jwtSecret!,
+      { expiresIn: "24h" },
+    );
+
+    return {
+      token,
+      user: {
+        id: user.id,
+        username: user.username,
+      },
+    };
+  } catch (error) {
+    if (Boom.isBoom(error)) {
+      throw error;
+    }
+
+    throw Boom.internal("Authentication failed");
+  }
+}
 
 export default authPlugin;

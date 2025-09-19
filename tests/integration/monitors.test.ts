@@ -157,7 +157,7 @@ describe("Monitors API", () => {
       const error: ErrorResponse = JSON.parse(
         response.payload,
       ) as ErrorResponse;
-      expect(error.message).toContain("Invalid monitor ID format");
+      expect(error.message).toContain("Invalid request params input");
     });
   });
 
@@ -217,7 +217,7 @@ describe("Monitors API", () => {
       const error: ErrorResponse = JSON.parse(
         response.payload,
       ) as ErrorResponse;
-      expect(error.message).toContain("Invalid monitor ID format");
+      expect(error.message).toContain("Invalid request params input");
     });
   });
 });

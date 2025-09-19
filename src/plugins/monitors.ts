@@ -2,14 +2,9 @@ import * as Hapi from "@hapi/hapi";
 import * as Boom from "@hapi/boom";
 import { Monitor, CreateMonitorPayload } from "../apigen";
 import { MonitorRepository } from "../database/repositories/monitor-repository";
+import Joi from "joi";
 
 const monitorRepository = new MonitorRepository();
-
-function isValidUUID(uuid: string): boolean {
-  const uuidRegex =
-    /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
-  return uuidRegex.test(uuid);
-}
 
 const monitorsPlugin: Hapi.Plugin<null> = {
   name: "app/monitors",
@@ -27,6 +22,13 @@ const monitorsPlugin: Hapi.Plugin<null> = {
         method: "POST",
         path: "/monitors",
         handler: createMonitorHandler,
+        options: {
+          validate: {
+            payload: Joi.object({
+              name: Joi.string().min(1).max(255).required(),
+            }),
+          },
+        },
       },
     ]);
 
@@ -35,6 +37,13 @@ const monitorsPlugin: Hapi.Plugin<null> = {
         method: "GET",
         path: "/monitors/{id}",
         handler: getMonitorByIdHandler,
+        options: {
+          validate: {
+            params: Joi.object({
+              id: Joi.string().guid({ version: "uuidv4" }).required(),
+            }),
+          },
+        },
       },
     ]);
 
@@ -43,6 +52,13 @@ const monitorsPlugin: Hapi.Plugin<null> = {
         method: "DELETE",
         path: "/monitors/{id}",
         handler: deleteMonitorHandler,
+        options: {
+          validate: {
+            params: Joi.object({
+              id: Joi.string().guid({ version: "uuidv4" }).required(),
+            }),
+          },
+        },
       },
     ]);
   },
@@ -96,14 +112,6 @@ async function getMonitorByIdHandler(request: Hapi.Request) {
   try {
     const id = request.params["id"] as string;
 
-    if (!id) {
-      throw Boom.badRequest("Monitor ID is required");
-    }
-
-    if (!isValidUUID(id)) {
-      throw Boom.badRequest("Invalid monitor ID format");
-    }
-
     const monitorRow = await monitorRepository.findById(id);
     if (!monitorRow) {
       throw Boom.notFound(`Monitor with ID ${id} not found`);
@@ -130,14 +138,6 @@ async function deleteMonitorHandler(
 ) {
   try {
     const id = request.params["id"] as string;
-
-    if (!id) {
-      throw Boom.badRequest("Monitor ID is required");
-    }
-
-    if (!isValidUUID(id)) {
-      throw Boom.badRequest("Invalid monitor ID format");
-    }
 
     const deleted = await monitorRepository.delete(id);
     if (!deleted) {
