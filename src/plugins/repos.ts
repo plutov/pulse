@@ -6,7 +6,8 @@ import { RepoRepository } from "../database/repositories/repo-repository";
 const repoRepository = new RepoRepository();
 
 function isValidUUID(uuid: string): boolean {
-  const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
+  const uuidRegex =
+    /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
   return uuidRegex.test(uuid);
 }
 
@@ -52,7 +53,7 @@ export default reposPlugin;
 async function getAllReposHandler() {
   try {
     const repoRows = await repoRepository.findAll();
-    const repos: Repo[] = repoRows.map(row => ({
+    const repos: Repo[] = repoRows.map((row) => ({
       id: row.id,
       name: row.name,
     }));
@@ -63,10 +64,13 @@ async function getAllReposHandler() {
   }
 }
 
-async function createRepoHandler(request: Hapi.Request, h: Hapi.ResponseToolkit) {
+async function createRepoHandler(
+  request: Hapi.Request,
+  h: Hapi.ResponseToolkit,
+) {
   try {
     const { name } = request.payload as CreateRepoRequest;
-    
+
     // Check if repo already exists
     const existingRepo = await repoRepository.findByName(name);
     if (existingRepo) {
@@ -78,7 +82,7 @@ async function createRepoHandler(request: Hapi.Request, h: Hapi.ResponseToolkit)
       id: repoRow.id,
       name: repoRow.name,
     };
-    
+
     return h.response(newRepo).code(201);
   } catch (error) {
     if (Boom.isBoom(error)) {
@@ -92,7 +96,7 @@ async function createRepoHandler(request: Hapi.Request, h: Hapi.ResponseToolkit)
 async function getRepoByIdHandler(request: Hapi.Request) {
   try {
     const id = request.params["id"] as string;
-    
+
     if (!id) {
       throw Boom.badRequest("Repository ID is required");
     }
@@ -121,10 +125,13 @@ async function getRepoByIdHandler(request: Hapi.Request) {
   }
 }
 
-async function deleteRepoHandler(request: Hapi.Request, h: Hapi.ResponseToolkit) {
+async function deleteRepoHandler(
+  request: Hapi.Request,
+  h: Hapi.ResponseToolkit,
+) {
   try {
     const id = request.params["id"] as string;
-    
+
     if (!id) {
       throw Boom.badRequest("Repository ID is required");
     }

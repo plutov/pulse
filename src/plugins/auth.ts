@@ -27,4 +27,3 @@ const authPlugin: Hapi.Plugin<null> = {
 };
 
 export default authPlugin;
-

@@ -8,12 +8,12 @@ export async function seed(knex: Knex): Promise<void> {
     {
       id: randomUUID(),
       name: "sample-repo-1",
-      description: "First sample repository"
+      description: "First sample repository",
     },
     {
       id: randomUUID(),
       name: "sample-repo-2",
-      description: "Second sample repository"
-    }
+      description: "Second sample repository",
+    },
   ]);
 }

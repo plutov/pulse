@@ -7,16 +7,19 @@
 ### Running locally
 
 Prepare the config:
+
 ```
 cp .env.example .env
 ```
 
 Start Postgres locally with Docker:
+
 ```
 docker-compose up -d
 ```
 
 Run migrations and start the server:
+
 ```
 npm run db:migrate
 npm run db:seed

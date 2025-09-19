@@ -13,4 +13,3 @@ export function getAuthHeaders(token?: string): Record<string, string> {
     authorization: `Bearer ${authToken}`,
   };
 }
-

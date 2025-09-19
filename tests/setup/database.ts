@@ -18,4 +18,3 @@ export async function closeTestDb(): Promise<void> {
     await knexInstance.destroy();
   }
 }
-

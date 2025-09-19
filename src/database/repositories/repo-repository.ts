@@ -10,7 +10,9 @@ export interface RepoRow {
   updated_at: Date | null;
 }
 
-export type CreateRepoData = Pick<RepoRow, "name"> & { description?: string | null };
+export type CreateRepoData = Pick<RepoRow, "name"> & {
+  description?: string | null;
+};
 export type UpdateRepoData = Partial<Pick<RepoRow, "name" | "description">>;
 
 export class RepoRepository {
@@ -38,15 +40,15 @@ export class RepoRepository {
       ...data,
       id: randomUUID(),
     };
-    
+
     const [repo] = await this.db(this.tableName)
       .insert(repoWithId)
       .returning<RepoRow[]>("*");
-    
+
     if (!repo) {
       throw new Error("Failed to create repository");
     }
-    
+
     return repo;
   }
 
@@ -59,16 +61,12 @@ export class RepoRepository {
   }
 
   async delete(id: string): Promise<boolean> {
-    const deletedCount = await this.db(this.tableName)
-      .where({ id })
-      .del();
+    const deletedCount = await this.db(this.tableName).where({ id }).del();
     return deletedCount > 0;
   }
 
   async exists(name: string): Promise<boolean> {
-    const repo = await this.db(this.tableName)
-      .where({ name })
-      .first<RepoRow>();
+    const repo = await this.db(this.tableName).where({ name }).first<RepoRow>();
     return !!repo;
   }
 }

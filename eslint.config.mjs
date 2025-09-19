@@ -3,35 +3,13 @@
 import eslint from "@eslint/js";
 import { defineConfig } from "eslint/config";
 import tseslint from "typescript-eslint";
+import prettierConfig from "eslint-config-prettier";
 
 export default defineConfig(
+  eslint.configs.recommended,
+  tseslint.configs.recommended,
+  prettierConfig,
   {
-    files: ["**/*.{js,ts}"],
-    extends: [eslint.configs.recommended],
-    languageOptions: {
-      globals: {
-        module: "readonly",
-        require: "readonly",
-        process: "readonly",
-      },
-    },
-  },
-  {
-    files: ["**/*.ts"],
-    extends: [...tseslint.configs.recommendedTypeChecked],
-    languageOptions: {
-      parserOptions: {
-        project: true,
-        tsconfigRootDir: import.meta.dirname,
-      },
-    },
-  },
-  {
-    ignores: [
-      "dist/**",
-      "node_modules/**",
-      "eslint.config.mjs",
-      "src/apigen/**",
-    ],
+    ignores: [".kanelrc.js", "tsconfig.json", "src/apigen/**"],
   },
 );

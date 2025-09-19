@@ -62,13 +62,12 @@ export async function setup() {
 
 export async function teardown() {
   console.log("Stopping test containers...");
-  
+
   if (postgresContainer) {
     await postgresContainer.stop();
   }
-  
+
   if (redisContainer) {
     await redisContainer.stop();
   }
 }
-
