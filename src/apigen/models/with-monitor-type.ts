@@ -13,17 +13,25 @@
  */
 
 
-// May contain unused imports in some cases
-// @ts-ignore
-import type { WithMonitorType } from './with-monitor-type';
-// May contain unused imports in some cases
-// @ts-ignore
-import type { WithName } from './with-name';
 
 /**
- * @type CreateMonitorPayload
+ * 
  * @export
+ * @interface WithMonitorType
  */
-export type CreateMonitorPayload = WithMonitorType & WithName;
+export interface WithMonitorType {
+    /**
+     * 
+     * @type {string}
+     * @memberof WithMonitorType
+     */
+    'monitorType': WithMonitorTypeMonitorTypeEnum;
+}
+
+export const WithMonitorTypeMonitorTypeEnum = {
+    Http: 'http'
+} as const;
+
+export type WithMonitorTypeMonitorTypeEnum = typeof WithMonitorTypeMonitorTypeEnum[keyof typeof WithMonitorTypeMonitorTypeEnum];
 
 

@@ -18,12 +18,15 @@
 import type { WithId } from './with-id';
 // May contain unused imports in some cases
 // @ts-ignore
+import type { WithMonitorType } from './with-monitor-type';
+// May contain unused imports in some cases
+// @ts-ignore
 import type { WithName } from './with-name';
 
 /**
  * @type Monitor
  * @export
  */
-export type Monitor = WithId & WithName;
+export type Monitor = WithId & WithMonitorType & WithName;
 
 

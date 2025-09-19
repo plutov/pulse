@@ -138,7 +138,6 @@ components:
         id:
           type: string
           format: uuid
-          example: "550e8400-e29b-41d4-a716-446655440000"
     WithName:
       required:
         - name
@@ -146,13 +145,24 @@ components:
       properties:
         name:
           type: string
+    WithMonitorType:
+      required:
+        - monitorType
+      type: object
+      properties:
+        monitorType:
+          type: string
+          enum:
+            - http
     Monitor:
       allOf:
         - $ref: "#/components/schemas/WithId"
         - $ref: "#/components/schemas/WithName"
+        - $ref: "#/components/schemas/WithMonitorType"
     CreateMonitorPayload:
       allOf:
         - $ref: "#/components/schemas/WithName"
+        - $ref: "#/components/schemas/WithMonitorType"
     WithUsername:
       required:
         - username

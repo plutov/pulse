@@ -15,6 +15,7 @@ docs/Monitor.md
 docs/MonitorApi.md
 docs/User.md
 docs/WithId.md
+docs/WithMonitorType.md
 docs/WithName.md
 docs/WithPassword.md
 docs/WithToken.md
@@ -30,6 +31,7 @@ models/login-response.ts
 models/monitor.ts
 models/user.ts
 models/with-id.ts
+models/with-monitor-type.ts
 models/with-name.ts
 models/with-password.ts
 models/with-token.ts

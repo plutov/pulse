@@ -5,6 +5,7 @@ export * from './login-response';
 export * from './monitor';
 export * from './user';
 export * from './with-id';
+export * from './with-monitor-type';
 export * from './with-name';
 export * from './with-password';
 export * from './with-token';

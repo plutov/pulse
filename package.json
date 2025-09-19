@@ -6,11 +6,12 @@
     "prettier": "prettier --write .",
     "test": "vitest run",
     "test:watch": "vitest",
-    "oapi": "openapi-generator-cli generate -i openapi.yaml -g typescript-axios -o ./src/apigen -c openapi.config.yaml",
     "db:migrate": "dotenv -e .env -- knex migrate:latest --knexfile knexfile.ts",
+    "db:down": "dotenv -e .env -- knex migrate:down --knexfile knexfile.ts",
     "db:seed": "dotenv -e .env -- knex seed:run --knexfile knexfile.ts",
     "db:setup": "npm run db:migrate && npm run db:seed",
-    "types:generate": "dotenv -e .env -- kanel --config .kanelrc.js"
+    "generate:oapi": "openapi-generator-cli generate -i openapi.yaml -g typescript-axios -o ./src/apigen -c openapi.config.yaml",
+    "generate:db": "dotenv -e .env -- kanel --config .kanelrc.js"
   },
   "devDependencies": {
     "@eslint/js": "^9.35.0",

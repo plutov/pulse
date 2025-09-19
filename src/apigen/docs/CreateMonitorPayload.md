@@ -6,6 +6,7 @@
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **name** | **string** |  | [default to undefined]
+**monitorType** | **string** |  | [default to undefined]
 
 ## Example
 
@@ -14,6 +15,7 @@ import { CreateMonitorPayload } from './api';
 
 const instance: CreateMonitorPayload = {
     name,
+    monitorType,
 };
 ```
 

@@ -1,22 +1,18 @@
-# Monitor
+# WithMonitorType
 
 
 ## Properties
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**id** | **string** |  | [default to undefined]
-**name** | **string** |  | [default to undefined]
 **monitorType** | **string** |  | [default to undefined]
 
 ## Example
 
 ```typescript
-import { Monitor } from './api';
+import { WithMonitorType } from './api';
 
-const instance: Monitor = {
-    id,
-    name,
+const instance: WithMonitorType = {
     monitorType,
 };
 ```

@@ -35,8 +35,8 @@ npm run dev
 ## Generate Code
 
 ```
-npm run types:generate
-npm run oapi
+npm run generate:db
+npm run generate:oapi
 ```
 
 ## Test
