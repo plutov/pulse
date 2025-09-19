@@ -1,9 +1,9 @@
 services:
   postgres:
     image: postgres:latest
-    container_name: tsar_postgres
+    container_name: pulse_postgres
     environment:
-      POSTGRES_DB: tsar
+      POSTGRES_DB: pulse
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
     ports:
@@ -16,10 +16,9 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
-
   redis:
     image: redis:latest
-    container_name: tsar_redis
+    container_name: pulse_redis
     ports:
       - "6379:6379"
     restart: unless-stopped

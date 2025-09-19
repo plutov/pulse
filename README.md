@@ -1,10 +1,16 @@
-### Tech stack
+## Pulse
+
+Pulse is a self-hosted, open-source monitoring dashboard that acts as your personal watchdog.
+
+## Tech Stack
 
 - hapi
 - kanel
 - knex
+- vitess
+- pino
 
-### Running locally
+## Running locally
 
 Prepare the config:
 
@@ -12,7 +18,7 @@ Prepare the config:
 cp .env.example .env
 ```
 
-Start Postgres locally with Docker:
+Start Postgres/Redis locally with Docker:
 
 ```
 docker-compose up -d
@@ -23,18 +29,17 @@ Run migrations and start the server:
 ```
 npm run db:migrate
 npm run db:seed
-npm run types:generate
 npm run dev
 ```
 
-### Generate
+## Generate Code
 
 ```
 npm run types:generate
 npm run oapi
 ```
 
-### Test
+## Test
 
 Using testcontainers:
 

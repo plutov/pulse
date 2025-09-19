@@ -8,8 +8,5 @@ module.exports = {
     ssl: process.env["DB_SSL"] === "true",
   },
   outputPath: "./src/types/database",
-  customTypeMap: {
-    "pg_catalog.tsvector": "string",
-    "pg_catalog.bpchar": "string",
-  },
+  customTypeMap: {},
 };
