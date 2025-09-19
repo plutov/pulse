@@ -23,7 +23,7 @@ describe("Auth", () => {
     it("should return 401 for empty JWT", async () => {
       const response = await server.inject({
         method: "GET",
-        url: "/repos",
+        url: "/monitors",
       });
 
       expect(response.statusCode).toBe(401);
@@ -32,7 +32,7 @@ describe("Auth", () => {
     it("should return 401 for invalid JWT", async () => {
       const response = await server.inject({
         method: "GET",
-        url: "/repos",
+        url: "/monitors",
         headers: {
           authorization: "Bearer invalid-token",
         },
@@ -44,7 +44,7 @@ describe("Auth", () => {
     it("should return 200 for valid JWT", async () => {
       const response = await server.inject({
         method: "GET",
-        url: "/repos",
+        url: "/monitors",
         headers: getAuthHeaders(),
       });
 

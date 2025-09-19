@@ -2,10 +2,10 @@ import { describe, it, expect, beforeEach, afterAll } from "vitest";
 import * as Hapi from "@hapi/hapi";
 import { createTestServer } from "../setup/server";
 import { cleanupTestDb, closeTestDb } from "../setup/database";
-import { ErrorResponse, Repo } from "../../src/apigen";
+import { ErrorResponse, Monitor } from "../../src/apigen";
 import { getAuthHeaders } from "../utils/auth";
 
-describe("Repos API", () => {
+describe("Monitors API", () => {
   let server: Hapi.Server;
 
   beforeEach(async () => {
@@ -20,11 +20,11 @@ describe("Repos API", () => {
     await closeTestDb();
   });
 
-  describe("GET /repos", () => {
-    it("should return empty array when no repos exist", async () => {
+  describe("GET /monitors", () => {
+    it("should return empty array when no monitors exist", async () => {
       const response = await server.inject({
         method: "GET",
-        url: "/repos",
+        url: "/monitors",
         headers: getAuthHeaders(),
       });
 
@@ -32,62 +32,62 @@ describe("Repos API", () => {
       expect(JSON.parse(response.payload)).toEqual([]);
     });
 
-    it("should return repos when they exist", async () => {
-      // Create a repo first
+    it("should return monitors when they exist", async () => {
+      // Create a monitor first
       await server.inject({
         method: "POST",
-        url: "/repos",
-        payload: { name: "test-repo" },
+        url: "/monitors",
+        payload: { name: "test-monitor" },
         headers: getAuthHeaders(),
       });
 
       const response = await server.inject({
         method: "GET",
-        url: "/repos",
+        url: "/monitors",
         headers: getAuthHeaders(),
       });
 
       expect(response.statusCode).toBe(200);
-      const repos: Repo[] = JSON.parse(response.payload) as Repo[];
-      expect(repos).toHaveLength(1);
-      expect(repos[0]).toMatchObject({
+      const monitors: Monitor[] = JSON.parse(response.payload) as Monitor[];
+      expect(monitors).toHaveLength(1);
+      expect(monitors[0]).toMatchObject({
         id: expect.any(String) as string,
-        name: "test-repo",
+        name: "test-monitor",
       });
     });
   });
 
-  describe("POST /repos", () => {
-    it("should create a new repo", async () => {
+  describe("POST /monitors", () => {
+    it("should create a new monitor", async () => {
       const response = await server.inject({
         method: "POST",
-        url: "/repos",
-        payload: { name: "new-repo" },
+        url: "/monitors",
+        payload: { name: "new-monitor" },
         headers: getAuthHeaders(),
       });
 
       expect(response.statusCode).toBe(201);
-      const repo: Repo = JSON.parse(response.payload) as Repo;
-      expect(repo).toMatchObject({
+      const monitor: Monitor = JSON.parse(response.payload) as Monitor;
+      expect(monitor).toMatchObject({
         id: expect.any(String) as string,
-        name: "new-repo",
+        name: "new-monitor",
       });
     });
 
-    it("should return 409 when repo name already exists", async () => {
-      // Create first repo
+    it("should return 409 when monitor name already exists", async () => {
+      // Create first monitor
       await server.inject({
         method: "POST",
-        url: "/repos",
-        payload: { name: "duplicate-repo" },
+        url: "/monitors",
+        payload: { name: "duplicate-monitor" },
         headers: getAuthHeaders(),
       });
 
-      // Try to create repo with same name
+      // Try to create monitor with same name
       const response = await server.inject({
         method: "POST",
-        url: "/repos",
-        payload: { name: "duplicate-repo" },
+        url: "/monitors",
+        payload: { name: "duplicate-monitor" },
         headers: getAuthHeaders(),
       });
 
@@ -99,32 +99,34 @@ describe("Repos API", () => {
     });
   });
 
-  describe("GET /repos/{id}", () => {
-    it("should return repo by id", async () => {
-      // Create a repo first
+  describe("GET /monitors/{id}", () => {
+    it("should return monitor by id", async () => {
+      // Create a monitor first
       const createResponse = await server.inject({
         method: "POST",
-        url: "/repos",
-        payload: { name: "test-repo" },
+        url: "/monitors",
+        payload: { name: "test-monitor" },
         headers: getAuthHeaders(),
       });
-      const createdRepo: Repo = JSON.parse(createResponse.payload) as Repo;
+      const createdMonitor: Monitor = JSON.parse(
+        createResponse.payload,
+      ) as Monitor;
 
       const response = await server.inject({
         method: "GET",
-        url: `/repos/${createdRepo.id}`,
+        url: `/monitors/${createdMonitor.id}`,
         headers: getAuthHeaders(),
       });
 
       expect(response.statusCode).toBe(200);
-      const repo: Repo = JSON.parse(response.payload) as Repo;
-      expect(repo).toEqual(createdRepo);
+      const monitor: Monitor = JSON.parse(response.payload) as Monitor;
+      expect(monitor).toEqual(createdMonitor);
     });
 
-    it("should return 404 when repo does not exist", async () => {
+    it("should return 404 when monitor does not exist", async () => {
       const response = await server.inject({
         method: "GET",
-        url: "/repos/550e8400-e29b-41d4-a716-446655440000",
+        url: "/monitors/550e8400-e29b-41d4-a716-446655440000",
         headers: getAuthHeaders(),
       });
 
@@ -138,7 +140,7 @@ describe("Repos API", () => {
     it("should return 400 for invalid id", async () => {
       const response = await server.inject({
         method: "GET",
-        url: "/repos/invalid",
+        url: "/monitors/invalid",
         headers: getAuthHeaders(),
       });
 
@@ -146,43 +148,45 @@ describe("Repos API", () => {
       const error: ErrorResponse = JSON.parse(
         response.payload,
       ) as ErrorResponse;
-      expect(error.message).toContain("Invalid repository ID format");
+      expect(error.message).toContain("Invalid monitorsitory ID format");
     });
   });
 
-  describe("DELETE /repos/{id}", () => {
-    it("should delete repo by id", async () => {
-      // Create a repo first
+  describe("DELETE /monitors/{id}", () => {
+    it("should delete monitor by id", async () => {
+      // Create a monitor first
       const createResponse = await server.inject({
         method: "POST",
-        url: "/repos",
-        payload: { name: "to-delete-repo" },
+        url: "/monitors",
+        payload: { name: "to-delete-monitor" },
         headers: getAuthHeaders(),
       });
-      const createdRepo: Repo = JSON.parse(createResponse.payload) as Repo;
+      const createdMonitor: Monitor = JSON.parse(
+        createResponse.payload,
+      ) as Monitor;
 
       const response = await server.inject({
         method: "DELETE",
-        url: `/repos/${createdRepo.id}`,
+        url: `/monitors/${createdMonitor.id}`,
         headers: getAuthHeaders(),
       });
 
       expect(response.statusCode).toBe(204);
       expect(response.payload).toBe("");
 
-      // Verify repo is deleted
+      // Verify monitor is deleted
       const getResponse = await server.inject({
         method: "GET",
-        url: `/repos/${createdRepo.id}`,
+        url: `/monitors/${createdMonitor.id}`,
         headers: getAuthHeaders(),
       });
       expect(getResponse.statusCode).toBe(404);
     });
 
-    it("should return 404 when trying to delete non-existent repo", async () => {
+    it("should return 404 when trying to delete non-existent monitor", async () => {
       const response = await server.inject({
         method: "DELETE",
-        url: "/repos/550e8400-e29b-41d4-a716-446655440000",
+        url: "/monitors/550e8400-e29b-41d4-a716-446655440000",
         headers: getAuthHeaders(),
       });
 
@@ -196,7 +200,7 @@ describe("Repos API", () => {
     it("should return 400 for invalid id", async () => {
       const response = await server.inject({
         method: "DELETE",
-        url: "/repos/invalid",
+        url: "/monitors/invalid",
         headers: getAuthHeaders(),
       });
 
@@ -204,7 +208,7 @@ describe("Repos API", () => {
       const error: ErrorResponse = JSON.parse(
         response.payload,
       ) as ErrorResponse;
-      expect(error.message).toContain("Invalid repository ID format");
+      expect(error.message).toContain("Invalid monitorsitory ID format");
     });
   });
 });

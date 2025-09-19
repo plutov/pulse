@@ -13,6 +13,18 @@
  */
 
 
-export * from "./api";
-export * from "./configuration";
-export * from "./models";
+
+/**
+ * 
+ * @export
+ * @interface WithId
+ */
+export interface WithId {
+    /**
+     * 
+     * @type {string}
+     * @memberof WithId
+     */
+    'id': string;
+}
+

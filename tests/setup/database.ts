@@ -10,7 +10,7 @@ export function getTestDb(): Knex {
 
 export async function cleanupTestDb(): Promise<void> {
   const db = getTestDb();
-  await db.raw("TRUNCATE TABLE repos RESTART IDENTITY CASCADE");
+  await db.raw("TRUNCATE TABLE monitors RESTART IDENTITY CASCADE");
 }
 
 export async function closeTestDb(): Promise<void> {

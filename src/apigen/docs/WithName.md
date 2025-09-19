@@ -1,20 +1,18 @@
-# Repo
+# WithName
 
 
 ## Properties
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**id** | **string** |  | [optional] [default to undefined]
-**name** | **string** |  | [optional] [default to undefined]
+**name** | **string** |  | [default to undefined]
 
 ## Example
 
 ```typescript
-import { Repo } from './api';
+import { WithName } from './api';
 
-const instance: Repo = {
-    id,
+const instance: WithName = {
     name,
 };
 ```

@@ -1,32 +1,32 @@
-# RepoApi
+# MonitorApi
 
 All URIs are relative to *http://localhost*
 
 |Method | HTTP request | Description|
 |------------- | ------------- | -------------|
-|[**createRepo**](#createrepo) | **POST** /repos | Create Repo|
-|[**listRepos**](#listrepos) | **GET** /repos | List Repos|
+|[**createMonitor**](#createmonitor) | **POST** /monitors | Create Monitor|
+|[**listMonitors**](#listmonitors) | **GET** /monitors | List Monitors|
 
-# **createRepo**
-> Repo createRepo(createRepoRequest)
+# **createMonitor**
+> Monitor createMonitor(createMonitorPayload)
 
 
 ### Example
 
 ```typescript
 import {
-    RepoApi,
+    MonitorApi,
     Configuration,
-    CreateRepoRequest
+    CreateMonitorPayload
 } from './api';
 
 const configuration = new Configuration();
-const apiInstance = new RepoApi(configuration);
+const apiInstance = new MonitorApi(configuration);
 
-let createRepoRequest: CreateRepoRequest; //
+let createMonitorPayload: CreateMonitorPayload; //
 
-const { status, data } = await apiInstance.createRepo(
-    createRepoRequest
+const { status, data } = await apiInstance.createMonitor(
+    createMonitorPayload
 );
 ```
 
@@ -34,12 +34,12 @@ const { status, data } = await apiInstance.createRepo(
 
 |Name | Type | Description  | Notes|
 |------------- | ------------- | ------------- | -------------|
-| **createRepoRequest** | **CreateRepoRequest**|  | |
+| **createMonitorPayload** | **CreateMonitorPayload**|  | |
 
 
 ### Return type
 
-**Repo**
+**Monitor**
 
 ### Authorization
 
@@ -59,22 +59,22 @@ No authorization required
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
-# **listRepos**
-> Array<Repo> listRepos()
+# **listMonitors**
+> Array<Monitor> listMonitors()
 
 
 ### Example
 
 ```typescript
 import {
-    RepoApi,
+    MonitorApi,
     Configuration
 } from './api';
 
 const configuration = new Configuration();
-const apiInstance = new RepoApi(configuration);
+const apiInstance = new MonitorApi(configuration);
 
-const { status, data } = await apiInstance.listRepos();
+const { status, data } = await apiInstance.listMonitors();
 ```
 
 ### Parameters
@@ -83,7 +83,7 @@ This endpoint does not have any parameters.
 
 ### Return type
 
-**Array<Repo>**
+**Array<Monitor>**
 
 ### Authorization
 

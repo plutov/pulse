@@ -1,4 +1,4 @@
-# CreateRepoRequest
+# CreateMonitorPayload
 
 
 ## Properties
@@ -10,9 +10,9 @@ Name | Type | Description | Notes
 ## Example
 
 ```typescript
-import { CreateRepoRequest } from './api';
+import { CreateMonitorPayload } from './api';
 
-const instance: CreateRepoRequest = {
+const instance: CreateMonitorPayload = {
     name,
 };
 ```

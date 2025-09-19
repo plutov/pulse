@@ -2,7 +2,7 @@ import * as Hapi from "@hapi/hapi";
 import { Engine as CatboxRedis } from "@hapi/catbox-redis";
 import HapiPino from "hapi-pino";
 import authPlugin from "../../src/plugins/auth";
-import reposPlugin from "../../src/plugins/repos";
+import monitorsPlugin from "../../src/plugins/monitors";
 
 export async function createTestServer(): Promise<Hapi.Server> {
   const server = Hapi.server({
@@ -32,7 +32,7 @@ export async function createTestServer(): Promise<Hapi.Server> {
     },
   });
 
-  await server.register([authPlugin, reposPlugin]);
+  await server.register([authPlugin, monitorsPlugin]);
 
   return server;
 }
