@@ -13,7 +13,21 @@
  */
 
 
+// May contain unused imports in some cases
+// @ts-ignore
+import type { User } from './user';
 
-export * from './clients/auth-api';
-export * from './clients/monitor-api';
+/**
+ * 
+ * @export
+ * @interface WithUser
+ */
+export interface WithUser {
+    /**
+     * 
+     * @type {User}
+     * @memberof WithUser
+     */
+    'user': User;
+}
 

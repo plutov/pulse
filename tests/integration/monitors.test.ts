@@ -1,22 +1,31 @@
-import { describe, it, expect, beforeEach, afterAll } from "vitest";
+import { describe, it, expect, beforeEach, afterAll, beforeAll } from "vitest";
 import * as Hapi from "@hapi/hapi";
 import { createTestServer } from "../setup/server";
-import { cleanupTestDb, closeTestDb } from "../setup/database";
+import { closeTestDb, getTestDb } from "../setup/database";
 import { ErrorResponse, Monitor } from "../../src/apigen";
-import { getAuthHeaders } from "../utils/auth";
+import { createTestUser, getAuthHeaders } from "../utils/auth";
+import { randomUUID } from "crypto";
 
 describe("Monitors API", () => {
   let server: Hapi.Server;
+  const userId = randomUUID();
+  const userName = `user-${userId}`;
+
+  beforeAll(async () => {
+    server = await createTestServer();
+    await createTestUser(userId, userName);
+  });
 
   beforeEach(async () => {
     server = await createTestServer();
-    await cleanupTestDb();
+    const db = getTestDb();
+    await db.raw("TRUNCATE TABLE monitors RESTART IDENTITY CASCADE");
   });
 
   afterAll(async () => {
-    if (server) {
-      await server.stop();
-    }
+    const db = getTestDb();
+    await db.table("users").where({ id: userId }).del();
+    await server.stop();
     await closeTestDb();
   });
 
@@ -25,7 +34,7 @@ describe("Monitors API", () => {
       const response = await server.inject({
         method: "GET",
         url: "/monitors",
-        headers: getAuthHeaders(),
+        headers: getAuthHeaders(userId),
       });
 
       expect(response.statusCode).toBe(200);
@@ -38,13 +47,13 @@ describe("Monitors API", () => {
         method: "POST",
         url: "/monitors",
         payload: { name: "test-monitor" },
-        headers: getAuthHeaders(),
+        headers: getAuthHeaders(userId),
       });
 
       const response = await server.inject({
         method: "GET",
         url: "/monitors",
-        headers: getAuthHeaders(),
+        headers: getAuthHeaders(userId),
       });
 
       expect(response.statusCode).toBe(200);
@@ -63,7 +72,7 @@ describe("Monitors API", () => {
         method: "POST",
         url: "/monitors",
         payload: { name: "new-monitor" },
-        headers: getAuthHeaders(),
+        headers: getAuthHeaders(userId),
       });
 
       expect(response.statusCode).toBe(201);
@@ -80,7 +89,7 @@ describe("Monitors API", () => {
         method: "POST",
         url: "/monitors",
         payload: { name: "duplicate-monitor" },
-        headers: getAuthHeaders(),
+        headers: getAuthHeaders(userId),
       });
 
       // Try to create monitor with same name
@@ -88,7 +97,7 @@ describe("Monitors API", () => {
         method: "POST",
         url: "/monitors",
         payload: { name: "duplicate-monitor" },
-        headers: getAuthHeaders(),
+        headers: getAuthHeaders(userId),
       });
 
       expect(response.statusCode).toBe(409);
@@ -106,7 +115,7 @@ describe("Monitors API", () => {
         method: "POST",
         url: "/monitors",
         payload: { name: "test-monitor" },
-        headers: getAuthHeaders(),
+        headers: getAuthHeaders(userId),
       });
       const createdMonitor: Monitor = JSON.parse(
         createResponse.payload,
@@ -115,7 +124,7 @@ describe("Monitors API", () => {
       const response = await server.inject({
         method: "GET",
         url: `/monitors/${createdMonitor.id}`,
-        headers: getAuthHeaders(),
+        headers: getAuthHeaders(userId),
       });
 
       expect(response.statusCode).toBe(200);
@@ -127,7 +136,7 @@ describe("Monitors API", () => {
       const response = await server.inject({
         method: "GET",
         url: "/monitors/550e8400-e29b-41d4-a716-446655440000",
-        headers: getAuthHeaders(),
+        headers: getAuthHeaders(userId),
       });
 
       expect(response.statusCode).toBe(404);
@@ -141,14 +150,14 @@ describe("Monitors API", () => {
       const response = await server.inject({
         method: "GET",
         url: "/monitors/invalid",
-        headers: getAuthHeaders(),
+        headers: getAuthHeaders(userId),
       });
 
       expect(response.statusCode).toBe(400);
       const error: ErrorResponse = JSON.parse(
         response.payload,
       ) as ErrorResponse;
-      expect(error.message).toContain("Invalid monitorsitory ID format");
+      expect(error.message).toContain("Invalid monitor ID format");
     });
   });
 
@@ -159,7 +168,7 @@ describe("Monitors API", () => {
         method: "POST",
         url: "/monitors",
         payload: { name: "to-delete-monitor" },
-        headers: getAuthHeaders(),
+        headers: getAuthHeaders(userId),
       });
       const createdMonitor: Monitor = JSON.parse(
         createResponse.payload,
@@ -168,7 +177,7 @@ describe("Monitors API", () => {
       const response = await server.inject({
         method: "DELETE",
         url: `/monitors/${createdMonitor.id}`,
-        headers: getAuthHeaders(),
+        headers: getAuthHeaders(userId),
       });
 
       expect(response.statusCode).toBe(204);
@@ -178,7 +187,7 @@ describe("Monitors API", () => {
       const getResponse = await server.inject({
         method: "GET",
         url: `/monitors/${createdMonitor.id}`,
-        headers: getAuthHeaders(),
+        headers: getAuthHeaders(userId),
       });
       expect(getResponse.statusCode).toBe(404);
     });
@@ -187,7 +196,7 @@ describe("Monitors API", () => {
       const response = await server.inject({
         method: "DELETE",
         url: "/monitors/550e8400-e29b-41d4-a716-446655440000",
-        headers: getAuthHeaders(),
+        headers: getAuthHeaders(userId),
       });
 
       expect(response.statusCode).toBe(404);
@@ -201,14 +210,14 @@ describe("Monitors API", () => {
       const response = await server.inject({
         method: "DELETE",
         url: "/monitors/invalid",
-        headers: getAuthHeaders(),
+        headers: getAuthHeaders(userId),
       });
 
       expect(response.statusCode).toBe(400);
       const error: ErrorResponse = JSON.parse(
         response.payload,
       ) as ErrorResponse;
-      expect(error.message).toContain("Invalid monitorsitory ID format");
+      expect(error.message).toContain("Invalid monitor ID format");
     });
   });
 });

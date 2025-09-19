@@ -5,6 +5,7 @@ import {
 import { RedisContainer, StartedRedisContainer } from "@testcontainers/redis";
 import { execSync } from "child_process";
 import * as path from "path";
+import { resetDb } from "../../src/database/connection";
 
 let postgresContainer: StartedPostgreSqlContainer;
 let redisContainer: StartedRedisContainer;
@@ -33,6 +34,9 @@ export async function setup() {
   process.env["REDIS_DB"] = "0";
   process.env["JWT_SECRET"] = "test-jwt-secret-for-testing-purposes-only";
 
+  // Reset the database connection to pick up new environment variables
+  resetDb();
+
   console.log("Running migrations...");
   try {
     execSync("npx knex migrate:latest --knexfile knexfile.ts", {
@@ -45,23 +49,14 @@ export async function setup() {
     throw error;
   }
 
-  console.log("Running seeds...");
-  try {
-    execSync("npx knex seed:run --knexfile knexfile.ts", {
-      stdio: "inherit",
-      cwd: path.resolve(__dirname, "../.."),
-      env: { ...process.env },
-    });
-  } catch (error) {
-    console.error("Seeding failed:", error);
-    throw error;
-  }
-
-  console.log("Test setup complete");
+  console.log("Migrations completed.");
 }
 
 export async function teardown() {
   console.log("Stopping test containers...");
+
+  // Reset the database connection before stopping containers
+  resetDb();
 
   if (postgresContainer) {
     await postgresContainer.stop();

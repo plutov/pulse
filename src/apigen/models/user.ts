@@ -13,7 +13,17 @@
  */
 
 
+// May contain unused imports in some cases
+// @ts-ignore
+import type { WithId } from './with-id';
+// May contain unused imports in some cases
+// @ts-ignore
+import type { WithUsername } from './with-username';
 
-export * from './clients/auth-api';
-export * from './clients/monitor-api';
+/**
+ * @type User
+ * @export
+ */
+export type User = WithId & WithUsername;
+
 

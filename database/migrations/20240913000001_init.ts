@@ -1,6 +1,16 @@
 import type { Knex } from "knex";
 
 export async function up(knex: Knex): Promise<void> {
+  await knex.schema.createTable("users", (table) => {
+    table.uuid("id").primary();
+    table.string("username", 255).notNullable().unique();
+    table.string("password_hash", 255).notNullable();
+    table.timestamp("created_at").defaultTo(knex.fn.now());
+    table.timestamp("updated_at").defaultTo(knex.fn.now());
+
+    table.index("username");
+  });
+
   return knex.schema.createTable("monitors", (table) => {
     table.uuid("id").primary();
     table.string("name", 255).notNullable().unique();
@@ -13,5 +23,6 @@ export async function up(knex: Knex): Promise<void> {
 }
 
 export async function down(knex: Knex): Promise<void> {
-  return knex.schema.dropTable("monitors");
+  await knex.schema.dropTable("monitors");
+  return knex.schema.dropTable("users");
 }

@@ -14,6 +14,17 @@
 
 
 
-export * from './clients/auth-api';
-export * from './clients/monitor-api';
+/**
+ * 
+ * @export
+ * @interface WithToken
+ */
+export interface WithToken {
+    /**
+     * 
+     * @type {string}
+     * @memberof WithToken
+     */
+    'token': string;
+}
 

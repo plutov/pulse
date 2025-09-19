@@ -13,7 +13,20 @@
  */
 
 
+// May contain unused imports in some cases
+// @ts-ignore
+import type { User } from './user';
+// May contain unused imports in some cases
+// @ts-ignore
+import type { WithToken } from './with-token';
+// May contain unused imports in some cases
+// @ts-ignore
+import type { WithUser } from './with-user';
 
-export * from './clients/auth-api';
-export * from './clients/monitor-api';
+/**
+ * @type LoginResponse
+ * @export
+ */
+export type LoginResponse = WithToken & WithUser;
+
 

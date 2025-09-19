@@ -1,5 +1,5 @@
 import { Knex } from "knex";
-import db from "../connection";
+import { getDb } from "../connection";
 import { randomUUID } from "crypto";
 
 export interface MonitorRow {
@@ -17,12 +17,12 @@ export type UpdateMonitorData = Partial<
   Pick<MonitorRow, "name" | "description">
 >;
 
-export class MonitorMonitorsitory {
+export class MonitorRepository {
   private db: Knex;
   private tableName = "monitors";
 
-  constructor(database: Knex = db) {
-    this.db = database;
+  constructor(database?: Knex) {
+    this.db = database || getDb();
   }
 
   async findAll(): Promise<MonitorRow[]> {
@@ -48,7 +48,7 @@ export class MonitorMonitorsitory {
       .returning<MonitorRow[]>("*");
 
     if (!monitor) {
-      throw new Error("Failed to create monitorsitory");
+      throw new Error("Failed to create monitor");
     }
 
     return monitor;
