@@ -7,11 +7,5 @@ export default defineConfig({
     hookTimeout: 60000,
     teardownTimeout: 60000,
     globalSetup: "./tests/setup/global.ts",
-    pool: "forks",
-    poolOptions: {
-      forks: {
-        singleFork: true,
-      },
-    },
   },
 });

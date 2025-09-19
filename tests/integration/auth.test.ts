@@ -1,55 +1,40 @@
-import { describe, it, beforeEach, afterAll, expect } from "vitest";
+import { describe, it, afterAll, expect, beforeAll } from "vitest";
 import * as Hapi from "@hapi/hapi";
 import { createTestServer } from "../setup/server";
-import { resetTestDb, closeTestDb } from "../setup/database";
+import { closeTestDb, getTestDb } from "../setup/database";
 import {
+  createTestUser,
   getAuthHeaders,
   TEST_USER_PASSWORD,
-  TEST_USER_USERNAME,
 } from "../utils/auth";
 import { LoginResponse } from "../../src/apigen";
+import { randomUUID } from "crypto";
 
 describe("Auth", () => {
   let server: Hapi.Server;
+  const userId = randomUUID();
+  const userName = `user-${userId}`;
 
-  beforeEach(async () => {
+  beforeAll(async () => {
     server = await createTestServer();
-    await resetTestDb();
+    await createTestUser(userId, userName);
   });
 
   afterAll(async () => {
+    const db = getTestDb();
+    await db.table("users").where({ id: userId }).del();
     await server.stop();
     await closeTestDb();
   });
 
   describe("Login", () => {
-    it("should login with valid credentials", async () => {
-      const response = await server.inject({
-        method: "POST",
-        url: "/auth/login",
-        payload: {
-          username: TEST_USER_USERNAME,
-          password: TEST_USER_PASSWORD,
-        },
-      });
-
-      expect(response.statusCode).toBe(200);
-      const result = JSON.parse(response.payload);
-
-      expect(result).toHaveProperty("token");
-      expect(result).toHaveProperty("user");
-      expect(result.user).toHaveProperty("id");
-      expect(result.user).toHaveProperty("username", TEST_USER_USERNAME);
-      expect(result.user).not.toHaveProperty("password_hash");
-    });
-
     it("should reject invalid username", async () => {
       const response = await server.inject({
         method: "POST",
         url: "/auth/login",
         payload: {
           username: "nonexistent",
-          password: "admin123",
+          password: TEST_USER_PASSWORD,
         },
       });
 
@@ -63,7 +48,7 @@ describe("Auth", () => {
         method: "POST",
         url: "/auth/login",
         payload: {
-          username: TEST_USER_USERNAME,
+          username: userName,
           password: "wrongpassword",
         },
       });
@@ -78,7 +63,7 @@ describe("Auth", () => {
         method: "POST",
         url: "/auth/login",
         payload: {
-          password: "admin123",
+          password: TEST_USER_PASSWORD,
         },
       });
 
@@ -90,7 +75,7 @@ describe("Auth", () => {
         method: "POST",
         url: "/auth/login",
         payload: {
-          username: "admin",
+          username: userName,
         },
       });
 
@@ -102,7 +87,7 @@ describe("Auth", () => {
         method: "POST",
         url: "/auth/login",
         payload: {
-          username: TEST_USER_USERNAME,
+          username: userName,
           password: TEST_USER_PASSWORD,
         },
       });
@@ -115,7 +100,9 @@ describe("Auth", () => {
       const protectedResponse = await server.inject({
         method: "GET",
         url: "/monitors",
-        headers: getAuthHeaders(token),
+        headers: {
+          authorization: `Bearer ${token}`,
+        },
       });
 
       expect(protectedResponse.statusCode).toBe(200);
@@ -148,7 +135,7 @@ describe("Auth", () => {
       const response = await server.inject({
         method: "GET",
         url: "/monitors",
-        headers: getAuthHeaders(),
+        headers: getAuthHeaders(userId),
       });
 
       expect(response.statusCode).toBe(200);

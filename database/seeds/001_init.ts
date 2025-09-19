@@ -1,7 +1,6 @@
 import type { Knex } from "knex";
 import { randomUUID } from "crypto";
 import * as bcrypt from "bcrypt";
-import { TEST_USER_ID } from "../../tests/utils/auth";
 
 export async function seed(knex: Knex): Promise<void> {
   await knex("monitors").del();
@@ -11,7 +10,7 @@ export async function seed(knex: Knex): Promise<void> {
 
   await knex("users").insert([
     {
-      id: TEST_USER_ID,
+      id: randomUUID(),
       username: "admin",
       password_hash: adminPasswordHash,
     },
