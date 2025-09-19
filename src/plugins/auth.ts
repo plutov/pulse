@@ -1,10 +1,11 @@
 import * as Hapi from "@hapi/hapi";
 import * as jwt from "hapi-auth-jwt2";
-import * as Joi from "joi";
 import { JwtPayload } from "jsonwebtoken";
 import { sign } from "jsonwebtoken";
 import { UserRepository } from "../database/repositories/user-repository";
 import * as Boom from "@hapi/boom";
+import { LoginResponse } from "../apigen";
+import { loginSchema } from "../schemas/auth";
 
 const validate = async function (decoded: JwtPayload) {
   const userRepository = new UserRepository();
@@ -30,7 +31,6 @@ const authPlugin: Hapi.Plugin<null> = {
       key: jwtSecret,
       validate,
     });
-
     server.auth.default("jwt");
 
     server.route({
@@ -39,10 +39,7 @@ const authPlugin: Hapi.Plugin<null> = {
       options: {
         auth: false,
         validate: {
-          payload: Joi.object({
-            username: Joi.string().required(),
-            password: Joi.string().required(),
-          }),
+          payload: loginSchema,
         },
       },
       handler: loginHandler,
@@ -61,7 +58,6 @@ async function loginHandler(request: Hapi.Request) {
 
   try {
     const user = await userRepository.verifyPassword(username, password);
-
     if (!user) {
       throw Boom.unauthorized("Invalid username or password");
     }
@@ -75,13 +71,11 @@ async function loginHandler(request: Hapi.Request) {
       { expiresIn: "24h" },
     );
 
-    return {
+    const res: LoginResponse = {
       token,
-      user: {
-        id: user.id,
-        username: user.username,
-      },
+      user: { id: user.id, username: user.username },
     };
+    return res;
   } catch (error) {
     if (Boom.isBoom(error)) {
       throw error;

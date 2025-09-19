@@ -2,7 +2,7 @@ import * as Hapi from "@hapi/hapi";
 import * as Boom from "@hapi/boom";
 import { Monitor, CreateMonitorPayload } from "../apigen";
 import { MonitorRepository } from "../database/repositories/monitor-repository";
-import Joi from "joi";
+import { createMonitorSchema, monitorIdParamSchema } from "../schemas/monitors";
 
 const monitorRepository = new MonitorRepository();
 
@@ -24,9 +24,7 @@ const monitorsPlugin: Hapi.Plugin<null> = {
         handler: createMonitorHandler,
         options: {
           validate: {
-            payload: Joi.object({
-              name: Joi.string().min(1).max(255).required(),
-            }),
+            payload: createMonitorSchema,
           },
         },
       },
@@ -39,9 +37,7 @@ const monitorsPlugin: Hapi.Plugin<null> = {
         handler: getMonitorByIdHandler,
         options: {
           validate: {
-            params: Joi.object({
-              id: Joi.string().guid({ version: "uuidv4" }).required(),
-            }),
+            params: monitorIdParamSchema,
           },
         },
       },
@@ -54,9 +50,7 @@ const monitorsPlugin: Hapi.Plugin<null> = {
         handler: deleteMonitorHandler,
         options: {
           validate: {
-            params: Joi.object({
-              id: Joi.string().guid({ version: "uuidv4" }).required(),
-            }),
+            params: monitorIdParamSchema,
           },
         },
       },
