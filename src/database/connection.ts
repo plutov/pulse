@@ -1,6 +1,20 @@
 import knex, { Knex } from "knex";
 import config from "../../knexfile";
 
-export const db: Knex = knex(config);
+let db: Knex | null = null;
 
-export default db;
+export function getDb(): Knex {
+  if (!db) {
+    db = knex(config);
+  }
+  return db;
+}
+
+export function resetDb(): void {
+  if (db) {
+    db.destroy();
+    db = null;
+  }
+}
+
+export default getDb();

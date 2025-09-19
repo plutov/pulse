@@ -1,7 +1,7 @@
 import { describe, it, expect, beforeEach, afterAll } from "vitest";
 import * as Hapi from "@hapi/hapi";
 import { createTestServer } from "../setup/server";
-import { cleanupTestDb, closeTestDb } from "../setup/database";
+import { resetTestDb, closeTestDb } from "../setup/database";
 import { ErrorResponse, Monitor } from "../../src/apigen";
 import { getAuthHeaders } from "../utils/auth";
 
@@ -10,13 +10,11 @@ describe("Monitors API", () => {
 
   beforeEach(async () => {
     server = await createTestServer();
-    await cleanupTestDb();
+    await resetTestDb();
   });
 
   afterAll(async () => {
-    if (server) {
-      await server.stop();
-    }
+    await server.stop();
     await closeTestDb();
   });
 

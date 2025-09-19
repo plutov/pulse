@@ -1,5 +1,6 @@
 import knex, { Knex } from "knex";
 import config from "../../knexfile";
+import { createTestUser } from "../utils/auth";
 
 let knexInstance: Knex;
 
@@ -8,13 +9,13 @@ export function getTestDb(): Knex {
   return knexInstance;
 }
 
-export async function cleanupTestDb(): Promise<void> {
+export async function resetTestDb(): Promise<void> {
   const db = getTestDb();
   await db.raw("TRUNCATE TABLE monitors RESTART IDENTITY CASCADE");
+  await db.raw("TRUNCATE TABLE users RESTART IDENTITY CASCADE");
+  await createTestUser();
 }
 
 export async function closeTestDb(): Promise<void> {
-  if (knexInstance) {
-    await knexInstance.destroy();
-  }
+  await knexInstance.destroy();
 }

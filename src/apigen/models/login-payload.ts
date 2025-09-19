@@ -13,7 +13,17 @@
  */
 
 
+// May contain unused imports in some cases
+// @ts-ignore
+import type { WithPassword } from './with-password';
+// May contain unused imports in some cases
+// @ts-ignore
+import type { WithUsername } from './with-username';
 
-export * from './clients/auth-api';
-export * from './clients/monitor-api';
+/**
+ * @type LoginPayload
+ * @export
+ */
+export type LoginPayload = WithPassword & WithUsername;
+
 

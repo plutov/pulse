@@ -1,8 +1,18 @@
 import * as Hapi from "@hapi/hapi";
 import * as jwt from "hapi-auth-jwt2";
+import * as Joi from "joi";
 import { JwtPayload } from "jsonwebtoken";
+import { sign } from "jsonwebtoken";
+import { UserRepository } from "../database/repositories/user-repository";
+import * as Boom from "@hapi/boom";
 
-const validate = function (decoded: JwtPayload) {
+const validate = async function (decoded: JwtPayload) {
+  const userRepository = new UserRepository();
+  const user = await userRepository.findById(decoded["id"]);
+  if (!user) {
+    return { isValid: false };
+  }
+
   return { isValid: true, credentials: { user: decoded } };
 };
 
@@ -21,8 +31,63 @@ const authPlugin: Hapi.Plugin<null> = {
       validate,
     });
 
-    // Set JWT as the default authentication strategy
     server.auth.default("jwt");
+
+    const userRepository = new UserRepository();
+
+    server.route({
+      method: "POST",
+      path: "/auth/login",
+      options: {
+        auth: false,
+        tags: ["api", "auth"],
+        description: "User login",
+        notes: "Authenticate user with username and password",
+        validate: {
+          payload: Joi.object({
+            username: Joi.string().required(),
+            password: Joi.string().required(),
+          }),
+        },
+      },
+      handler: async (request) => {
+        const { username, password } = request.payload as {
+          username: string;
+          password: string;
+        };
+
+        try {
+          const user = await userRepository.verifyPassword(username, password);
+
+          if (!user) {
+            throw Boom.unauthorized("Invalid username or password");
+          }
+
+          const token = sign(
+            {
+              id: user.id,
+              username: user.username,
+            },
+            jwtSecret,
+            { expiresIn: "24h" },
+          );
+
+          return {
+            token,
+            user: {
+              id: user.id,
+              username: user.username,
+            },
+          };
+        } catch (error) {
+          if (Boom.isBoom(error)) {
+            throw error;
+          }
+
+          throw Boom.internal("Authentication failed");
+        }
+      },
+    });
   },
 };
 

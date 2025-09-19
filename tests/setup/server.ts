@@ -28,7 +28,6 @@ export async function createTestServer(): Promise<Hapi.Server> {
     options: {
       logRequestComplete: false,
       logRequestStart: false,
-      level: "silent", // Suppress logs during testing
     },
   });
 

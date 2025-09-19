@@ -1,5 +1,5 @@
 import { Knex } from "knex";
-import db from "../connection";
+import { getDb } from "../connection";
 import { randomUUID } from "crypto";
 
 export interface MonitorRow {
@@ -21,8 +21,8 @@ export class MonitorMonitorsitory {
   private db: Knex;
   private tableName = "monitors";
 
-  constructor(database: Knex = db) {
-    this.db = database;
+  constructor(database?: Knex) {
+    this.db = database || getDb();
   }
 
   async findAll(): Promise<MonitorRow[]> {
