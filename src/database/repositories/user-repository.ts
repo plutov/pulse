@@ -1,11 +1,14 @@
 import { Knex } from "knex";
 import { getDb } from "../connection";
 import * as bcrypt from "bcrypt";
-import Users from "../types/public/Users";
+import Users, { UsersInitializer } from "../types/public/Users";
 
-export type CreateUserData = Users & {
-  password: string;
-};
+export type CreateUserData = Omit<
+  UsersInitializer & {
+    password: string;
+  },
+  "password_hash"
+>;
 
 export class UserRepository {
   private db: Knex;

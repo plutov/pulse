@@ -3,6 +3,10 @@ import * as Boom from "@hapi/boom";
 import { Monitor, CreateMonitorPayload } from "../apigen";
 import { MonitorRepository } from "../database/repositories/monitor-repository";
 import { createMonitorSchema, monitorIdParamSchema } from "../schemas/monitors";
+import { randomUUID } from "crypto";
+import { MonitorsId } from "../database/types/public/Monitors";
+import { UsersId } from "../database/types/public/Users";
+import MonitorType from "../database/types/public/MonitorType";
 
 const monitorRepository = new MonitorRepository();
 
@@ -62,10 +66,11 @@ export default monitorsPlugin;
 
 async function getAllMonitorsHandler() {
   try {
-    const monitorRows = await monitorRepository.findAll();
-    const monitors: Monitor[] = monitorRows.map((row) => ({
+    const rows = await monitorRepository.findAll();
+    const monitors: Monitor[] = rows.map((row) => ({
       id: row.id,
       name: row.name,
+      monitorType: row.monitor_type,
     }));
     return monitors;
   } catch (error) {
@@ -79,17 +84,25 @@ async function createMonitorHandler(
   h: Hapi.ResponseToolkit,
 ) {
   try {
-    const { name } = request.payload as CreateMonitorPayload;
+    const { name, monitorType } = request.payload as CreateMonitorPayload;
+    const id = randomUUID();
+    const author = request.auth.credentials["id"];
 
     const existingMonitor = await monitorRepository.findByName(name);
     if (existingMonitor) {
       throw Boom.conflict(`Monitor with name '${name}' already exists`);
     }
 
-    const monitorRow = await monitorRepository.create({ name });
+    const row = await monitorRepository.create({
+      id: id as MonitorsId,
+      name,
+      author: author as UsersId,
+      monitor_type: monitorType as MonitorType,
+    });
     const newMonitor: Monitor = {
-      id: monitorRow.id,
-      name: monitorRow.name,
+      id: row.id,
+      name: row.name,
+      monitorType: row.monitor_type,
     };
 
     return h.response(newMonitor).code(201);
@@ -106,14 +119,15 @@ async function getMonitorByIdHandler(request: Hapi.Request) {
   try {
     const id = request.params["id"] as string;
 
-    const monitorRow = await monitorRepository.findById(id);
-    if (!monitorRow) {
+    const row = await monitorRepository.findById(id);
+    if (!row) {
       throw Boom.notFound(`Monitor with ID ${id} not found`);
     }
 
     const monitor: Monitor = {
-      id: monitorRow.id,
-      name: monitorRow.name,
+      id: row.id,
+      name: row.name,
+      monitorType: row.monitor_type,
     };
 
     return monitor;

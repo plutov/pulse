@@ -48,7 +48,7 @@ describe("Monitors API", () => {
       await server.inject({
         method: "POST",
         url: "/monitors",
-        payload: { name: "test-monitor" },
+        payload: { name: "test-monitor", monitorType: "http" },
         headers: getAuthHeaders(userId),
       });
 
@@ -73,7 +73,7 @@ describe("Monitors API", () => {
       const response = await server.inject({
         method: "POST",
         url: "/monitors",
-        payload: { name: "new-monitor" },
+        payload: { name: "new-monitor", monitorType: "http" },
         headers: getAuthHeaders(userId),
       });
 
@@ -90,7 +90,7 @@ describe("Monitors API", () => {
       await server.inject({
         method: "POST",
         url: "/monitors",
-        payload: { name: "duplicate-monitor" },
+        payload: { name: "duplicate-monitor", monitorType: "http" },
         headers: getAuthHeaders(userId),
       });
 
@@ -98,7 +98,7 @@ describe("Monitors API", () => {
       const response = await server.inject({
         method: "POST",
         url: "/monitors",
-        payload: { name: "duplicate-monitor" },
+        payload: { name: "duplicate-monitor", monitorType: "http" },
         headers: getAuthHeaders(userId),
       });
 
@@ -116,7 +116,7 @@ describe("Monitors API", () => {
       const createResponse = await server.inject({
         method: "POST",
         url: "/monitors",
-        payload: { name: "test-monitor" },
+        payload: { name: "test-monitor", monitorType: "http" },
         headers: getAuthHeaders(userId),
       });
       const createdMonitor: Monitor = JSON.parse(
@@ -169,7 +169,7 @@ describe("Monitors API", () => {
       const createResponse = await server.inject({
         method: "POST",
         url: "/monitors",
-        payload: { name: "to-delete-monitor" },
+        payload: { name: "to-delete-monitor", monitorType: "http" },
         headers: getAuthHeaders(userId),
       });
       const createdMonitor: Monitor = JSON.parse(

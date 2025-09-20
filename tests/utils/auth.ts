@@ -1,6 +1,7 @@
 import * as jwt from "jsonwebtoken";
 import { getTestDb } from "../setup/database";
 import { UserRepository } from "../../src/database/repositories/user-repository";
+import { UsersId } from "../../src/database/types/public/Users";
 
 export const TEST_USER_PASSWORD = "admin123";
 
@@ -24,7 +25,7 @@ export async function createTestUser(
   const db = getTestDb();
   const userRepository = new UserRepository(db);
 
-  await userRepository.create({ id, username, password });
+  await userRepository.create({ id: id as UsersId, username, password });
 
   return { id, username };
 }

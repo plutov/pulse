@@ -13,7 +13,7 @@ export default interface Monitors {
 
   author: UsersId;
 
-  type: MonitorType;
+  monitor_type: MonitorType;
 
   name: string;
 
@@ -30,7 +30,7 @@ export interface MonitorsInitializer {
 
   author: UsersId;
 
-  type: MonitorType;
+  monitor_type: MonitorType;
 
   name: string;
 
@@ -49,7 +49,7 @@ export interface MonitorsMutator {
 
   author?: UsersId;
 
-  type?: MonitorType;
+  monitor_type?: MonitorType;
 
   name?: string;
 

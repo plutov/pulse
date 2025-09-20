@@ -14,7 +14,7 @@ const validate = async function (decoded: JwtPayload) {
     return { isValid: false };
   }
 
-  return { isValid: true, credentials: { user: decoded } };
+  return { isValid: true };
 };
 
 const authPlugin: Hapi.Plugin<null> = {

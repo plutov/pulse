@@ -1,7 +1,7 @@
 import { Knex } from "knex";
 import { getDb } from "../connection";
 import { randomUUID } from "crypto";
-import Monitors from "../types/public/Monitors";
+import Monitors, { MonitorsInitializer } from "../types/public/Monitors";
 
 export class MonitorRepository {
   private db: Knex;
@@ -23,14 +23,9 @@ export class MonitorRepository {
     return this.db(this.tableName).where({ name }).first<Monitors>();
   }
 
-  async create(data: Monitors): Promise<Monitors> {
-    const monitorWithId = {
-      ...data,
-      id: randomUUID(),
-    };
-
+  async create(data: MonitorsInitializer): Promise<Monitors> {
     const [monitor] = await this.db(this.tableName)
-      .insert(monitorWithId)
+      .insert(data)
       .returning<Monitors[]>("*");
 
     if (!monitor) {
