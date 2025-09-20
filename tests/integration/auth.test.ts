@@ -9,6 +9,7 @@ import {
 } from "../utils/auth";
 import { LoginResponse } from "../../src/apigen";
 import { randomUUID } from "crypto";
+import { UserRepository } from "../../src/database/repositories/user-repository";
 
 describe("Auth", () => {
   let server: Hapi.Server;
@@ -22,7 +23,8 @@ describe("Auth", () => {
 
   afterAll(async () => {
     const db = getTestDb();
-    await db.table("users").where({ id: userId }).del();
+    const userRepository = new UserRepository(db);
+    await userRepository.delete(userId);
     await server.stop();
     await closeTestDb();
   });

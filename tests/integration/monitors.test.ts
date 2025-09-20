@@ -5,6 +5,7 @@ import { closeTestDb, getTestDb } from "../setup/database";
 import { ErrorResponse, Monitor } from "../../src/apigen";
 import { createTestUser, getAuthHeaders } from "../utils/auth";
 import { randomUUID } from "crypto";
+import { UserRepository } from "../../src/database/repositories/user-repository";
 
 describe("Monitors API", () => {
   let server: Hapi.Server;
@@ -24,7 +25,8 @@ describe("Monitors API", () => {
 
   afterAll(async () => {
     const db = getTestDb();
-    await db.table("users").where({ id: userId }).del();
+    const userRepository = new UserRepository(db);
+    await userRepository.delete(userId);
     await server.stop();
     await closeTestDb();
   });

@@ -1,6 +1,6 @@
 import * as jwt from "jsonwebtoken";
-import * as bcrypt from "bcrypt";
 import { getTestDb } from "../setup/database";
+import { UserRepository } from "../../src/database/repositories/user-repository";
 
 export const TEST_USER_PASSWORD = "admin123";
 
@@ -22,16 +22,9 @@ export async function createTestUser(
   password = TEST_USER_PASSWORD,
 ): Promise<{ id: string; username: string }> {
   const db = getTestDb();
-  const passwordHash = await bcrypt.hash(password, 12);
+  const userRepository = new UserRepository(db);
 
-  await db("users")
-    .insert({
-      id,
-      username,
-      password_hash: passwordHash,
-    })
-    .onConflict("id")
-    .ignore();
+  await userRepository.create({ id, username, password });
 
   return { id, username };
 }
