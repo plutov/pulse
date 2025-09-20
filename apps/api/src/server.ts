@@ -3,7 +3,6 @@ import { Engine as CatboxRedis } from "@hapi/catbox-redis";
 import HapiPino from "hapi-pino";
 import authPlugin from "./plugins/auth";
 import monitorsPlugin from "./plugins/monitors";
-import { ErrorResponse } from "@pulse/shared";
 import { Boom } from "@hapi/boom";
 
 interface ServerOptions {
@@ -16,6 +15,13 @@ export async function createServer(
   const server = Hapi.server({
     port: options.port ?? 3000,
     host: "localhost",
+    routes: {
+      cors: {
+        origin: ['http://localhost:5173', 'http://127.0.0.1:5173'], // Allow Vite dev server
+        headers: ['Accept', 'Authorization', 'Content-Type', 'If-None-Match'],
+        credentials: true
+      }
+    },
     cache: [
       {
         name: "redis_cache",
@@ -36,7 +42,7 @@ export async function createServer(
     const response = request.response;
     if (response instanceof Boom && response.isBoom) {
       const error = response as Boom;
-      const errorResponse: ErrorResponse = {
+      const errorResponse = {
         message: error.message,
       };
       return h.response(errorResponse).code(error.output.statusCode);
