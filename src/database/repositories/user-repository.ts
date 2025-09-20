@@ -10,6 +10,8 @@ export type CreateUserData = Omit<
   "password_hash"
 >;
 
+export type UserNoSensitive = Omit<Users, "password_hash">;
+
 export class UserRepository {
   private db: Knex;
   private tableName = "users";
@@ -19,11 +21,12 @@ export class UserRepository {
     this.db = database || getDb();
   }
 
-  async findById(id: string): Promise<Users | undefined> {
+  async findById(id: string): Promise<UserNoSensitive | undefined> {
     const user = await this.db(this.tableName)
       .select("id", "username", "created_at", "updated_at")
       .where({ id })
       .first<Users>();
+
     return user;
   }
 
@@ -31,13 +34,13 @@ export class UserRepository {
     return this.db(this.tableName).where({ username }).first<Users>();
   }
 
-  async create(data: CreateUserData): Promise<Users> {
-    const passwordHash = await bcrypt.hash(data.password, this.saltRounds);
+  async create(data: CreateUserData): Promise<UserNoSensitive> {
+    const password_hash = await bcrypt.hash(data.password, this.saltRounds);
 
-    const userWithId = {
+    const userWithId: UsersInitializer = {
       id: data.id,
       username: data.username,
-      password_hash: passwordHash,
+      password_hash: password_hash,
     };
 
     const [user] = await this.db(this.tableName)
@@ -48,7 +51,8 @@ export class UserRepository {
       throw new Error("Failed to create user");
     }
 
-    return user as Users;
+    user.password_hash = "";
+    return user;
   }
 
   async delete(id: string): Promise<boolean> {
@@ -59,7 +63,7 @@ export class UserRepository {
   async verifyPassword(
     username: string,
     password: string,
-  ): Promise<Users | null> {
+  ): Promise<UserNoSensitive | null> {
     const user = await this.findByUsername(username);
     if (!user) {
       return null;
@@ -70,12 +74,7 @@ export class UserRepository {
       return null;
     }
 
-    return {
-      id: user.id,
-      username: user.username,
-      password_hash: "",
-      created_at: user.created_at,
-      updated_at: user.updated_at,
-    };
+    user.password_hash = "";
+    return user as UserNoSensitive;
   }
 }

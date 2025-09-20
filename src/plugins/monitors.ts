@@ -4,8 +4,6 @@ import { Monitor, CreateMonitorPayload } from "../apigen";
 import { MonitorRepository } from "../database/repositories/monitor-repository";
 import { createMonitorSchema, monitorIdParamSchema } from "../schemas/monitors";
 import { randomUUID } from "crypto";
-import { MonitorsId } from "../database/types/public/Monitors";
-import { UsersId } from "../database/types/public/Users";
 import MonitorType from "../database/types/public/MonitorType";
 
 const monitorRepository = new MonitorRepository();
@@ -86,7 +84,10 @@ async function createMonitorHandler(
   try {
     const { name, monitorType } = request.payload as CreateMonitorPayload;
     const id = randomUUID();
-    const author = request.auth.credentials["id"];
+    const author = request.auth.credentials["id"] as string;
+    if (!author) {
+      throw Boom.unauthorized("User not authenticated");
+    }
 
     const existingMonitor = await monitorRepository.findByName(name);
     if (existingMonitor) {
@@ -94,9 +95,9 @@ async function createMonitorHandler(
     }
 
     const row = await monitorRepository.create({
-      id: id as MonitorsId,
+      id,
       name,
-      author: author as UsersId,
+      author,
       monitor_type: monitorType as MonitorType,
     });
     const newMonitor: Monitor = {

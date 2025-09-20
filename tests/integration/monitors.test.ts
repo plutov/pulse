@@ -59,11 +59,12 @@ describe("Monitors API", () => {
       });
 
       expect(response.statusCode).toBe(200);
-      const monitors: Monitor[] = JSON.parse(response.payload) as Monitor[];
+      const monitors: Monitor[] = JSON.parse(response.payload);
       expect(monitors).toHaveLength(1);
       expect(monitors[0]).toMatchObject({
         id: expect.any(String) as string,
         name: "test-monitor",
+        monitorType: "http",
       });
     });
   });
@@ -78,10 +79,11 @@ describe("Monitors API", () => {
       });
 
       expect(response.statusCode).toBe(201);
-      const monitor: Monitor = JSON.parse(response.payload) as Monitor;
+      const monitor: Monitor = JSON.parse(response.payload);
       expect(monitor).toMatchObject({
         id: expect.any(String) as string,
         name: "new-monitor",
+        monitorType: "http",
       });
     });
 
@@ -103,9 +105,7 @@ describe("Monitors API", () => {
       });
 
       expect(response.statusCode).toBe(409);
-      const error: ErrorResponse = JSON.parse(
-        response.payload,
-      ) as ErrorResponse;
+      const error: ErrorResponse = JSON.parse(response.payload);
       expect(error.message).toContain("already exists");
     });
   });
@@ -119,9 +119,7 @@ describe("Monitors API", () => {
         payload: { name: "test-monitor", monitorType: "http" },
         headers: getAuthHeaders(userId),
       });
-      const createdMonitor: Monitor = JSON.parse(
-        createResponse.payload,
-      ) as Monitor;
+      const createdMonitor: Monitor = JSON.parse(createResponse.payload);
 
       const response = await server.inject({
         method: "GET",
@@ -130,7 +128,7 @@ describe("Monitors API", () => {
       });
 
       expect(response.statusCode).toBe(200);
-      const monitor: Monitor = JSON.parse(response.payload) as Monitor;
+      const monitor: Monitor = JSON.parse(response.payload);
       expect(monitor).toEqual(createdMonitor);
     });
 
@@ -142,9 +140,7 @@ describe("Monitors API", () => {
       });
 
       expect(response.statusCode).toBe(404);
-      const error: ErrorResponse = JSON.parse(
-        response.payload,
-      ) as ErrorResponse;
+      const error: ErrorResponse = JSON.parse(response.payload);
       expect(error.message).toContain("not found");
     });
 
@@ -156,9 +152,7 @@ describe("Monitors API", () => {
       });
 
       expect(response.statusCode).toBe(400);
-      const error: ErrorResponse = JSON.parse(
-        response.payload,
-      ) as ErrorResponse;
+      const error: ErrorResponse = JSON.parse(response.payload);
       expect(error.message).toContain("Invalid request params input");
     });
   });
@@ -172,9 +166,7 @@ describe("Monitors API", () => {
         payload: { name: "to-delete-monitor", monitorType: "http" },
         headers: getAuthHeaders(userId),
       });
-      const createdMonitor: Monitor = JSON.parse(
-        createResponse.payload,
-      ) as Monitor;
+      const createdMonitor: Monitor = JSON.parse(createResponse.payload);
 
       const response = await server.inject({
         method: "DELETE",
@@ -202,9 +194,7 @@ describe("Monitors API", () => {
       });
 
       expect(response.statusCode).toBe(404);
-      const error: ErrorResponse = JSON.parse(
-        response.payload,
-      ) as ErrorResponse;
+      const error: ErrorResponse = JSON.parse(response.payload);
       expect(error.message).toContain("not found");
     });
 
@@ -216,9 +206,7 @@ describe("Monitors API", () => {
       });
 
       expect(response.statusCode).toBe(400);
-      const error: ErrorResponse = JSON.parse(
-        response.payload,
-      ) as ErrorResponse;
+      const error: ErrorResponse = JSON.parse(response.payload);
       expect(error.message).toContain("Invalid request params input");
     });
   });

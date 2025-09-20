@@ -1,6 +1,5 @@
 import { Knex } from "knex";
 import { getDb } from "../connection";
-import { randomUUID } from "crypto";
 import Monitors, { MonitorsInitializer } from "../types/public/Monitors";
 
 export class MonitorRepository {

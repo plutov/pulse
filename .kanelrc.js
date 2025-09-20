@@ -1,3 +1,7 @@
+const { recase } = require("@kristiandupont/recase");
+
+const toPascalCase = recase("snake", "pascal");
+
 module.exports = {
   connection: {
     host: process.env["DB_HOST"],
@@ -8,5 +12,18 @@ module.exports = {
     ssl: process.env["DB_SSL"] === "true",
   },
   outputPath: "./src/database/types",
-  customTypeMap: {},
+  customTypeMap: {
+    "pg_catalog.uuid": "string",
+  },
+  // Use strings for UUIDs
+  generateIdentifierType: (c, d) => {
+    const name = toPascalCase(c.name);
+    return {
+      declarationType: "typeDeclaration",
+      name,
+      exportAs: "named",
+      typeDefinition: [`string`],
+      comment: [`Identifier type for ${d.name}`],
+    };
+  },
 };
