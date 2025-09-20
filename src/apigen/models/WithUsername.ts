@@ -16,59 +16,50 @@ import { mapValues } from '../runtime';
 /**
  * 
  * @export
- * @interface User
+ * @interface WithUsername
  */
-export interface User {
+export interface WithUsername {
     /**
      * 
      * @type {string}
-     * @memberof User
-     */
-    id: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof User
+     * @memberof WithUsername
      */
     username: string;
 }
 
 /**
- * Check if a given object implements the User interface.
+ * Check if a given object implements the WithUsername interface.
  */
-export function instanceOfUser(value: object): value is User {
-    if (!('id' in value) || value['id'] === undefined) return false;
+export function instanceOfWithUsername(value: object): value is WithUsername {
     if (!('username' in value) || value['username'] === undefined) return false;
     return true;
 }
 
-export function UserFromJSON(json: any): User {
-    return UserFromJSONTyped(json, false);
+export function WithUsernameFromJSON(json: any): WithUsername {
+    return WithUsernameFromJSONTyped(json, false);
 }
 
-export function UserFromJSONTyped(json: any, ignoreDiscriminator: boolean): User {
+export function WithUsernameFromJSONTyped(json: any, ignoreDiscriminator: boolean): WithUsername {
     if (json == null) {
         return json;
     }
     return {
         
-        'id': json['id'],
         'username': json['username'],
     };
 }
 
-export function UserToJSON(json: any): User {
-    return UserToJSONTyped(json, false);
+export function WithUsernameToJSON(json: any): WithUsername {
+    return WithUsernameToJSONTyped(json, false);
 }
 
-export function UserToJSONTyped(value?: User | null, ignoreDiscriminator: boolean = false): any {
+export function WithUsernameToJSONTyped(value?: WithUsername | null, ignoreDiscriminator: boolean = false): any {
     if (value == null) {
         return value;
     }
 
     return {
         
-        'id': value['id'],
         'username': value['username'],
     };
 }
