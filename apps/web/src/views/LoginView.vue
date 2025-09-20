@@ -1,48 +1,54 @@
 <template>
-  <div class="min-h-screen bg-white flex items-center justify-center">
-    <div class="w-full max-w-md">
-      <form @submit.prevent="handleLogin" class="border border-black p-8">
-        <h2 class="text-2xl font-bold text-black mb-6 text-center">Login</h2>
-        
-        <div class="mb-4">
-          <label for="username" class="block text-black text-sm font-bold mb-2">
-            Username
-          </label>
-          <input
-            id="username"
-            v-model="username"
-            type="text"
-            required
-            class="w-full px-3 py-2 border border-black text-black bg-white focus:outline-none focus:border-black"
-          />
-        </div>
-        
-        <div class="mb-6">
-          <label for="password" class="block text-black text-sm font-bold mb-2">
-            Password
-          </label>
-          <input
-            id="password"
-            v-model="password"
-            type="password"
-            required
-            class="w-full px-3 py-2 border border-black text-black bg-white focus:outline-none focus:border-black"
-          />
-        </div>
-        
-        <button
-          type="submit"
-          :disabled="loading"
-          class="w-full bg-black text-white py-2 px-4 border border-black hover:bg-white hover:text-black transition-colors disabled:opacity-50"
-        >
-          {{ loading ? 'Logging in...' : 'Login' }}
-        </button>
-        
-        <div v-if="error" class="mt-4 text-black text-sm text-center">
-          {{ error }}
-        </div>
-      </form>
-    </div>
+  <div class="min-h-screen bg-background flex items-center justify-center p-4">
+    <Card class="w-full max-w-md">
+      <CardHeader class="space-y-1">
+        <CardTitle class="text-2xl font-bold text-center">Welcome to Pulse</CardTitle>
+        <CardDescription class="text-center">
+          Enter your credentials to access your account
+        </CardDescription>
+      </CardHeader>
+      <CardContent>
+        <form @submit.prevent="handleLogin" class="space-y-4">
+          <div class="space-y-2">
+            <Label for="username">Username</Label>
+            <Input
+              id="username"
+              v-model="username"
+              type="text"
+              placeholder="Enter your username"
+              required
+              :disabled="loading"
+            />
+          </div>
+          
+          <div class="space-y-2">
+            <Label for="password">Password</Label>
+            <Input
+              id="password"
+              v-model="password"
+              type="password"
+              placeholder="Enter your password"
+              required
+              :disabled="loading"
+            />
+          </div>
+          
+          <Alert v-if="error" variant="destructive" class="mt-4">
+            <AlertDescription>
+              {{ error }}
+            </AlertDescription>
+          </Alert>
+          
+          <Button 
+            type="submit" 
+            :disabled="loading" 
+            class="w-full"
+          >
+            {{ loading ? 'Signing in...' : 'Sign in' }}
+          </Button>
+        </form>
+      </CardContent>
+    </Card>
   </div>
 </template>
 
@@ -50,6 +56,11 @@
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { authApi } from '@/services/api'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
+import { Label } from '@/components/ui/label'
+import { Alert, AlertDescription } from '@/components/ui/alert'
 
 const router = useRouter()
 
@@ -73,7 +84,7 @@ const handleLogin = async () => {
     localStorage.setItem('token', response.token)
     router.push('/dashboard')
   } catch (err) {
-    error.value = 'Invalid username or password'
+    error.value = 'Invalid username or password. Please try again.'
   } finally {
     loading.value = false
   }
