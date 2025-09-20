@@ -1,0 +1,20 @@
+{
+  "name": "@pulse/shared",
+  "version": "1.0.0",
+  "private": true,
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch",
+    "clean": "rm -rf dist",
+    "generate": "rm -rf ./src/apigen && openapi-generator-cli generate -i ./openapi.yaml -g typescript-fetch -o ./src/apigen -c openapi.config.yaml"
+  },
+  "devDependencies": {
+    "@openapitools/openapi-generator-cli": "^2.23.1",
+    "typescript": "^5.9.2"
+  },
+  "files": [
+    "dist"
+  ]
+}

@@ -1,7 +1,0 @@
-# Based on https://openapi-generator.tech/docs/generators/typescript-axios#config-options
-additionalProperties:
-  enumPropertyNaming: camelCase
-  modelPropertyNaming: camelCase
-  supportsES6: true
-  withSeparateModelsAndApi: true
-  withInterfaces: true
