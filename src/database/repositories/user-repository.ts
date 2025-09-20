@@ -45,13 +45,14 @@ export class UserRepository {
 
     const [user] = await this.db(this.tableName)
       .insert(userWithId)
-      .returning<Users[]>(["id", "username", "created_at", "updated_at"]);
+      .returning<
+        UserNoSensitive[]
+      >(["id", "username", "created_at", "updated_at"]);
 
     if (!user) {
       throw new Error("Failed to create user");
     }
 
-    user.password_hash = "";
     return user;
   }
 
@@ -74,7 +75,6 @@ export class UserRepository {
       return null;
     }
 
-    user.password_hash = "";
     return user as UserNoSensitive;
   }
 }
