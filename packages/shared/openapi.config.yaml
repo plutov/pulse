@@ -1,0 +1,6 @@
+withInterfaces: true
+withSeparateModelsAndApi: true
+apiPackage: api
+modelPackage: models
+npmName: "@pulse/shared"
+npmVersion: "1.0.0"
