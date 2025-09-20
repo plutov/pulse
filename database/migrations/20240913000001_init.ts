@@ -14,7 +14,7 @@ export async function up(knex: Knex): Promise<void> {
   return knex.schema.createTable("monitors", (table) => {
     table.uuid("id").primary();
     table
-      .uuid("user_id")
+      .uuid("author")
       .notNullable()
       .references("id")
       .inTable("users")
@@ -36,5 +36,6 @@ export async function up(knex: Knex): Promise<void> {
 
 export async function down(knex: Knex): Promise<void> {
   await knex.schema.dropTable("monitors");
+  await knex.raw("DROP TYPE IF EXISTS monitor_type CASCADE");
   return knex.schema.dropTable("users");
 }

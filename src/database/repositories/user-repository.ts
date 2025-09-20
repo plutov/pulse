@@ -7,8 +7,6 @@ export type CreateUserData = Users & {
   password: string;
 };
 
-export type UserNoSensitive = Omit<Users, "password_hash">;
-
 export class UserRepository {
   private db: Knex;
   private tableName = "users";
@@ -18,11 +16,11 @@ export class UserRepository {
     this.db = database || getDb();
   }
 
-  async findById(id: string): Promise<UserNoSensitive | undefined> {
+  async findById(id: string): Promise<Users | undefined> {
     const user = await this.db(this.tableName)
       .select("id", "username", "created_at", "updated_at")
       .where({ id })
-      .first<UserNoSensitive>();
+      .first<Users>();
     return user;
   }
 
@@ -30,7 +28,7 @@ export class UserRepository {
     return this.db(this.tableName).where({ username }).first<Users>();
   }
 
-  async create(data: CreateUserData): Promise<UserNoSensitive> {
+  async create(data: CreateUserData): Promise<Users> {
     const passwordHash = await bcrypt.hash(data.password, this.saltRounds);
 
     const userWithId = {
@@ -41,15 +39,13 @@ export class UserRepository {
 
     const [user] = await this.db(this.tableName)
       .insert(userWithId)
-      .returning<
-        UserNoSensitive[]
-      >(["id", "username", "created_at", "updated_at"]);
+      .returning<Users[]>(["id", "username", "created_at", "updated_at"]);
 
     if (!user) {
       throw new Error("Failed to create user");
     }
 
-    return user as UserNoSensitive;
+    return user as Users;
   }
 
   async delete(id: string): Promise<boolean> {
@@ -60,7 +56,7 @@ export class UserRepository {
   async verifyPassword(
     username: string,
     password: string,
-  ): Promise<UserNoSensitive | null> {
+  ): Promise<Users | null> {
     const user = await this.findByUsername(username);
     if (!user) {
       return null;
@@ -74,6 +70,7 @@ export class UserRepository {
     return {
       id: user.id,
       username: user.username,
+      password_hash: "",
       created_at: user.created_at,
       updated_at: user.updated_at,
     };

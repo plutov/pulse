@@ -11,7 +11,7 @@ export type MonitorsId = string & { __brand: 'public.monitors' };
 export default interface Monitors {
   id: MonitorsId;
 
-  user_id: UsersId;
+  author: UsersId;
 
   type: MonitorType;
 
@@ -28,7 +28,7 @@ export default interface Monitors {
 export interface MonitorsInitializer {
   id: MonitorsId;
 
-  user_id: UsersId;
+  author: UsersId;
 
   type: MonitorType;
 
@@ -47,7 +47,7 @@ export interface MonitorsInitializer {
 export interface MonitorsMutator {
   id?: MonitorsId;
 
-  user_id?: UsersId;
+  author?: UsersId;
 
   type?: MonitorType;
 
