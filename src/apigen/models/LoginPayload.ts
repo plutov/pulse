@@ -16,60 +16,60 @@ import { mapValues } from '../runtime';
 /**
  * 
  * @export
- * @interface User
+ * @interface LoginPayload
  */
-export interface User {
+export interface LoginPayload {
     /**
      * 
      * @type {string}
-     * @memberof User
-     */
-    id: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof User
+     * @memberof LoginPayload
      */
     username: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof LoginPayload
+     */
+    password: string;
 }
 
 /**
- * Check if a given object implements the User interface.
+ * Check if a given object implements the LoginPayload interface.
  */
-export function instanceOfUser(value: object): value is User {
-    if (!('id' in value) || value['id'] === undefined) return false;
+export function instanceOfLoginPayload(value: object): value is LoginPayload {
     if (!('username' in value) || value['username'] === undefined) return false;
+    if (!('password' in value) || value['password'] === undefined) return false;
     return true;
 }
 
-export function UserFromJSON(json: any): User {
-    return UserFromJSONTyped(json, false);
+export function LoginPayloadFromJSON(json: any): LoginPayload {
+    return LoginPayloadFromJSONTyped(json, false);
 }
 
-export function UserFromJSONTyped(json: any, ignoreDiscriminator: boolean): User {
+export function LoginPayloadFromJSONTyped(json: any, ignoreDiscriminator: boolean): LoginPayload {
     if (json == null) {
         return json;
     }
     return {
         
-        'id': json['id'],
         'username': json['username'],
+        'password': json['password'],
     };
 }
 
-export function UserToJSON(json: any): User {
-    return UserToJSONTyped(json, false);
+export function LoginPayloadToJSON(json: any): LoginPayload {
+    return LoginPayloadToJSONTyped(json, false);
 }
 
-export function UserToJSONTyped(value?: User | null, ignoreDiscriminator: boolean = false): any {
+export function LoginPayloadToJSONTyped(value?: LoginPayload | null, ignoreDiscriminator: boolean = false): any {
     if (value == null) {
         return value;
     }
 
     return {
         
-        'id': value['id'],
         'username': value['username'],
+        'password': value['password'],
     };
 }
 

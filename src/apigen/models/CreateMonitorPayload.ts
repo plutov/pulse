@@ -16,77 +16,68 @@ import { mapValues } from '../runtime';
 /**
  * 
  * @export
- * @interface Monitor
+ * @interface CreateMonitorPayload
  */
-export interface Monitor {
+export interface CreateMonitorPayload {
     /**
      * 
      * @type {string}
-     * @memberof Monitor
-     */
-    id: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof Monitor
+     * @memberof CreateMonitorPayload
      */
     name: string;
     /**
      * 
      * @type {string}
-     * @memberof Monitor
+     * @memberof CreateMonitorPayload
      */
-    monitorType: MonitorMonitorTypeEnum;
+    monitorType: CreateMonitorPayloadMonitorTypeEnum;
 }
 
 
 /**
  * @export
  */
-export const MonitorMonitorTypeEnum = {
+export const CreateMonitorPayloadMonitorTypeEnum = {
     http: 'http'
 } as const;
-export type MonitorMonitorTypeEnum = typeof MonitorMonitorTypeEnum[keyof typeof MonitorMonitorTypeEnum];
+export type CreateMonitorPayloadMonitorTypeEnum = typeof CreateMonitorPayloadMonitorTypeEnum[keyof typeof CreateMonitorPayloadMonitorTypeEnum];
 
 
 /**
- * Check if a given object implements the Monitor interface.
+ * Check if a given object implements the CreateMonitorPayload interface.
  */
-export function instanceOfMonitor(value: object): value is Monitor {
-    if (!('id' in value) || value['id'] === undefined) return false;
+export function instanceOfCreateMonitorPayload(value: object): value is CreateMonitorPayload {
     if (!('name' in value) || value['name'] === undefined) return false;
     if (!('monitorType' in value) || value['monitorType'] === undefined) return false;
     return true;
 }
 
-export function MonitorFromJSON(json: any): Monitor {
-    return MonitorFromJSONTyped(json, false);
+export function CreateMonitorPayloadFromJSON(json: any): CreateMonitorPayload {
+    return CreateMonitorPayloadFromJSONTyped(json, false);
 }
 
-export function MonitorFromJSONTyped(json: any, ignoreDiscriminator: boolean): Monitor {
+export function CreateMonitorPayloadFromJSONTyped(json: any, ignoreDiscriminator: boolean): CreateMonitorPayload {
     if (json == null) {
         return json;
     }
     return {
         
-        'id': json['id'],
         'name': json['name'],
         'monitorType': json['monitorType'],
     };
 }
 
-export function MonitorToJSON(json: any): Monitor {
-    return MonitorToJSONTyped(json, false);
+export function CreateMonitorPayloadToJSON(json: any): CreateMonitorPayload {
+    return CreateMonitorPayloadToJSONTyped(json, false);
 }
 
-export function MonitorToJSONTyped(value?: Monitor | null, ignoreDiscriminator: boolean = false): any {
+export function CreateMonitorPayloadToJSONTyped(value?: CreateMonitorPayload | null, ignoreDiscriminator: boolean = false): any {
     if (value == null) {
         return value;
     }
 
     return {
         
-        'id': value['id'],
         'name': value['name'],
         'monitorType': value['monitorType'],
     };

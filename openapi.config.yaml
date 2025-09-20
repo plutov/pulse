@@ -1,8 +1,7 @@
 # Based on https://openapi-generator.tech/docs/generators/typescript-axios#config-options
 additionalProperties:
-  apiPackage: clients
-  modelPackage: models
-  ensureUniqueParams: true
-  withInterfaces: true
-  withNodeImports: true
+  enumPropertyNaming: camelCase
+  modelPropertyNaming: camelCase
+  supportsES6: true
   withSeparateModelsAndApi: true
+  withInterfaces: true

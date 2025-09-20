@@ -10,7 +10,7 @@
     "db:down": "dotenv -e .env -- knex migrate:down --knexfile knexfile.ts",
     "db:seed": "dotenv -e .env -- knex seed:run --knexfile knexfile.ts",
     "db:setup": "npm run db:migrate && npm run db:seed",
-    "generate:oapi": "openapi-generator-cli generate -i openapi.yaml -g typescript-axios -o ./src/apigen -c openapi.config.yaml",
+    "generate:oapi": "rm -rf ./src/apigen && openapi-generator-cli generate -i openapi.yaml -g typescript-fetch -o ./src/apigen -c openapi.config.yaml",
     "generate:db": "dotenv -e .env -- kanel --config .kanelrc.js"
   },
   "devDependencies": {
