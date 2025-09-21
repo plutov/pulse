@@ -17,7 +17,7 @@ export async function createServer(
     host: "localhost",
     routes: {
       cors: {
-        origin: ["http://localhost:5173", "http://127.0.0.1:5173"], // Allow Vite dev server
+        origin: ["http://localhost:9000", "http://127.0.0.1:9000"],
         headers: ["Accept", "Authorization", "Content-Type", "If-None-Match"],
         credentials: true,
       },

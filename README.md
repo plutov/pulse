@@ -54,7 +54,7 @@ npm run dev
 
 This will start:
 - API server at http://localhost:3000
-- Vue.js frontend at http://localhost:5173
+- Vue.js frontend at http://localhost:9000
 
 ### Linting
 
