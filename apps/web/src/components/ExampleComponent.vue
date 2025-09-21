@@ -13,6 +13,10 @@
 </template>
 
 <script setup lang="ts">
+import { useQuasar } from "quasar";
+
+const $q = useQuasar();
+
 import { computed, ref } from "vue";
 import type { Todo, Meta } from "./models";
 
@@ -29,6 +33,7 @@ const props = withDefaults(defineProps<Props>(), {
 
 const clickCount = ref(0);
 function increment() {
+  $q.notify('Running on Quasar v' + $q.version)
   clickCount.value += 1;
   return clickCount.value;
 }
