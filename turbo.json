@@ -1,26 +1,19 @@
 {
   "$schema": "https://turbo.build/schema.json",
-  "globalDependencies": ["**/.env.*local"],
   "tasks": {
     "build": {
       "dependsOn": ["^build"],
-      "outputs": ["dist/**", ".next/**", "!.next/cache/**"]
+      "outputs": ["dist/**"]
     },
     "dev": {
       "cache": false,
       "persistent": true
     },
-    "generate": {
-      "dependsOn": [],
-      "outputs": ["src/apigen/**"]
-    },
+    "generate": {},
     "lint": {
       "dependsOn": ["^build"]
     },
     "test": {
-      "dependsOn": ["^build"]
-    },
-    "type-check": {
       "dependsOn": ["^build"]
     },
     "clean": {
@@ -31,4 +24,3 @@
     }
   }
 }
-
