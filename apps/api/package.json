@@ -3,18 +3,16 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "build": "tsc",
+    "build": "echo 'No build step required'",
     "dev": "dotenv -e .env -- ts-node src/index.ts",
-    "lint": "eslint . --ext .ts",
-    "lint:fix": "eslint . --ext .ts --fix",
+    "lint": "eslint -c ./eslint.config.mjs .",
     "format": "prettier --write .",
     "test": "vitest run",
-    "test:watch": "vitest",
     "db:migrate": "dotenv -e .env -- knex migrate:latest --knexfile knexfile.ts",
     "db:down": "dotenv -e .env -- knex migrate:down --knexfile knexfile.ts",
     "db:seed": "dotenv -e .env -- knex seed:run --knexfile knexfile.ts",
     "db:setup": "npm run db:migrate && npm run db:seed",
-    "generate:db": "dotenv -e .env -- kanel --config .kanelrc.js"
+    "generate": "dotenv -e .env -- kanel --config .kanelrc.js"
   },
   "devDependencies": {
     "@eslint/js": "^9.35.0",
