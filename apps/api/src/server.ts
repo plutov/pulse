@@ -17,10 +17,10 @@ export async function createServer(
     host: "localhost",
     routes: {
       cors: {
-        origin: ['http://localhost:5173', 'http://127.0.0.1:5173'], // Allow Vite dev server
-        headers: ['Accept', 'Authorization', 'Content-Type', 'If-None-Match'],
-        credentials: true
-      }
+        origin: ["http://localhost:5173", "http://127.0.0.1:5173"], // Allow Vite dev server
+        headers: ["Accept", "Authorization", "Content-Type", "If-None-Match"],
+        credentials: true,
+      },
     },
     cache: [
       {

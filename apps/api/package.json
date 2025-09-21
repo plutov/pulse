@@ -7,7 +7,7 @@
     "dev": "dotenv -e .env -- ts-node src/index.ts",
     "lint": "eslint . --ext .ts",
     "lint:fix": "eslint . --ext .ts --fix",
-    "prettier": "prettier --write .",
+    "format": "prettier --write .",
     "test": "vitest run",
     "test:watch": "vitest",
     "db:migrate": "dotenv -e .env -- knex migrate:latest --knexfile knexfile.ts",

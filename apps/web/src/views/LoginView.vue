@@ -20,7 +20,7 @@
               :disabled="loading"
             />
           </div>
-          
+
           <div class="space-y-2">
             <Label for="password">Password</Label>
             <Input
@@ -32,19 +32,15 @@
               :disabled="loading"
             />
           </div>
-          
+
           <Alert v-if="error" variant="destructive" class="mt-4">
             <AlertDescription>
               {{ error }}
             </AlertDescription>
           </Alert>
-          
-          <Button 
-            type="submit" 
-            :disabled="loading" 
-            class="w-full"
-          >
-            {{ loading ? 'Signing in...' : 'Sign in' }}
+
+          <Button type="submit" :disabled="loading" class="w-full">
+            {{ loading ? "Signing in..." : "Sign in" }}
           </Button>
         </form>
       </CardContent>
@@ -53,40 +49,46 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
-import { useRouter } from 'vue-router'
-import { authApi } from '@/services/api'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
-import { Label } from '@/components/ui/label'
-import { Alert, AlertDescription } from '@/components/ui/alert'
+import { ref } from "vue";
+import { useRouter } from "vue-router";
+import { authApi } from "@/services/api";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Alert, AlertDescription } from "@/components/ui/alert";
 
-const router = useRouter()
+const router = useRouter();
 
-const username = ref('')
-const password = ref('')
-const loading = ref(false)
-const error = ref('')
+const username = ref("");
+const password = ref("");
+const loading = ref(false);
+const error = ref("");
 
 const handleLogin = async () => {
-  loading.value = true
-  error.value = ''
-  
+  loading.value = true;
+  error.value = "";
+
   try {
     const response = await authApi.login({
       loginPayload: {
         username: username.value,
-        password: password.value
-      }
-    })
-    
-    localStorage.setItem('token', response.token)
-    router.push('/dashboard')
+        password: password.value,
+      },
+    });
+
+    localStorage.setItem("token", response.token);
+    router.push("/dashboard");
   } catch (err) {
-    error.value = 'Invalid username or password. Please try again.'
+    error.value = "Invalid username or password. Please try again.";
   } finally {
-    loading.value = false
+    loading.value = false;
   }
-}
+};
 </script>

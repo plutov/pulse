@@ -14,10 +14,6 @@
       "dependsOn": [],
       "outputs": ["src/apigen/**"]
     },
-    "generate:oapi": {
-      "dependsOn": [],
-      "outputs": ["src/apigen/**"]
-    },
     "lint": {
       "dependsOn": ["^build"]
     },
@@ -29,6 +25,10 @@
     },
     "clean": {
       "cache": false
+    },
+    "format": {
+      "cache": false
     }
   }
 }
+

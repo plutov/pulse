@@ -11,7 +11,9 @@
     "build": "turbo run build",
     "lint": "turbo run lint",
     "test": "turbo run test",
-    "clean": "turbo run clean"
+    "clean": "turbo run clean",
+    "format": "turbo run format",
+    "generate": "turbo run generate"
   },
   "devDependencies": {
     "turbo": "latest"
@@ -21,4 +23,3 @@
   },
   "packageManager": "npm@11.5.1"
 }
-
