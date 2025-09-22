@@ -5,14 +5,9 @@ import { sign } from "jsonwebtoken";
 import { UserRepository } from "../database/repositories/user-repository";
 import * as Boom from "@hapi/boom";
 import { LoginResponse } from "@pulse/shared";
-import Joi from "joi";
+import { loginSchema } from "../api/schemas";
 
 const userRepository = new UserRepository();
-
-export const loginSchema = Joi.object({
-  username: Joi.string().required(),
-  password: Joi.string().required(),
-});
 
 const validate = async function (decoded: JwtPayload) {
   const user = await userRepository.findById(decoded["id"]);

@@ -4,16 +4,7 @@ import { Monitor, CreateMonitorPayload } from "@pulse/shared";
 import { MonitorRepository } from "../database/repositories/monitor-repository";
 import { randomUUID } from "crypto";
 import MonitorType from "../database/types/public/MonitorType";
-import Joi from "joi";
-
-export const createMonitorSchema = Joi.object({
-  name: Joi.string().min(1).max(255).required(),
-  monitorType: Joi.string().valid("http").required(),
-});
-
-export const monitorIdParamSchema = Joi.object({
-  id: Joi.string().guid({ version: "uuidv4" }).required(),
-});
+import { createMonitorSchema, monitorIdParamSchema } from "../api/schemas";
 
 const monitorRepository = new MonitorRepository();
 
