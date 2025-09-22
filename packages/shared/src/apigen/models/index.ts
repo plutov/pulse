@@ -4,6 +4,7 @@ export * from './login-payload';
 export * from './login-response';
 export * from './monitor';
 export * from './user';
+export * from './validation-message';
 export * from './with-id';
 export * from './with-monitor-type';
 export * from './with-name';

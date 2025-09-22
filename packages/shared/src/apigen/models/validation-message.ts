@@ -13,33 +13,24 @@
  */
 
 
-// May contain unused imports in some cases
-// @ts-ignore
-import type { ValidationMessage } from './validation-message';
 
 /**
  * 
  * @export
- * @interface ErrorResponse
+ * @interface ValidationMessage
  */
-export interface ErrorResponse {
-    /**
-     * 
-     * @type {number}
-     * @memberof ErrorResponse
-     */
-    'statusCode': number;
+export interface ValidationMessage {
     /**
      * 
      * @type {string}
-     * @memberof ErrorResponse
+     * @memberof ValidationMessage
      */
     'message': string;
     /**
      * 
-     * @type {Array<ValidationMessage>}
-     * @memberof ErrorResponse
+     * @type {string}
+     * @memberof ValidationMessage
      */
-    'validationMessages': Array<ValidationMessage>;
+    'type': string;
 }
 

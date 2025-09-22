@@ -16,6 +16,7 @@ docs/LoginResponse.md
 docs/Monitor.md
 docs/MonitorApi.md
 docs/User.md
+docs/ValidationMessage.md
 docs/WithId.md
 docs/WithMonitorType.md
 docs/WithName.md
@@ -32,6 +33,7 @@ models/login-payload.ts
 models/login-response.ts
 models/monitor.ts
 models/user.ts
+models/validation-message.ts
 models/with-id.ts
 models/with-monitor-type.ts
 models/with-name.ts

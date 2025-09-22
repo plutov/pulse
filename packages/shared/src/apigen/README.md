@@ -66,6 +66,7 @@ Class | Method | HTTP request | Description
  - [LoginResponse](docs/LoginResponse.md)
  - [Monitor](docs/Monitor.md)
  - [User](docs/User.md)
+ - [ValidationMessage](docs/ValidationMessage.md)
  - [WithId](docs/WithId.md)
  - [WithMonitorType](docs/WithMonitorType.md)
  - [WithName](docs/WithName.md)

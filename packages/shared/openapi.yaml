@@ -130,6 +130,31 @@ components:
       scheme: bearer
       bearerFormat: JWT
   schemas:
+    ValidationMessage:
+      required:
+        - message
+        - type
+      type: object
+      properties:
+        message:
+          type: string
+        type:
+          type: string
+    ErrorResponse:
+      required:
+        - statusCode
+        - message
+        - validationMessages
+      type: object
+      properties:
+        statusCode:
+          type: integer
+        message:
+          type: string
+        validationMessages:
+          type: array
+          items:
+            $ref: "#/components/schemas/ValidationMessage"
     WithId:
       required:
         - id
@@ -203,13 +228,6 @@ components:
       properties:
         user:
           $ref: "#/components/schemas/User"
-    ErrorResponse:
-      required:
-        - message
-      type: object
-      properties:
-        message:
-          type: string
   requestBodies:
     LoginBody:
       required: true

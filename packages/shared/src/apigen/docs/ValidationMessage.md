@@ -1,23 +1,21 @@
-# ErrorResponse
+# ValidationMessage
 
 
 ## Properties
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**statusCode** | **number** |  | [default to undefined]
 **message** | **string** |  | [default to undefined]
-**validationMessages** | [**Array&lt;ValidationMessage&gt;**](ValidationMessage.md) |  | [default to undefined]
+**type** | **string** |  | [default to undefined]
 
 ## Example
 
 ```typescript
-import { ErrorResponse } from '@pulse/shared';
+import { ValidationMessage } from '@pulse/shared';
 
-const instance: ErrorResponse = {
-    statusCode,
+const instance: ValidationMessage = {
     message,
-    validationMessages,
+    type,
 };
 ```
 
