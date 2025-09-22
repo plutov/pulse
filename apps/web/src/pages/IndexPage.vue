@@ -12,17 +12,15 @@
         <h5>API Demo</h5>
         <div class="q-gutter-sm">
           <q-btn
-            color="primary"
-            label="Login Demo"
-            @click="loginDemo"
-            :loading="loginLoading"
-          />
-          <q-btn
             color="secondary"
             label="List Monitors"
             @click="listMonitors"
             :loading="monitorsLoading"
-            :disable="!isLoggedIn"
+          />
+          <q-btn
+            color="negative"
+            label="Logout"
+            @click="logout"
           />
         </div>
 
@@ -50,10 +48,15 @@
 
 <script setup lang="ts">
 import { ref } from "vue";
+import { useRouter } from "vue-router";
 import type { Todo, Meta } from "components/models";
 import ExampleComponent from "components/ExampleComponent.vue";
-import { authApi, monitorApi } from "boot/axios";
-import type { LoginPayload, Monitor } from "@pulse/shared";
+import { getMonitorApi } from "boot/axios";
+import type { Monitor } from "@pulse/shared";
+import { useAuthStore } from "../stores/auth";
+
+const router = useRouter();
+const authStore = useAuthStore();
 
 const todos = ref<Todo[]>([
   {
@@ -83,35 +86,12 @@ const meta = ref<Meta>({
 });
 
 const monitors = ref<Monitor[]>([]);
-const loginLoading = ref(false);
 const monitorsLoading = ref(false);
-const isLoggedIn = ref(false);
-const authToken = ref<string>("");
-
-const loginDemo = async () => {
-  loginLoading.value = true;
-  try {
-    const loginPayload: LoginPayload = {
-      username: "admin",
-      password: "admin123",
-    };
-
-    const response = await authApi.login(loginPayload);
-
-    if (response.data) {
-      authToken.value = response.data.token;
-      isLoggedIn.value = true;
-    }
-  } catch (error: unknown) {
-    console.log("api error:", error);
-  } finally {
-    loginLoading.value = false;
-  }
-};
 
 const listMonitors = async () => {
   monitorsLoading.value = true;
   try {
+    const monitorApi = getMonitorApi();
     const response = await monitorApi.listMonitors();
     if (response.data) {
       monitors.value = response.data;
@@ -121,5 +101,10 @@ const listMonitors = async () => {
   } finally {
     monitorsLoading.value = false;
   }
+};
+
+const logout = () => {
+  authStore.logout();
+  void router.push("/login");
 };
 </script>

@@ -3,9 +3,9 @@
 
 import { defineConfig } from "#q-app/wrappers";
 
-export default defineConfig((/* ctx */) => {
+export default defineConfig(() => {
   return {
-    boot: ["axios"],
+    boot: ["pinia", "axios"],
     css: ["app.scss"],
     extras: ["material-icons", "roboto-font"],
     build: {
