@@ -5,8 +5,8 @@ export async function up(knex: Knex): Promise<void> {
     table.uuid("id").primary();
     table.string("username", 255).notNullable().unique();
     table.string("password_hash", 4098).notNullable();
-    table.timestamp("created_at").defaultTo(knex.fn.now());
-    table.timestamp("updated_at").defaultTo(knex.fn.now());
+    table.timestamp("created_at").defaultTo(knex.fn.now()).notNullable();
+    table.timestamp("updated_at").defaultTo(knex.fn.now()).notNullable();
 
     table.index("username");
   });
@@ -27,8 +27,8 @@ export async function up(knex: Knex): Promise<void> {
       .notNullable();
     table.string("name", 255).notNullable().unique();
     table.text("description");
-    table.timestamp("created_at").defaultTo(knex.fn.now());
-    table.timestamp("updated_at").defaultTo(knex.fn.now());
+    table.timestamp("created_at").defaultTo(knex.fn.now()).notNullable();
+    table.timestamp("updated_at").defaultTo(knex.fn.now()).notNullable();
 
     table.index("name");
   });
@@ -37,5 +37,5 @@ export async function up(knex: Knex): Promise<void> {
 export async function down(knex: Knex): Promise<void> {
   await knex.schema.dropTable("monitors");
   await knex.raw("DROP TYPE IF EXISTS monitor_type CASCADE");
-  return knex.schema.dropTable("users");
+  await knex.schema.dropTable("users");
 }

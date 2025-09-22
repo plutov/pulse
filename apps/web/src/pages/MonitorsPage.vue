@@ -20,11 +20,13 @@
       bordered
       hide-bottom
     >
-      <template v-slot:no-data="{ message }">
-        <div class="full-width row flex-center q-gutter-sm">
-          <q-icon size="2em" name="sentiment_dissatisfied" />
-          <span>{{ message }}</span>
-        </div>
+      <template v-slot:body-cell-status="props">
+        <q-td :props="props">
+          <q-badge
+            :color="props.row.status === 'active' ? 'positive' : 'orange'"
+            :label="props.row.status"
+          />
+        </q-td>
       </template>
     </q-table>
   </q-page>
@@ -33,8 +35,8 @@
 <script setup lang="ts">
 import { ref, onMounted } from "vue";
 import { getMonitorApi } from "boot/axios";
-import type { ErrorResponse, Monitor } from "@pulse/shared";
-import { useQuasar } from "quasar";
+import { MonitorType, type ErrorResponse, type Monitor } from "@pulse/shared";
+import { useQuasar, date } from "quasar";
 import axios from "axios";
 
 const $q = useQuasar();
@@ -43,13 +45,6 @@ const monitors = ref<Monitor[]>([]);
 const monitorsLoading = ref(false);
 
 const columns = [
-  {
-    name: "id",
-    required: true,
-    label: "ID",
-    align: "left",
-    field: (row: Monitor) => row.id,
-  },
   {
     name: "name",
     required: true,
@@ -63,6 +58,45 @@ const columns = [
     label: "Type",
     align: "left",
     field: (row: Monitor) => row.monitorType,
+  },
+  {
+    name: "status",
+    required: true,
+    label: "Status",
+    align: "left",
+    field: (row: Monitor) => row.status,
+  },
+  {
+    name: "schedule",
+    required: true,
+    label: "Schedule",
+    align: "left",
+    field: (row: Monitor) => row.schedule,
+  },
+  {
+    name: "author",
+    required: true,
+    label: "Author",
+    align: "left",
+    field: (row: Monitor) => row.author.username,
+  },
+  {
+    name: "createdAt",
+    required: true,
+    label: "Created",
+    align: "left",
+    field: (row: Monitor) =>
+      date.formatDate(new Date(row.createdAt), "YYYY-MM-DD HH:mm"),
+  },
+  {
+    name: "httpConfig",
+    required: false,
+    label: "Config",
+    align: "left",
+    field: (row: Monitor) =>
+      row.monitorType === MonitorType.http && row.httpConfig
+        ? `${row.httpConfig.method} ${row.httpConfig.url}`
+        : "N/A",
   },
 ];
 

@@ -1,19 +1,19 @@
-# WithMonitorType
+# WithOptionalHttpConfig
 
 
 ## Properties
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**monitorType** | [**MonitorType**](MonitorType.md) |  | [default to undefined]
+**httpConfig** | [**HttpConfig**](HttpConfig.md) |  | [optional] [default to undefined]
 
 ## Example
 
 ```typescript
-import { WithMonitorType } from '@pulse/shared';
+import { WithOptionalHttpConfig } from '@pulse/shared';
 
-const instance: WithMonitorType = {
-    monitorType,
+const instance: WithOptionalHttpConfig = {
+    httpConfig,
 };
 ```
 

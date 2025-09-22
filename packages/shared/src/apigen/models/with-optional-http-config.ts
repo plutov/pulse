@@ -15,21 +15,19 @@
 
 // May contain unused imports in some cases
 // @ts-ignore
-import type { MonitorType } from './monitor-type';
+import type { HttpConfig } from './http-config';
 
 /**
  * 
  * @export
- * @interface WithMonitorType
+ * @interface WithOptionalHttpConfig
  */
-export interface WithMonitorType {
+export interface WithOptionalHttpConfig {
     /**
      * 
-     * @type {MonitorType}
-     * @memberof WithMonitorType
+     * @type {HttpConfig}
+     * @memberof WithOptionalHttpConfig
      */
-    'monitorType': MonitorType;
+    'httpConfig'?: HttpConfig;
 }
-
-
 

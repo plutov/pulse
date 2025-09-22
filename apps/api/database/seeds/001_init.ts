@@ -1,6 +1,8 @@
 import type { Knex } from "knex";
 import { randomUUID } from "crypto";
 import * as bcrypt from "bcrypt";
+import MonitorType from "../../src/database/types/public/MonitorType";
+import MonitorStatus from "../../src/database/types/public/MonitorStatus";
 
 export async function seed(knex: Knex): Promise<void> {
   await knex("monitors").del();
@@ -21,16 +23,41 @@ export async function seed(knex: Knex): Promise<void> {
     {
       id: randomUUID(),
       author: userId,
-      name: "sample-monitor-1",
-      description: "description-1",
-      monitor_type: "http",
+      name: "pliutau.com",
+      description: "",
+      monitor_type: MonitorType.http,
+      status: MonitorStatus.active,
+      schedule: "*/5 * * * *",
+      config: {
+        url: "https://pliutau.com",
+        method: "GET",
+      },
     },
     {
       id: randomUUID(),
       author: userId,
-      name: "sample-monitor-2",
-      description: "description-2",
-      monitor_type: "http",
+      name: "gitprint.me",
+      description: "",
+      monitor_type: MonitorType.http,
+      status: MonitorStatus.active,
+      schedule: "*/5 * * * *",
+      config: {
+        url: "https://gitprint.me",
+        method: "GET",
+      },
+    },
+    {
+      id: randomUUID(),
+      author: userId,
+      name: "packagemain.tech",
+      description: "",
+      monitor_type: MonitorType.http,
+      status: MonitorStatus.active,
+      schedule: "*/5 * * * *",
+      config: {
+        url: "https://packagemain.tech",
+        method: "GET",
+      },
     },
   ]);
 }

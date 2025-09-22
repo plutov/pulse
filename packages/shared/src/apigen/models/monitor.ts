@@ -15,6 +15,21 @@
 
 // May contain unused imports in some cases
 // @ts-ignore
+import type { HttpConfig } from './http-config';
+// May contain unused imports in some cases
+// @ts-ignore
+import type { MonitorType } from './monitor-type';
+// May contain unused imports in some cases
+// @ts-ignore
+import type { User } from './user';
+// May contain unused imports in some cases
+// @ts-ignore
+import type { WithAuthor } from './with-author';
+// May contain unused imports in some cases
+// @ts-ignore
+import type { WithCreatedAt } from './with-created-at';
+// May contain unused imports in some cases
+// @ts-ignore
 import type { WithId } from './with-id';
 // May contain unused imports in some cases
 // @ts-ignore
@@ -22,11 +37,23 @@ import type { WithMonitorType } from './with-monitor-type';
 // May contain unused imports in some cases
 // @ts-ignore
 import type { WithName } from './with-name';
+// May contain unused imports in some cases
+// @ts-ignore
+import type { WithOptionalHttpConfig } from './with-optional-http-config';
+// May contain unused imports in some cases
+// @ts-ignore
+import type { WithSchedule } from './with-schedule';
+// May contain unused imports in some cases
+// @ts-ignore
+import type { WithStatus } from './with-status';
+// May contain unused imports in some cases
+// @ts-ignore
+import type { WithUpdatedAt } from './with-updated-at';
 
 /**
  * @type Monitor
  * @export
  */
-export type Monitor = WithId & WithMonitorType & WithName;
+export type Monitor = WithAuthor & WithCreatedAt & WithId & WithMonitorType & WithName & WithOptionalHttpConfig & WithSchedule & WithStatus & WithUpdatedAt;
 
 

@@ -13,23 +13,18 @@
  */
 
 
-// May contain unused imports in some cases
-// @ts-ignore
-import type { MonitorType } from './monitor-type';
 
 /**
  * 
  * @export
- * @interface WithMonitorType
+ * @interface WithUpdatedAt
  */
-export interface WithMonitorType {
+export interface WithUpdatedAt {
     /**
      * 
-     * @type {MonitorType}
-     * @memberof WithMonitorType
+     * @type {string}
+     * @memberof WithUpdatedAt
      */
-    'monitorType': MonitorType;
+    'updatedAt': string;
 }
-
-
 

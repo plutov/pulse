@@ -45,7 +45,7 @@ const { status, data } = await apiInstance.createMonitor(
 
 ### Authorization
 
-[bearerAuth](../README.md#bearerAuth)
+[BearerAuth](../README.md#BearerAuth)
 
 ### HTTP request headers
 
@@ -98,7 +98,7 @@ void (empty response body)
 
 ### Authorization
 
-[bearerAuth](../README.md#bearerAuth)
+[BearerAuth](../README.md#BearerAuth)
 
 ### HTTP request headers
 
@@ -152,7 +152,7 @@ const { status, data } = await apiInstance.getMonitorById(
 
 ### Authorization
 
-[bearerAuth](../README.md#bearerAuth)
+[BearerAuth](../README.md#BearerAuth)
 
 ### HTTP request headers
 
@@ -199,7 +199,7 @@ This endpoint does not have any parameters.
 
 ### Authorization
 
-[bearerAuth](../README.md#bearerAuth)
+[BearerAuth](../README.md#BearerAuth)
 
 ### HTTP request headers
 

@@ -18,9 +18,26 @@ export const createMonitorSchema = Joi.object({
     "string.max": "Name cannot exceed 255 characters",
   }),
   monitorType: Joi.string().valid("http").required().messages({
-    "any.only": "Monitor type must be one of [http]",
-    "any.required": "Monitor type is required",
+    "string.only": "Monitor type must be one of [http]",
+    "string.required": "Monitor type is required",
   }),
+  schedule: Joi.string().required().messages({
+    "string.empty": "Schedule cannot be empty",
+    "string.required": "Schedule is required",
+  }),
+  status: Joi.string().valid("active", "paused").required().messages({
+    "string.only": "Status must be one of [active, paused]",
+    "string.required": "Status is required",
+  }),
+  httpConfig: Joi.object({
+    url: Joi.string().uri().required().messages({
+      "string.uri": "URL must be a valid URI",
+      "string.required": "URL is required when httpConfig is provided",
+    }),
+    method: Joi.string()
+      .valid("GET", "POST", "PUT", "DELETE", "HEAD", "OPTIONS", "PATCH")
+      .default("GET"),
+  }).optional(),
 }).options({ abortEarly: false });
 
 export const monitorIdParamSchema = Joi.object({

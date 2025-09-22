@@ -12,9 +12,9 @@ export default interface Users {
 
   password_hash: string;
 
-  created_at: Date | null;
+  created_at: Date;
 
-  updated_at: Date | null;
+  updated_at: Date;
 }
 
 /** Represents the initializer for the table public.users */
@@ -26,10 +26,10 @@ export interface UsersInitializer {
   password_hash: string;
 
   /** Default value: CURRENT_TIMESTAMP */
-  created_at?: Date | null;
+  created_at?: Date;
 
   /** Default value: CURRENT_TIMESTAMP */
-  updated_at?: Date | null;
+  updated_at?: Date;
 }
 
 /** Represents the mutator for the table public.users */
@@ -40,7 +40,7 @@ export interface UsersMutator {
 
   password_hash?: string;
 
-  created_at?: Date | null;
+  created_at?: Date;
 
-  updated_at?: Date | null;
+  updated_at?: Date;
 }

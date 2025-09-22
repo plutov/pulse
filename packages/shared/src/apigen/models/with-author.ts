@@ -15,21 +15,19 @@
 
 // May contain unused imports in some cases
 // @ts-ignore
-import type { MonitorType } from './monitor-type';
+import type { User } from './user';
 
 /**
  * 
  * @export
- * @interface WithMonitorType
+ * @interface WithAuthor
  */
-export interface WithMonitorType {
+export interface WithAuthor {
     /**
      * 
-     * @type {MonitorType}
-     * @memberof WithMonitorType
+     * @type {User}
+     * @memberof WithAuthor
      */
-    'monitorType': MonitorType;
+    'author': User;
 }
-
-
 

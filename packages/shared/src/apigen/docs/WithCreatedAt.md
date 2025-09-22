@@ -1,19 +1,19 @@
-# WithMonitorType
+# WithCreatedAt
 
 
 ## Properties
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**monitorType** | [**MonitorType**](MonitorType.md) |  | [default to undefined]
+**createdAt** | **string** |  | [default to undefined]
 
 ## Example
 
 ```typescript
-import { WithMonitorType } from '@pulse/shared';
+import { WithCreatedAt } from '@pulse/shared';
 
-const instance: WithMonitorType = {
-    monitorType,
+const instance: WithCreatedAt = {
+    createdAt,
 };
 ```
 

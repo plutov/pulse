@@ -62,16 +62,24 @@ Class | Method | HTTP request | Description
 
  - [CreateMonitorPayload](docs/CreateMonitorPayload.md)
  - [ErrorResponse](docs/ErrorResponse.md)
+ - [HttpConfig](docs/HttpConfig.md)
  - [LoginPayload](docs/LoginPayload.md)
  - [LoginResponse](docs/LoginResponse.md)
  - [Monitor](docs/Monitor.md)
+ - [MonitorType](docs/MonitorType.md)
  - [User](docs/User.md)
  - [ValidationMessage](docs/ValidationMessage.md)
+ - [WithAuthor](docs/WithAuthor.md)
+ - [WithCreatedAt](docs/WithCreatedAt.md)
  - [WithId](docs/WithId.md)
  - [WithMonitorType](docs/WithMonitorType.md)
  - [WithName](docs/WithName.md)
+ - [WithOptionalHttpConfig](docs/WithOptionalHttpConfig.md)
  - [WithPassword](docs/WithPassword.md)
+ - [WithSchedule](docs/WithSchedule.md)
+ - [WithStatus](docs/WithStatus.md)
  - [WithToken](docs/WithToken.md)
+ - [WithUpdatedAt](docs/WithUpdatedAt.md)
  - [WithUser](docs/WithUser.md)
  - [WithUsername](docs/WithUsername.md)
 
@@ -81,8 +89,8 @@ Class | Method | HTTP request | Description
 
 
 Authentication schemes defined for the API:
-<a id="bearerAuth"></a>
-### bearerAuth
+<a id="BearerAuth"></a>
+### BearerAuth
 
 - **Type**: Bearer authentication (JWT)
 

@@ -1,19 +1,19 @@
-# WithMonitorType
+# WithAuthor
 
 
 ## Properties
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**monitorType** | [**MonitorType**](MonitorType.md) |  | [default to undefined]
+**author** | [**User**](User.md) |  | [default to undefined]
 
 ## Example
 
 ```typescript
-import { WithMonitorType } from '@pulse/shared';
+import { WithAuthor } from '@pulse/shared';
 
-const instance: WithMonitorType = {
-    monitorType,
+const instance: WithAuthor = {
+    author,
 };
 ```
 

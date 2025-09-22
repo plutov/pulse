@@ -1,6 +1,13 @@
 import { Knex } from "knex";
 import { getDb } from "../connection";
 import Monitors, { MonitorsInitializer } from "../types/public/Monitors";
+import { CreateMonitorPayload, HttpConfig, Monitor } from "@pulse/shared";
+import MonitorType from "../types/public/MonitorType";
+import MonitorStatus from "../types/public/MonitorStatus";
+
+export interface MonitorWithAuthor extends Monitors {
+  author_username: string;
+}
 
 export class MonitorRepository {
   private db: Knex;
@@ -10,12 +17,19 @@ export class MonitorRepository {
     this.db = database || getDb();
   }
 
-  async findAll(): Promise<Monitors[]> {
-    return this.db(this.tableName).select("*").orderBy("created_at", "desc");
+  async findAll(): Promise<MonitorWithAuthor[]> {
+    return this.db(this.tableName)
+      .select("monitors.*", "users.username as author_username")
+      .join("users", "monitors.author", "users.id")
+      .orderBy("monitors.created_at", "desc");
   }
 
-  async findById(id: string): Promise<Monitors | undefined> {
-    return this.db(this.tableName).where({ id }).first<Monitors>();
+  async findById(id: string): Promise<MonitorWithAuthor | undefined> {
+    return this.db(this.tableName)
+      .select("monitors.*", "users.username as author_username")
+      .join("users", "monitors.author", "users.id")
+      .where("monitors.id", id)
+      .first<MonitorWithAuthor>();
   }
 
   async findByName(name: string): Promise<Monitors | undefined> {
@@ -38,4 +52,44 @@ export class MonitorRepository {
     const deletedCount = await this.db(this.tableName).where({ id }).del();
     return deletedCount > 0;
   }
+}
+
+export function convertMonitorRowToApi(row: MonitorWithAuthor): Monitor {
+  const res: Monitor = {
+    id: row.id,
+    name: row.name,
+    monitorType: row.monitor_type,
+    createdAt: row.created_at.toISOString(),
+    updatedAt: row.updated_at.toISOString(),
+    author: {
+      id: row.author,
+      username: row.author_username,
+    },
+    schedule: row.schedule,
+    status: row.status as "active" | "paused",
+  };
+  if (res.monitorType == MonitorType.http && row.config) {
+    res.httpConfig = row.config as HttpConfig;
+  }
+  return res;
+}
+
+export function convertMonitorRowsToApi(rows: MonitorWithAuthor[]): Monitor[] {
+  return rows.map(convertMonitorRowToApi);
+}
+
+export function convertCreateMonitorPayloadToDb(
+  payload: CreateMonitorPayload,
+  authorId: string,
+  id: string,
+): MonitorsInitializer {
+  return {
+    id,
+    author: authorId,
+    monitor_type: payload.monitorType as MonitorType,
+    name: payload.name,
+    schedule: payload.schedule,
+    status: payload.status as MonitorStatus,
+    config: payload.httpConfig || null,
+  };
 }

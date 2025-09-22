@@ -7,7 +7,13 @@ Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **id** | **string** |  | [default to undefined]
 **name** | **string** |  | [default to undefined]
-**monitorType** | **string** |  | [default to undefined]
+**monitorType** | [**MonitorType**](MonitorType.md) |  | [default to undefined]
+**createdAt** | **string** |  | [default to undefined]
+**updatedAt** | **string** |  | [default to undefined]
+**author** | [**User**](User.md) |  | [default to undefined]
+**schedule** | **string** | Cron-like schedule string | [default to undefined]
+**status** | **string** |  | [default to undefined]
+**httpConfig** | [**HttpConfig**](HttpConfig.md) |  | [optional] [default to undefined]
 
 ## Example
 
@@ -18,6 +24,12 @@ const instance: Monitor = {
     id,
     name,
     monitorType,
+    createdAt,
+    updatedAt,
+    author,
+    schedule,
+    status,
+    httpConfig,
 };
 ```
 

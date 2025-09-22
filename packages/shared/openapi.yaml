@@ -27,10 +27,10 @@ paths:
     get:
       tags:
         - monitor
+      security:
+        - BearerAuth: []
       summary: List Monitors
       operationId: listMonitors
-      security:
-        - bearerAuth: []
       responses:
         "200":
           description: ok
@@ -47,10 +47,10 @@ paths:
     post:
       tags:
         - monitor
+      security:
+        - BearerAuth: []
       summary: Create Monitor
       operationId: createMonitor
-      security:
-        - bearerAuth: []
       requestBody:
         $ref: "#/components/requestBodies/CreateMonitorBody"
       responses:
@@ -70,18 +70,12 @@ paths:
     get:
       tags:
         - monitor
+      security:
+        - BearerAuth: []
       summary: Get Monitor by ID
       operationId: getMonitorById
-      security:
-        - bearerAuth: []
       parameters:
-        - name: id
-          in: path
-          required: true
-          schema:
-            type: string
-            format: uuid
-          description: Monitor ID
+        - $ref: "#/components/parameters/MonitorIdParam"
       responses:
         "200":
           description: ok
@@ -100,18 +94,12 @@ paths:
     delete:
       tags:
         - monitor
+      security:
+        - BearerAuth: []
       summary: Delete Monitor
       operationId: deleteMonitor
-      security:
-        - bearerAuth: []
       parameters:
-        - name: id
-          in: path
-          required: true
-          schema:
-            type: string
-            format: uuid
-          description: Monitor ID
+        - $ref: "#/components/parameters/MonitorIdParam"
       responses:
         "204":
           description: Monitor deleted successfully
@@ -125,7 +113,7 @@ paths:
           $ref: "#/components/responses/InternalServerError"
 components:
   securitySchemes:
-    bearerAuth:
+    BearerAuth:
       type: http
       scheme: bearer
       bearerFormat: JWT
@@ -174,24 +162,105 @@ components:
       properties:
         name:
           type: string
+    MonitorType:
+      type: string
+      enum:
+        - http
     WithMonitorType:
       required:
         - monitorType
       type: object
       properties:
         monitorType:
+          $ref: "#/components/schemas/MonitorType"
+    WithCreatedAt:
+      required:
+        - createdAt
+      type: object
+      properties:
+        createdAt:
+          type: string
+          format: date-time
+    WithUpdatedAt:
+      required:
+        - updatedAt
+      type: object
+      properties:
+        updatedAt:
+          type: string
+          format: date-time
+    User:
+      allOf:
+        - $ref: "#/components/schemas/WithId"
+        - $ref: "#/components/schemas/WithUsername"
+    WithAuthor:
+      required:
+        - author
+      type: object
+      properties:
+        author:
+          $ref: "#/components/schemas/User"
+    HttpConfig:
+      required:
+        - url
+        - method
+      type: object
+      properties:
+        url:
+          type: string
+          format: uri
+        method:
           type: string
           enum:
-            - http
+            - GET
+            - POST
+            - PUT
+            - DELETE
+            - HEAD
+            - OPTIONS
+            - PATCH
+    WithOptionalHttpConfig:
+      type: object
+      properties:
+        httpConfig:
+          $ref: "#/components/schemas/HttpConfig"
+    WithSchedule:
+      required:
+        - schedule
+      type: object
+      properties:
+        schedule:
+          type: string
+          description: Cron-like schedule string
+          example: "*/5 * * * *"
+    WithStatus:
+      required:
+        - status
+      type: object
+      properties:
+        status:
+          type: string
+          enum:
+            - active
+            - paused
     Monitor:
       allOf:
         - $ref: "#/components/schemas/WithId"
         - $ref: "#/components/schemas/WithName"
         - $ref: "#/components/schemas/WithMonitorType"
+        - $ref: "#/components/schemas/WithCreatedAt"
+        - $ref: "#/components/schemas/WithUpdatedAt"
+        - $ref: "#/components/schemas/WithAuthor"
+        - $ref: "#/components/schemas/WithSchedule"
+        - $ref: "#/components/schemas/WithStatus"
+        - $ref: "#/components/schemas/WithOptionalHttpConfig"
     CreateMonitorPayload:
       allOf:
         - $ref: "#/components/schemas/WithName"
         - $ref: "#/components/schemas/WithMonitorType"
+        - $ref: "#/components/schemas/WithSchedule"
+        - $ref: "#/components/schemas/WithStatus"
+        - $ref: "#/components/schemas/WithOptionalHttpConfig"
     WithUsername:
       required:
         - username
@@ -221,10 +290,6 @@ components:
       allOf:
         - $ref: "#/components/schemas/WithToken"
         - $ref: "#/components/schemas/WithUser"
-    User:
-      allOf:
-        - $ref: "#/components/schemas/WithId"
-        - $ref: "#/components/schemas/WithUsername"
     WithUser:
       required:
         - user
@@ -270,3 +335,12 @@ components:
         application/json:
           schema:
             $ref: "#/components/schemas/ErrorResponse"
+  parameters:
+    MonitorIdParam:
+      name: id
+      in: path
+      required: true
+      schema:
+        type: string
+        format: uuid
+      description: Monitor ID

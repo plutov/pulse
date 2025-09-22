@@ -2,15 +2,53 @@ import { describe, it, expect, beforeEach, afterAll, beforeAll } from "vitest";
 import * as Hapi from "@hapi/hapi";
 import { createTestServer } from "../setup/server";
 import { closeTestDb, getTestDb } from "../setup/database";
-import { ErrorResponse, Monitor } from "@pulse/shared";
+import {
+  ErrorResponse,
+  Monitor,
+  CreateMonitorPayload,
+  HttpConfig,
+  MonitorType,
+  WithStatusStatusEnum,
+} from "@pulse/shared";
 import { createTestUser, getAuthHeaders } from "../utils/auth";
 import { randomUUID } from "crypto";
 import { UserRepository } from "../../src/database/repositories/user-repository";
+import { ApiErrorsEnum } from "../../src/api/errors";
+
+interface TestMonitorData {
+  name: string;
+  monitorType: MonitorType;
+  schedule?: string;
+  status?: WithStatusStatusEnum;
+  httpConfig?: HttpConfig;
+}
 
 describe("Monitors API", () => {
   let server: Hapi.Server;
   const userId = randomUUID();
   const userName = `user-${userId}`;
+
+  const createMonitor = async (
+    monitorData: TestMonitorData,
+  ): Promise<Monitor> => {
+    const payload: CreateMonitorPayload = {
+      name: monitorData.name,
+      monitorType: monitorData.monitorType,
+      schedule: monitorData.schedule || "*/5 * * * *",
+      status: monitorData.status || WithStatusStatusEnum.active,
+      httpConfig: monitorData.httpConfig || {
+        url: "https://example.com",
+        method: "GET",
+      },
+    };
+    const response = await server.inject({
+      method: "POST",
+      url: "/monitors",
+      payload,
+      headers: getAuthHeaders(userId),
+    });
+    return JSON.parse(response.payload);
+  };
 
   beforeAll(async () => {
     server = await createTestServer();
@@ -44,12 +82,9 @@ describe("Monitors API", () => {
     });
 
     it("should return monitors when they exist", async () => {
-      // Create a monitor first
-      await server.inject({
-        method: "POST",
-        url: "/monitors",
-        payload: { name: "test-monitor", monitorType: "http" },
-        headers: getAuthHeaders(userId),
+      await createMonitor({
+        name: "test-monitor",
+        monitorType: MonitorType.http,
       });
 
       const response = await server.inject({
@@ -65,42 +100,53 @@ describe("Monitors API", () => {
         id: expect.any(String) as string,
         name: "test-monitor",
         monitorType: "http",
+        status: "active",
+        schedule: "*/5 * * * *",
+        httpConfig: expect.objectContaining({
+          url: "https://example.com",
+          method: "GET",
+        }),
       });
     });
   });
 
   describe("POST /monitors", () => {
     it("should create a new monitor", async () => {
-      const response = await server.inject({
-        method: "POST",
-        url: "/monitors",
-        payload: { name: "new-monitor", monitorType: "http" },
-        headers: getAuthHeaders(userId),
+      const monitor: Monitor = await createMonitor({
+        name: "new-monitor",
+        monitorType: MonitorType.http,
+        schedule: "*/5 * * * *",
+        status: WithStatusStatusEnum.active,
       });
-
-      expect(response.statusCode).toBe(201);
-      const monitor: Monitor = JSON.parse(response.payload);
       expect(monitor).toMatchObject({
         id: expect.any(String) as string,
         name: "new-monitor",
         monitorType: "http",
+        status: "active",
+        schedule: "*/5 * * * *",
+        httpConfig: expect.objectContaining({ method: "GET" }),
       });
     });
 
     it("should return 409 when monitor name already exists", async () => {
-      // Create first monitor
-      await server.inject({
-        method: "POST",
-        url: "/monitors",
-        payload: { name: "duplicate-monitor", monitorType: "http" },
-        headers: getAuthHeaders(userId),
+      await createMonitor({
+        name: "duplicate-monitor",
+        monitorType: MonitorType.http,
       });
 
-      // Try to create monitor with same name
       const response = await server.inject({
         method: "POST",
         url: "/monitors",
-        payload: { name: "duplicate-monitor", monitorType: "http" },
+        payload: {
+          name: "duplicate-monitor",
+          monitorType: MonitorType.http,
+          schedule: "*/5 * * * *",
+          status: WithStatusStatusEnum.active,
+          httpConfig: {
+            url: "https://example.com",
+            method: "GET",
+          },
+        },
         headers: getAuthHeaders(userId),
       });
 
@@ -112,14 +158,10 @@ describe("Monitors API", () => {
 
   describe("GET /monitors/{id}", () => {
     it("should return monitor by id", async () => {
-      // Create a monitor first
-      const createResponse = await server.inject({
-        method: "POST",
-        url: "/monitors",
-        payload: { name: "test-monitor", monitorType: "http" },
-        headers: getAuthHeaders(userId),
+      const createdMonitor = await createMonitor({
+        name: "test-monitor",
+        monitorType: MonitorType.http,
       });
-      const createdMonitor: Monitor = JSON.parse(createResponse.payload);
 
       const response = await server.inject({
         method: "GET",
@@ -153,20 +195,16 @@ describe("Monitors API", () => {
 
       expect(response.statusCode).toBe(400);
       const error: ErrorResponse = JSON.parse(response.payload);
-      expect(error.message).toContain("Invalid request params input");
+      expect(error.message).toContain(ApiErrorsEnum.ValidationFailed);
     });
   });
 
   describe("DELETE /monitors/{id}", () => {
     it("should delete monitor by id", async () => {
-      // Create a monitor first
-      const createResponse = await server.inject({
-        method: "POST",
-        url: "/monitors",
-        payload: { name: "to-delete-monitor", monitorType: "http" },
-        headers: getAuthHeaders(userId),
+      const createdMonitor = await createMonitor({
+        name: "to-delete-monitor",
+        monitorType: MonitorType.http,
       });
-      const createdMonitor: Monitor = JSON.parse(createResponse.payload);
 
       const response = await server.inject({
         method: "DELETE",
@@ -177,7 +215,6 @@ describe("Monitors API", () => {
       expect(response.statusCode).toBe(204);
       expect(response.payload).toBe("");
 
-      // Verify monitor is deleted
       const getResponse = await server.inject({
         method: "GET",
         url: `/monitors/${createdMonitor.id}`,
@@ -207,7 +244,7 @@ describe("Monitors API", () => {
 
       expect(response.statusCode).toBe(400);
       const error: ErrorResponse = JSON.parse(response.payload);
-      expect(error.message).toContain("Invalid request params input");
+      expect(error.message).toContain(ApiErrorsEnum.ValidationFailed);
     });
   });
 });

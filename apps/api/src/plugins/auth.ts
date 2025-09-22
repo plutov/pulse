@@ -6,7 +6,7 @@ import { UserRepository } from "../database/repositories/user-repository";
 import * as Boom from "@hapi/boom";
 import { LoginResponse } from "@pulse/shared";
 import { loginSchema } from "../api/schemas";
-import { validationFailAction } from "../api/utils";
+import { validationFailAction } from "../api/errors";
 
 const userRepository = new UserRepository();
 

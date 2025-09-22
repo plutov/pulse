@@ -6,7 +6,10 @@
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **name** | **string** |  | [default to undefined]
-**monitorType** | **string** |  | [default to undefined]
+**monitorType** | [**MonitorType**](MonitorType.md) |  | [default to undefined]
+**schedule** | **string** | Cron-like schedule string | [default to undefined]
+**status** | **string** |  | [default to undefined]
+**httpConfig** | [**HttpConfig**](HttpConfig.md) |  | [optional] [default to undefined]
 
 ## Example
 
@@ -16,6 +19,9 @@ import { CreateMonitorPayload } from '@pulse/shared';
 const instance: CreateMonitorPayload = {
     name,
     monitorType,
+    schedule,
+    status,
+    httpConfig,
 };
 ```
 

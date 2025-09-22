@@ -3,6 +3,7 @@
 
 import type { Id } from './Users';
 import type { default as MonitorType } from './MonitorType';
+import type { default as MonitorStatus } from './MonitorStatus';
 
 /** Identifier type for monitors */
 export type Id = string;
@@ -19,9 +20,15 @@ export default interface Monitors {
 
   description: string | null;
 
-  created_at: Date | null;
+  created_at: Date;
 
-  updated_at: Date | null;
+  updated_at: Date;
+
+  schedule: string;
+
+  status: MonitorStatus;
+
+  config: unknown | null;
 }
 
 /** Represents the initializer for the table public.monitors */
@@ -37,10 +44,17 @@ export interface MonitorsInitializer {
   description?: string | null;
 
   /** Default value: CURRENT_TIMESTAMP */
-  created_at?: Date | null;
+  created_at?: Date;
 
   /** Default value: CURRENT_TIMESTAMP */
-  updated_at?: Date | null;
+  updated_at?: Date;
+
+  schedule: string;
+
+  /** Default value: 'active'::monitor_status */
+  status?: MonitorStatus;
+
+  config?: unknown | null;
 }
 
 /** Represents the mutator for the table public.monitors */
@@ -55,7 +69,13 @@ export interface MonitorsMutator {
 
   description?: string | null;
 
-  created_at?: Date | null;
+  created_at?: Date;
 
-  updated_at?: Date | null;
+  updated_at?: Date;
+
+  schedule?: string;
+
+  status?: MonitorStatus;
+
+  config?: unknown | null;
 }

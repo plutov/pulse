@@ -13,23 +13,18 @@
  */
 
 
-// May contain unused imports in some cases
-// @ts-ignore
-import type { MonitorType } from './monitor-type';
 
 /**
  * 
  * @export
- * @interface WithMonitorType
+ * @enum {string}
  */
-export interface WithMonitorType {
-    /**
-     * 
-     * @type {MonitorType}
-     * @memberof WithMonitorType
-     */
-    'monitorType': MonitorType;
-}
+
+export const MonitorType = {
+    http: 'http'
+} as const;
+
+export type MonitorType = typeof MonitorType[keyof typeof MonitorType];
 
 
 
