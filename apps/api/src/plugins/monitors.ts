@@ -5,6 +5,7 @@ import { MonitorRepository } from "../database/repositories/monitor-repository";
 import { randomUUID } from "crypto";
 import MonitorType from "../database/types/public/MonitorType";
 import { createMonitorSchema, monitorIdParamSchema } from "../api/schemas";
+import { validationFailAction } from "../api/utils";
 
 const monitorRepository = new MonitorRepository();
 
@@ -27,6 +28,7 @@ const monitorsPlugin: Hapi.Plugin<null> = {
         options: {
           validate: {
             payload: createMonitorSchema,
+            failAction: validationFailAction,
           },
         },
       },
@@ -40,6 +42,7 @@ const monitorsPlugin: Hapi.Plugin<null> = {
         options: {
           validate: {
             params: monitorIdParamSchema,
+            failAction: validationFailAction,
           },
         },
       },
@@ -53,6 +56,7 @@ const monitorsPlugin: Hapi.Plugin<null> = {
         options: {
           validate: {
             params: monitorIdParamSchema,
+            failAction: validationFailAction,
           },
         },
       },
