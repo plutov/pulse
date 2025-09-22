@@ -1,7 +1,8 @@
 import * as Hapi from "@hapi/hapi";
 import * as Boom from "@hapi/boom";
-import { Monitor, CreateMonitorPayload } from "@pulse/shared";
+import { CreateMonitorPayload } from "@pulse/shared";
 import { MonitorRepository } from "../database/repositories/monitor-repository";
+import { convertMonitorRowToApi, convertMonitorRowsToApi } from "../database/converters";
 import { randomUUID } from "crypto";
 import MonitorType from "../database/types/public/MonitorType";
 import { createMonitorSchema, monitorIdParamSchema } from "../api/schemas";
@@ -69,12 +70,7 @@ export default monitorsPlugin;
 async function getAllMonitorsHandler() {
   try {
     const rows = await monitorRepository.findAll();
-    const monitors: Monitor[] = rows.map((row) => ({
-      id: row.id,
-      name: row.name,
-      monitorType: row.monitor_type,
-    }));
-    return monitors;
+    return convertMonitorRowsToApi(rows);
   } catch (error) {
     console.error("Error fetching monitors:", error);
     throw Boom.internal("Failed to fetch monitorsitories");
@@ -104,11 +100,7 @@ async function createMonitorHandler(
       author,
       monitor_type: monitorType as MonitorType,
     });
-    const newMonitor: Monitor = {
-      id: row.id,
-      name: row.name,
-      monitorType: row.monitor_type,
-    };
+    const newMonitor = convertMonitorRowToApi(row);
 
     return h.response(newMonitor).code(201);
   } catch (error) {
@@ -129,13 +121,7 @@ async function getMonitorByIdHandler(request: Hapi.Request) {
       throw Boom.notFound(`Monitor with ID ${id} not found`);
     }
 
-    const monitor: Monitor = {
-      id: row.id,
-      name: row.name,
-      monitorType: row.monitor_type,
-    };
-
-    return monitor;
+    return convertMonitorRowToApi(row);
   } catch (error) {
     if (Boom.isBoom(error)) {
       throw error;

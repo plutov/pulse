@@ -40,7 +40,7 @@ export default defineConfig(() => {
       config: {
         dark: true,
       },
-      iconSet: "material-icons", // Quasar icon set
+      iconSet: "material-icons",
       plugins: ["Notify"],
     },
     animations: [],

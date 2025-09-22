@@ -1,69 +1,7 @@
 <template>
   <q-page class="row items-center justify-evenly">
-    <div class="column q-gutter-md">
-      <div class="q-pa-md">
-        <h5>API Demo</h5>
-        <div class="q-gutter-sm">
-          <q-btn
-            color="secondary"
-            label="List Monitors"
-            @click="listMonitors"
-            :loading="monitorsLoading"
-          />
-          <q-btn color="negative" label="Logout" @click="logout" />
-        </div>
-
-        <div v-if="monitors.length > 0" class="q-mt-md">
-          <q-card>
-            <q-card-section>
-              <div class="text-h6">Monitors</div>
-              <q-list>
-                <q-item v-for="monitor in monitors" :key="monitor.id">
-                  <q-item-section>
-                    <q-item-label>{{ monitor.name }}</q-item-label>
-                    <q-item-label caption
-                      >Type: {{ monitor.monitorType }}</q-item-label
-                    >
-                  </q-item-section>
-                </q-item>
-              </q-list>
-            </q-card-section>
-          </q-card>
-        </div>
-      </div>
-    </div>
+    <div class="text-h2 text-white">Welcome to Pulse!</div>
   </q-page>
 </template>
 
-<script setup lang="ts">
-import { ref } from "vue";
-import { useRouter } from "vue-router";
-import { getMonitorApi } from "boot/axios";
-import type { Monitor } from "@pulse/shared";
-import { useAuthStore } from "../stores/auth";
-
-const router = useRouter();
-const authStore = useAuthStore();
-const monitors = ref<Monitor[]>([]);
-const monitorsLoading = ref(false);
-
-const listMonitors = async () => {
-  monitorsLoading.value = true;
-  try {
-    const monitorApi = getMonitorApi();
-    const response = await monitorApi.listMonitors();
-    if (response.data) {
-      monitors.value = response.data;
-    }
-  } catch (error: unknown) {
-    console.log("api error:", error);
-  } finally {
-    monitorsLoading.value = false;
-  }
-};
-
-const logout = () => {
-  authStore.logout();
-  void router.push("/login");
-};
-</script>
+<script setup lang="ts"></script>
