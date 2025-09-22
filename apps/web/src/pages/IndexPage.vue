@@ -98,8 +98,8 @@ const loginDemo = async () => {
 
     const response = await authApi.login(loginPayload);
 
-    if (response) {
-      authToken.value = response.token;
+    if (response.data) {
+      authToken.value = response.data.token;
       isLoggedIn.value = true;
     }
   } catch (error: unknown) {
@@ -112,7 +112,10 @@ const loginDemo = async () => {
 const listMonitors = async () => {
   monitorsLoading.value = true;
   try {
-    monitors.value = await monitorApi.listMonitors();
+    const response = await monitorApi.listMonitors();
+    if (response.data) {
+      monitors.value = response.data;
+    }
   } catch (error: unknown) {
     console.log("api error:", error);
   } finally {
