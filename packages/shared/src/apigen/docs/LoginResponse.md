@@ -11,7 +11,7 @@ Name | Type | Description | Notes
 ## Example
 
 ```typescript
-import { LoginResponse } from '@pulse/apigen';
+import { LoginResponse } from '@pulse/shared';
 
 const instance: LoginResponse = {
     token,

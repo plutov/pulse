@@ -12,7 +12,7 @@ Name | Type | Description | Notes
 ## Example
 
 ```typescript
-import { Monitor } from '@pulse/apigen';
+import { Monitor } from '@pulse/shared';
 
 const instance: Monitor = {
     id,

@@ -10,7 +10,7 @@ Name | Type | Description | Notes
 ## Example
 
 ```typescript
-import { ErrorResponse } from '@pulse/apigen';
+import { ErrorResponse } from '@pulse/shared';
 
 const instance: ErrorResponse = {
     message,

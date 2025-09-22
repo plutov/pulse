@@ -10,7 +10,7 @@ Name | Type | Description | Notes
 ## Example
 
 ```typescript
-import { WithMonitorType } from '@pulse/apigen';
+import { WithMonitorType } from '@pulse/shared';
 
 const instance: WithMonitorType = {
     monitorType,

@@ -20,7 +20,7 @@ import {
     MonitorApi,
     Configuration,
     CreateMonitorPayload
-} from '@pulse/apigen';
+} from '@pulse/shared';
 
 const configuration = new Configuration();
 const apiInstance = new MonitorApi(configuration);
@@ -73,7 +73,7 @@ const { status, data } = await apiInstance.createMonitor(
 import {
     MonitorApi,
     Configuration
-} from '@pulse/apigen';
+} from '@pulse/shared';
 
 const configuration = new Configuration();
 const apiInstance = new MonitorApi(configuration);
@@ -127,7 +127,7 @@ void (empty response body)
 import {
     MonitorApi,
     Configuration
-} from '@pulse/apigen';
+} from '@pulse/shared';
 
 const configuration = new Configuration();
 const apiInstance = new MonitorApi(configuration);
@@ -181,7 +181,7 @@ const { status, data } = await apiInstance.getMonitorById(
 import {
     MonitorApi,
     Configuration
-} from '@pulse/apigen';
+} from '@pulse/shared';
 
 const configuration = new Configuration();
 const apiInstance = new MonitorApi(configuration);

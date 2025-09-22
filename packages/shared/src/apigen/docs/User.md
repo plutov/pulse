@@ -11,7 +11,7 @@ Name | Type | Description | Notes
 ## Example
 
 ```typescript
-import { User } from '@pulse/apigen';
+import { User } from '@pulse/shared';
 
 const instance: User = {
     id,

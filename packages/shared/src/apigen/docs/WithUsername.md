@@ -10,7 +10,7 @@ Name | Type | Description | Notes
 ## Example
 
 ```typescript
-import { WithUsername } from '@pulse/apigen';
+import { WithUsername } from '@pulse/shared';
 
 const instance: WithUsername = {
     username,

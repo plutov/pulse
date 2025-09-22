@@ -17,7 +17,7 @@ import {
     AuthApi,
     Configuration,
     LoginPayload
-} from '@pulse/apigen';
+} from '@pulse/shared';
 
 const configuration = new Configuration();
 const apiInstance = new AuthApi(configuration);

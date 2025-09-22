@@ -11,7 +11,7 @@ Name | Type | Description | Notes
 ## Example
 
 ```typescript
-import { CreateMonitorPayload } from '@pulse/apigen';
+import { CreateMonitorPayload } from '@pulse/shared';
 
 const instance: CreateMonitorPayload = {
     name,
