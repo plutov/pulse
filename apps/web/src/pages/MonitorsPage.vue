@@ -1,47 +1,70 @@
 <template>
-  <q-page class="row items-center justify-evenly">
-    <div class="column q-gutter-md">
-      <div class="q-pa-md">
-        <h5>API Demo</h5>
-        <div class="q-gutter-sm">
-          <q-btn
-            color="secondary"
-            label="List Monitors"
-            @click="listMonitors"
-            :loading="monitorsLoading"
-          />
-          <q-btn color="negative" label="Logout" @click="logout" />
-        </div>
-
-        <div v-if="monitors.length > 0" class="q-mt-md">
-          <q-card>
-            <q-card-section>
-              <div class="text-h6">Monitors</div>
-              <q-list>
-                <q-item v-for="monitor in monitors" :key="monitor.id">
-                  <q-item-section>
-                    <q-item-label>{{ monitor.name }}</q-item-label>
-                    <q-item-label caption
-                      >Type: {{ monitor.monitorType }}</q-item-label
-                    >
-                  </q-item-section>
-                </q-item>
-              </q-list>
-            </q-card-section>
-          </q-card>
-        </div>
-      </div>
+  <q-page class="q-pa-md">
+    <div class="row justify-between items-center q-mb-md">
+      <h4 class="q-ma-none">Monitors</h4>
+      <q-btn
+        color="accent"
+        label="Create Monitor"
+        icon="add"
+        @click="createMonitor"
+      />
     </div>
+
+    <q-table
+      :rows="monitors"
+      :columns="columns"
+      row-key="id"
+      :loading="monitorsLoading"
+      :sortable="false"
+      flat
+      bordered
+      hide-bottom
+    >
+      <template v-slot:no-data="{ message }">
+        <div class="full-width row flex-center q-gutter-sm">
+          <q-icon size="2em" name="sentiment_dissatisfied" />
+          <span>{{ message }}</span>
+        </div>
+      </template>
+    </q-table>
   </q-page>
 </template>
 
 <script setup lang="ts">
-import { ref } from "vue";
+import { ref, onMounted } from "vue";
 import { getMonitorApi } from "boot/axios";
-import type { Monitor } from "@pulse/shared";
+import type { ErrorResponse, Monitor } from "@pulse/shared";
+import { useQuasar } from "quasar";
+import axios from "axios";
+
+const $q = useQuasar();
 
 const monitors = ref<Monitor[]>([]);
 const monitorsLoading = ref(false);
+
+const columns = [
+  {
+    name: "id",
+    required: true,
+    label: "ID",
+    align: "left",
+    field: (row: Monitor) => row.id,
+  },
+  {
+    name: "name",
+    required: true,
+    label: "Name",
+    align: "left",
+    field: (row: Monitor) => row.name,
+  },
+  {
+    name: "monitorType",
+    required: true,
+    label: "Type",
+    align: "left",
+    field: (row: Monitor) => row.monitorType,
+  },
+];
 
 const listMonitors = async () => {
   monitorsLoading.value = true;
@@ -51,10 +74,24 @@ const listMonitors = async () => {
     if (response.data) {
       monitors.value = response.data;
     }
-  } catch (error: unknown) {
-    console.log("api error:", error);
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      const response = error.response?.data as ErrorResponse;
+      $q.notify({
+        type: "negative",
+        message: response.message,
+      });
+    }
   } finally {
     monitorsLoading.value = false;
   }
 };
+
+const createMonitor = () => {
+  console.log("Create monitor clicked");
+};
+
+onMounted(() => {
+  void listMonitors();
+});
 </script>
