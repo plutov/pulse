@@ -5,7 +5,7 @@ import { defineConfig } from "#q-app/wrappers";
 
 export default defineConfig((/* ctx */) => {
   return {
-    boot: [],
+    boot: ["axios"],
     css: ["app.scss"],
     extras: ["material-icons", "roboto-font"],
     build: {
@@ -34,7 +34,7 @@ export default defineConfig((/* ctx */) => {
       ],
     },
     devServer: {
-      open: false,
+      open: true,
     },
     framework: {
       config: {

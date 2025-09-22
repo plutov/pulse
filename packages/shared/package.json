@@ -7,7 +7,7 @@
   "scripts": {
     "build": "tsc",
     "clean": "rm -rf dist",
-    "generate": "rm -rf ./src/apigen && openapi-generator-cli generate -i ./openapi.yaml -g typescript-fetch -o ./src/apigen -c openapi.config.yaml"
+    "generate": "rm -rf ./src/apigen && openapi-generator-cli generate -i ./openapi.yaml -g typescript-axios -o ./src/apigen -c openapi.config.yaml"
   },
   "devDependencies": {
     "@openapitools/openapi-generator-cli": "^2.23.1",

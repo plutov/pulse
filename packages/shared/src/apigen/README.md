@@ -1,6 +1,6 @@
-## @pulse/shared@1.0.0
+## @pulse/apigen@0.0.0
 
-This generator creates TypeScript/JavaScript client that utilizes [Fetch API](https://fetch.spec.whatwg.org/). The generated Node module can be used in the following environments:
+This generator creates TypeScript/JavaScript client that utilizes [axios](https://github.com/axios/axios). The generated Node module can be used in the following environments:
 
 Environment
 * Node.js
@@ -36,7 +36,7 @@ navigate to the folder of your consuming project and run one of the following co
 _published:_
 
 ```
-npm install @pulse/shared@1.0.0 --save
+npm install @pulse/apigen@0.0.0 --save
 ```
 
 _unPublished (not recommended):_
@@ -44,3 +44,44 @@ _unPublished (not recommended):_
 ```
 npm install PATH_TO_GENERATED_PACKAGE --save
 ```
+
+### Documentation for API Endpoints
+
+All URIs are relative to *http://localhost*
+
+Class | Method | HTTP request | Description
+------------ | ------------- | ------------- | -------------
+*AuthApi* | [**login**](docs/AuthApi.md#login) | **POST** /auth/login | User Login
+*MonitorApi* | [**createMonitor**](docs/MonitorApi.md#createmonitor) | **POST** /monitors | Create Monitor
+*MonitorApi* | [**deleteMonitor**](docs/MonitorApi.md#deletemonitor) | **DELETE** /monitors/{id} | Delete Monitor
+*MonitorApi* | [**getMonitorById**](docs/MonitorApi.md#getmonitorbyid) | **GET** /monitors/{id} | Get Monitor by ID
+*MonitorApi* | [**listMonitors**](docs/MonitorApi.md#listmonitors) | **GET** /monitors | List Monitors
+
+
+### Documentation For Models
+
+ - [CreateMonitorPayload](docs/CreateMonitorPayload.md)
+ - [ErrorResponse](docs/ErrorResponse.md)
+ - [LoginPayload](docs/LoginPayload.md)
+ - [LoginResponse](docs/LoginResponse.md)
+ - [Monitor](docs/Monitor.md)
+ - [User](docs/User.md)
+ - [WithId](docs/WithId.md)
+ - [WithMonitorType](docs/WithMonitorType.md)
+ - [WithName](docs/WithName.md)
+ - [WithPassword](docs/WithPassword.md)
+ - [WithToken](docs/WithToken.md)
+ - [WithUser](docs/WithUser.md)
+ - [WithUsername](docs/WithUsername.md)
+
+
+<a id="documentation-for-authorization"></a>
+## Documentation For Authorization
+
+
+Authentication schemes defined for the API:
+<a id="bearerAuth"></a>
+### bearerAuth
+
+- **Type**: Bearer authentication (JWT)
+

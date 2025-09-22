@@ -1,0 +1,22 @@
+# CreateMonitorPayload
+
+
+## Properties
+
+Name | Type | Description | Notes
+------------ | ------------- | ------------- | -------------
+**name** | **string** |  | [default to undefined]
+**monitorType** | **string** |  | [default to undefined]
+
+## Example
+
+```typescript
+import { CreateMonitorPayload } from '@pulse/apigen';
+
+const instance: CreateMonitorPayload = {
+    name,
+    monitorType,
+};
+```
+
+[[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)

@@ -33,7 +33,7 @@ const props = withDefaults(defineProps<Props>(), {
 
 const clickCount = ref(0);
 function increment() {
-  $q.notify('Running on Quasar v' + $q.version)
+  $q.notify("Running on Quasar v" + $q.version);
   clickCount.value += 1;
   return clickCount.value;
 }
