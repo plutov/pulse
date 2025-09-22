@@ -17,13 +17,23 @@
 
     <q-drawer v-model="leftDrawerOpen" show-if-above bordered>
       <q-list>
-        <q-item-label header> Essential Links </q-item-label>
+        <q-item
+          v-for="(item, index) in menuList"
+          :key="index"
+          clickable
+          v-ripple
+          :to="item.route"
+        >
+          <q-item-section avatar>
+            <q-icon :name="item.icon" />
+          </q-item-section>
 
-        <EssentialLink
-          v-for="link in linksList"
-          :key="link.title"
-          v-bind="link"
-        />
+          <q-item-section>
+            <q-item-label>{{ item.label }}</q-item-label>
+          </q-item-section>
+
+          <q-separator v-if="item.separator" />
+        </q-item>
       </q-list>
     </q-drawer>
 
@@ -35,16 +45,13 @@
 
 <script setup lang="ts">
 import { ref } from "vue";
-import EssentialLink, {
-  type EssentialLinkProps,
-} from "components/EssentialLink.vue";
 
-const linksList: EssentialLinkProps[] = [
+const menuList = [
   {
-    title: "Docs",
-    caption: "quasar.dev",
-    icon: "school",
-    link: "https://quasar.dev",
+    icon: "home",
+    label: "Home",
+    separator: false,
+    route: "/",
   },
 ];
 
