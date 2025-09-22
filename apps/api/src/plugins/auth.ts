@@ -6,6 +6,7 @@ import { UserRepository } from "../database/repositories/user-repository";
 import * as Boom from "@hapi/boom";
 import { LoginResponse } from "@pulse/shared";
 import { loginSchema } from "../api/schemas";
+import Joi from "joi";
 
 const userRepository = new UserRepository();
 
@@ -41,6 +42,13 @@ const authPlugin: Hapi.Plugin<null> = {
         auth: false,
         validate: {
           payload: loginSchema,
+          failAction: (_request, _h, err) => {
+            const customErr = Boom.badRequest("Validation failed");
+            if (err && err instanceof Joi.ValidationError) {
+              customErr.output.payload.details = err?.details;
+            }
+            return customErr;
+          },
         },
       },
       handler: loginHandler,

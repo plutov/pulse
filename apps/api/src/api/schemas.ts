@@ -2,12 +2,14 @@ import Joi from "joi";
 
 export const loginSchema = Joi.object({
   username: Joi.string().required().messages({
-    "any.required": "Username is required",
+    "string.required": "Username is required",
+    "string.empty": "Username cannot be empty",
   }),
   password: Joi.string().required().messages({
-    "any.required": "Password is required",
+    "string.required": "Password is required",
+    "string.empty": "Password cannot be empty",
   }),
-});
+}).options({ abortEarly: false });
 
 export const createMonitorSchema = Joi.object({
   name: Joi.string().min(1).max(255).required().messages({
@@ -19,7 +21,7 @@ export const createMonitorSchema = Joi.object({
     "any.only": "Monitor type must be one of [http]",
     "any.required": "Monitor type is required",
   }),
-});
+}).options({ abortEarly: false });
 
 export const monitorIdParamSchema = Joi.object({
   id: Joi.string().guid({ version: "uuidv4" }).required().messages({

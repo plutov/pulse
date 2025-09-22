@@ -4,6 +4,7 @@ import HapiPino from "hapi-pino";
 import authPlugin from "./plugins/auth";
 import monitorsPlugin from "./plugins/monitors";
 import { Boom } from "@hapi/boom";
+import { ErrorResponse } from "@pulse/shared";
 
 interface ServerOptions {
   port?: number | string;
@@ -42,9 +43,25 @@ export async function createServer(
     const response = request.response;
     if (response instanceof Boom && response.isBoom) {
       const error = response as Boom;
-      const errorResponse = {
+      const errorResponse: ErrorResponse = {
         message: error.message,
+        statusCode: error.output.statusCode,
+        validationMessages: [],
       };
+      if (
+        error.output.payload.details &&
+        Array.isArray(error.output.payload.details)
+      ) {
+        errorResponse.validationMessages = error.output.payload.details.map(
+          (detail) => {
+            return {
+              message: detail.message,
+              type: detail.type,
+              path: detail.path,
+            };
+          },
+        );
+      }
       return h.response(errorResponse).code(error.output.statusCode);
     }
     return h.continue;

@@ -32,5 +32,11 @@ export interface ValidationMessage {
      * @memberof ValidationMessage
      */
     'type': string;
+    /**
+     * 
+     * @type {Array<string>}
+     * @memberof ValidationMessage
+     */
+    'path'?: Array<string>;
 }
 

@@ -140,6 +140,10 @@ components:
           type: string
         type:
           type: string
+        path:
+          type: array
+          items:
+            type: string
     ErrorResponse:
       required:
         - statusCode
