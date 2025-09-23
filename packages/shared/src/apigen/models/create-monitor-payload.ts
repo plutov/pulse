@@ -21,13 +21,13 @@ import type { HttpConfig } from './http-config';
 import type { MonitorType } from './monitor-type';
 // May contain unused imports in some cases
 // @ts-ignore
+import type { WithConfig } from './with-config';
+// May contain unused imports in some cases
+// @ts-ignore
 import type { WithMonitorType } from './with-monitor-type';
 // May contain unused imports in some cases
 // @ts-ignore
 import type { WithName } from './with-name';
-// May contain unused imports in some cases
-// @ts-ignore
-import type { WithOptionalHttpConfig } from './with-optional-http-config';
 // May contain unused imports in some cases
 // @ts-ignore
 import type { WithSchedule } from './with-schedule';
@@ -39,6 +39,6 @@ import type { WithStatus } from './with-status';
  * @type CreateMonitorPayload
  * @export
  */
-export type CreateMonitorPayload = WithMonitorType & WithName & WithOptionalHttpConfig & WithSchedule & WithStatus;
+export type CreateMonitorPayload = WithConfig & WithMonitorType & WithName & WithSchedule & WithStatus;
 
 

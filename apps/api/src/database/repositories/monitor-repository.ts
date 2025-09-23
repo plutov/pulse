@@ -67,10 +67,8 @@ export function convertMonitorRowToApi(row: MonitorWithAuthor): Monitor {
     },
     schedule: row.schedule,
     status: row.status as "active" | "paused",
+    config: row.config as HttpConfig, // TODO: handle other types
   };
-  if (res.monitorType == MonitorType.http && row.config) {
-    res.httpConfig = row.config as HttpConfig;
-  }
   return res;
 }
 
@@ -90,6 +88,6 @@ export function convertCreateMonitorPayloadToDb(
     name: payload.name,
     schedule: payload.schedule,
     status: payload.status as MonitorStatus,
-    config: payload.httpConfig || null,
+    config: payload.config,
   };
 }

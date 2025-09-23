@@ -1,19 +1,19 @@
-# WithOptionalHttpConfig
+# WithConfig
 
 
 ## Properties
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**httpConfig** | [**HttpConfig**](HttpConfig.md) |  | [optional] [default to undefined]
+**config** | [**HttpConfig**](HttpConfig.md) |  | [default to undefined]
 
 ## Example
 
 ```typescript
-import { WithOptionalHttpConfig } from '@pulse/shared';
+import { WithConfig } from '@pulse/shared';
 
-const instance: WithOptionalHttpConfig = {
-    httpConfig,
+const instance: WithConfig = {
+    config,
 };
 ```
 

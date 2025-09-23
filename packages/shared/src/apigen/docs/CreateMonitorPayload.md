@@ -9,7 +9,7 @@ Name | Type | Description | Notes
 **monitorType** | [**MonitorType**](MonitorType.md) |  | [default to undefined]
 **schedule** | **string** | Cron-like schedule string | [default to undefined]
 **status** | **string** |  | [default to undefined]
-**httpConfig** | [**HttpConfig**](HttpConfig.md) |  | [optional] [default to undefined]
+**config** | [**HttpConfig**](HttpConfig.md) |  | [default to undefined]
 
 ## Example
 
@@ -21,7 +21,7 @@ const instance: CreateMonitorPayload = {
     monitorType,
     schedule,
     status,
-    httpConfig,
+    config,
 };
 ```
 

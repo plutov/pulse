@@ -68,6 +68,7 @@ npm run lint
 Run tests across all projects:
 ```bash
 npm run test
+npm run coverage
 ```
 
 ## Generate Code

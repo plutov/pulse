@@ -7,5 +7,9 @@ export default defineConfig({
     hookTimeout: 60000,
     teardownTimeout: 60000,
     globalSetup: "./tests/setup/global.ts",
+    coverage: {
+      provider: "v8",
+      exclude: ["database/**", "src/database/types/**"],
+    },
   },
 });

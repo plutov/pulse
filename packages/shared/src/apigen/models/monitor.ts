@@ -27,6 +27,9 @@ import type { User } from './user';
 import type { WithAuthor } from './with-author';
 // May contain unused imports in some cases
 // @ts-ignore
+import type { WithConfig } from './with-config';
+// May contain unused imports in some cases
+// @ts-ignore
 import type { WithCreatedAt } from './with-created-at';
 // May contain unused imports in some cases
 // @ts-ignore
@@ -37,9 +40,6 @@ import type { WithMonitorType } from './with-monitor-type';
 // May contain unused imports in some cases
 // @ts-ignore
 import type { WithName } from './with-name';
-// May contain unused imports in some cases
-// @ts-ignore
-import type { WithOptionalHttpConfig } from './with-optional-http-config';
 // May contain unused imports in some cases
 // @ts-ignore
 import type { WithSchedule } from './with-schedule';
@@ -54,6 +54,6 @@ import type { WithUpdatedAt } from './with-updated-at';
  * @type Monitor
  * @export
  */
-export type Monitor = WithAuthor & WithCreatedAt & WithId & WithMonitorType & WithName & WithOptionalHttpConfig & WithSchedule & WithStatus & WithUpdatedAt;
+export type Monitor = WithAuthor & WithConfig & WithCreatedAt & WithId & WithMonitorType & WithName & WithSchedule & WithStatus & WithUpdatedAt;
 
 

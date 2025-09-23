@@ -20,11 +20,11 @@ docs/MonitorType.md
 docs/User.md
 docs/ValidationMessage.md
 docs/WithAuthor.md
+docs/WithConfig.md
 docs/WithCreatedAt.md
 docs/WithId.md
 docs/WithMonitorType.md
 docs/WithName.md
-docs/WithOptionalHttpConfig.md
 docs/WithPassword.md
 docs/WithSchedule.md
 docs/WithStatus.md
@@ -45,11 +45,11 @@ models/monitor.ts
 models/user.ts
 models/validation-message.ts
 models/with-author.ts
+models/with-config.ts
 models/with-created-at.ts
 models/with-id.ts
 models/with-monitor-type.ts
 models/with-name.ts
-models/with-optional-http-config.ts
 models/with-password.ts
 models/with-schedule.ts
 models/with-status.ts

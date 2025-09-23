@@ -94,8 +94,8 @@ const columns = [
     label: "Config",
     align: "left",
     field: (row: Monitor) =>
-      row.monitorType === MonitorType.http && row.httpConfig
-        ? `${row.httpConfig.method} ${row.httpConfig.url}`
+      row.monitorType === MonitorType.http && row.config
+        ? `${row.config.method} ${row.config.url}`
         : "N/A",
   },
 ];

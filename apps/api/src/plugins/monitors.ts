@@ -94,7 +94,7 @@ async function createMonitorHandler(
 
     const existingMonitor = await monitorRepository.findByName(payload.name);
     if (existingMonitor) {
-      throw Boom.conflict(`Monitor with name '${payload.name}' already exists`);
+      throw Boom.conflict(`Monitor with this name already exists`);
     }
 
     const createData = convertCreateMonitorPayloadToDb(payload, authorId, id);

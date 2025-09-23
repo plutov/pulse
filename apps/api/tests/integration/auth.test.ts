@@ -10,6 +10,7 @@ import {
 import { LoginResponse } from "@pulse/shared";
 import { randomUUID } from "crypto";
 import { UserRepository } from "../../src/database/repositories/user-repository";
+import { ApiErrorsEnum } from "../../src/api/errors";
 
 describe("Auth", () => {
   let server: Hapi.Server;
@@ -70,6 +71,8 @@ describe("Auth", () => {
       });
 
       expect(response.statusCode).toBe(400);
+      const result = JSON.parse(response.payload);
+      expect(result.message).toBe(ApiErrorsEnum.ValidationFailed);
     });
 
     it("should reject missing password", async () => {
@@ -82,6 +85,8 @@ describe("Auth", () => {
       });
 
       expect(response.statusCode).toBe(400);
+      const result = JSON.parse(response.payload);
+      expect(result.message).toBe(ApiErrorsEnum.ValidationFailed);
     });
 
     it("should return a valid JWT token that can be used for authenticated requests", async () => {

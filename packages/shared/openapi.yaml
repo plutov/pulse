@@ -200,6 +200,9 @@ components:
       properties:
         author:
           $ref: "#/components/schemas/User"
+    MonitorConfig:
+      oneOf:
+        - $ref: "#/components/schemas/HttpConfig"
     HttpConfig:
       required:
         - url
@@ -208,7 +211,6 @@ components:
       properties:
         url:
           type: string
-          format: uri
         method:
           type: string
           enum:
@@ -219,11 +221,13 @@ components:
             - HEAD
             - OPTIONS
             - PATCH
-    WithOptionalHttpConfig:
+    WithConfig:
       type: object
+      required:
+        - config
       properties:
-        httpConfig:
-          $ref: "#/components/schemas/HttpConfig"
+        config:
+          $ref: "#/components/schemas/MonitorConfig"
     WithSchedule:
       required:
         - schedule
@@ -253,14 +257,14 @@ components:
         - $ref: "#/components/schemas/WithAuthor"
         - $ref: "#/components/schemas/WithSchedule"
         - $ref: "#/components/schemas/WithStatus"
-        - $ref: "#/components/schemas/WithOptionalHttpConfig"
+        - $ref: "#/components/schemas/WithConfig"
     CreateMonitorPayload:
       allOf:
         - $ref: "#/components/schemas/WithName"
         - $ref: "#/components/schemas/WithMonitorType"
         - $ref: "#/components/schemas/WithSchedule"
         - $ref: "#/components/schemas/WithStatus"
-        - $ref: "#/components/schemas/WithOptionalHttpConfig"
+        - $ref: "#/components/schemas/WithConfig"
     WithUsername:
       required:
         - username

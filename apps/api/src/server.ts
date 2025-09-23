@@ -8,6 +8,7 @@ import { ErrorResponse } from "@pulse/shared";
 
 interface ServerOptions {
   port?: number | string;
+  silent?: boolean;
 }
 
 export async function createServer(
@@ -74,6 +75,7 @@ export async function createServer(
       redact: ["req.headers.authorization"],
       logRequestComplete: true,
       logRequestStart: false,
+      level: options.silent ? "silent" : "info",
     },
   });
 

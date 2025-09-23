@@ -3,3 +3,4 @@ dist/
 postgres_data/
 .env
 .turbo/
+coverage/

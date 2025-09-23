@@ -20,14 +20,14 @@ import type { HttpConfig } from './http-config';
 /**
  * 
  * @export
- * @interface WithOptionalHttpConfig
+ * @interface WithConfig
  */
-export interface WithOptionalHttpConfig {
+export interface WithConfig {
     /**
      * 
      * @type {HttpConfig}
-     * @memberof WithOptionalHttpConfig
+     * @memberof WithConfig
      */
-    'httpConfig'?: HttpConfig;
+    'config': HttpConfig;
 }
 
