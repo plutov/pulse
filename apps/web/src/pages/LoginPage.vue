@@ -50,7 +50,7 @@
 <script setup lang="ts">
 import { ref } from "vue";
 import { useRouter } from "vue-router";
-import { useAuthStore } from "../stores/auth";
+import { useAuthStore } from "stores/auth";
 
 const router = useRouter();
 const authStore = useAuthStore();
@@ -62,12 +62,12 @@ const errorMessage = ref("");
 const onSubmit = async () => {
   errorMessage.value = "";
 
-  const success = await authStore.login({
+  const user = await authStore.login({
     username: username.value,
     password: password.value,
   });
 
-  if (success) {
+  if (user) {
     void router.push("/");
   } else {
     errorMessage.value = "Invalid username or password";

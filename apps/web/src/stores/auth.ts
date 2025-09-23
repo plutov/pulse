@@ -9,7 +9,7 @@ export const useAuthStore = defineStore("auth", () => {
   const isLoading = ref(false);
   const isAuthenticated = computed(() => !!token.value);
 
-  const login = async (credentials: LoginPayload): Promise<boolean> => {
+  const login = async (credentials: LoginPayload): Promise<User | null> => {
     isLoading.value = true;
     try {
       const response = await authApi.login(credentials);
@@ -17,15 +17,15 @@ export const useAuthStore = defineStore("auth", () => {
         token.value = response.data.token;
         user.value = response.data.user;
         localStorage.setItem("auth_token", response.data.token);
-        return true;
+        return response.data.user;
       }
-      return false;
     } catch (error) {
-      console.error("Login error:", error);
-      return false;
+      console.error("Login failed:", error);
     } finally {
       isLoading.value = false;
     }
+
+    return null;
   };
 
   const logout = () => {

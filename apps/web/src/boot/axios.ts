@@ -1,7 +1,7 @@
 import { defineBoot } from "#q-app/wrappers";
 import axios, { type AxiosInstance } from "axios";
 import { AuthApi, MonitorApi, Configuration } from "@pulse/shared";
-import { useAuthStore } from "../stores/auth";
+import { useAuthStore } from "stores/auth";
 import { unref } from "vue";
 
 declare module "vue" {
