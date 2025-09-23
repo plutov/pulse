@@ -4,8 +4,13 @@ import {
   createMonitorHandler,
   getMonitorByIdHandler,
   deleteMonitorHandler,
+  listMonitorRuns,
 } from "../controllers/monitors";
-import { createMonitorSchema, monitorIdParamSchema } from "../api/schemas";
+import {
+  createMonitorSchema,
+  monitorIdParamSchema,
+  listMonitorRunsParamsSchema,
+} from "../api/schemas";
 import { validationFailAction } from "../api/errors";
 
 export const monitorRoutes: Hapi.ServerRoute[] = [
@@ -43,6 +48,17 @@ export const monitorRoutes: Hapi.ServerRoute[] = [
     options: {
       validate: {
         params: monitorIdParamSchema,
+        failAction: validationFailAction,
+      },
+    },
+  },
+  {
+    method: "GET",
+    path: "/runs",
+    handler: listMonitorRuns,
+    options: {
+      validate: {
+        query: listMonitorRunsParamsSchema,
         failAction: validationFailAction,
       },
     },

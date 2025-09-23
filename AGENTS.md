@@ -13,12 +13,12 @@ Follow these steps in order when making API changes:
 
 ### Generate and Build Types
 
-After updating the OpenAPI spec:
+After updating the OpenAPI spec, generate the TypeScript types and build the package:
 
 ```bash
 cd packages/shared
-npm run generate  # Generates TypeScript types from OpenAPI
-npm run build     # Builds the shared package
+npm run generate
+npm run build
 ```
 
 This creates TypeScript types in `packages/shared/src/apigen/` that both `api` and `web` applications can use.
@@ -30,14 +30,16 @@ For database changes:
 - Create migrations in `apps/api/database/migrations/`
 - Use snake_case for PostgreSQL field names
 - Generate database types after running migrations
-- Database types are generated in `apps/api/src/database/types/`
+- Database types are generated in `apps/api/src/models/types/`
 
 ### API Implementation
 
 When implementing API endpoints:
 
 - Use the generated types from `@pulse/shared`
-- Implement endpoints in `apps/api/src/plugins/`
+- Hapi plugins: `apps/api/src/plugins/`
+- Route handlers: `apps/api/src/routes/`
+- Controllers: `apps/api/src/controllers/`
 - **Important**: API fields use camelCase, PostgreSQL fields use snake_case
 - Always use converters when mapping between API and database models
 - All fields must be validated using Joi schemas defined in `apps/api/src/api/schemas.ts`

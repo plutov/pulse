@@ -54,7 +54,8 @@ Class | Method | HTTP request | Description
 *AuthApi* | [**login**](docs/AuthApi.md#login) | **POST** /auth/login | User Login
 *MonitorApi* | [**createMonitor**](docs/MonitorApi.md#createmonitor) | **POST** /monitors | Create Monitor
 *MonitorApi* | [**deleteMonitor**](docs/MonitorApi.md#deletemonitor) | **DELETE** /monitors/{id} | Delete Monitor
-*MonitorApi* | [**getMonitorById**](docs/MonitorApi.md#getmonitorbyid) | **GET** /monitors/{id} | Get Monitor by ID
+*MonitorApi* | [**getMonitor**](docs/MonitorApi.md#getmonitor) | **GET** /monitors/{id} | Get Monitor
+*MonitorApi* | [**listMonitorRuns**](docs/MonitorApi.md#listmonitorruns) | **GET** /runs | Get Monitor Runs
 *MonitorApi* | [**listMonitors**](docs/MonitorApi.md#listmonitors) | **GET** /monitors | List Monitors
 
 
@@ -63,16 +64,25 @@ Class | Method | HTTP request | Description
  - [CreateMonitorPayload](docs/CreateMonitorPayload.md)
  - [ErrorResponse](docs/ErrorResponse.md)
  - [HttpConfig](docs/HttpConfig.md)
+ - [HttpRunDetails](docs/HttpRunDetails.md)
  - [LoginPayload](docs/LoginPayload.md)
  - [LoginResponse](docs/LoginResponse.md)
  - [Monitor](docs/Monitor.md)
+ - [MonitorMinimal](docs/MonitorMinimal.md)
+ - [MonitorRun](docs/MonitorRun.md)
+ - [MonitorRunStatus](docs/MonitorRunStatus.md)
+ - [MonitorRunsList](docs/MonitorRunsList.md)
  - [MonitorType](docs/MonitorType.md)
  - [User](docs/User.md)
  - [ValidationMessage](docs/ValidationMessage.md)
  - [WithAuthor](docs/WithAuthor.md)
  - [WithConfig](docs/WithConfig.md)
  - [WithCreatedAt](docs/WithCreatedAt.md)
+ - [WithDurationMs](docs/WithDurationMs.md)
  - [WithId](docs/WithId.md)
+ - [WithMonitorMinimal](docs/WithMonitorMinimal.md)
+ - [WithMonitorRunDetails](docs/WithMonitorRunDetails.md)
+ - [WithMonitorRunStatus](docs/WithMonitorRunStatus.md)
  - [WithMonitorType](docs/WithMonitorType.md)
  - [WithName](docs/WithName.md)
  - [WithPassword](docs/WithPassword.md)

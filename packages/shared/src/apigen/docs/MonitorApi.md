@@ -6,7 +6,8 @@ All URIs are relative to *http://localhost*
 |------------- | ------------- | -------------|
 |[**createMonitor**](#createmonitor) | **POST** /monitors | Create Monitor|
 |[**deleteMonitor**](#deletemonitor) | **DELETE** /monitors/{id} | Delete Monitor|
-|[**getMonitorById**](#getmonitorbyid) | **GET** /monitors/{id} | Get Monitor by ID|
+|[**getMonitor**](#getmonitor) | **GET** /monitors/{id} | Get Monitor|
+|[**listMonitorRuns**](#listmonitorruns) | **GET** /runs | Get Monitor Runs|
 |[**listMonitors**](#listmonitors) | **GET** /monitors | List Monitors|
 
 # **createMonitor**
@@ -78,7 +79,7 @@ import {
 const configuration = new Configuration();
 const apiInstance = new MonitorApi(configuration);
 
-let id: string; //Monitor ID (default to undefined)
+let id: string; // (default to undefined)
 
 const { status, data } = await apiInstance.deleteMonitor(
     id
@@ -89,7 +90,7 @@ const { status, data } = await apiInstance.deleteMonitor(
 
 |Name | Type | Description  | Notes|
 |------------- | ------------- | ------------- | -------------|
-| **id** | [**string**] | Monitor ID | defaults to undefined|
+| **id** | [**string**] |  | defaults to undefined|
 
 
 ### Return type
@@ -117,8 +118,8 @@ void (empty response body)
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
-# **getMonitorById**
-> Monitor getMonitorById()
+# **getMonitor**
+> Monitor getMonitor()
 
 
 ### Example
@@ -132,9 +133,9 @@ import {
 const configuration = new Configuration();
 const apiInstance = new MonitorApi(configuration);
 
-let id: string; //Monitor ID (default to undefined)
+let id: string; // (default to undefined)
 
-const { status, data } = await apiInstance.getMonitorById(
+const { status, data } = await apiInstance.getMonitor(
     id
 );
 ```
@@ -143,12 +144,72 @@ const { status, data } = await apiInstance.getMonitorById(
 
 |Name | Type | Description  | Notes|
 |------------- | ------------- | ------------- | -------------|
-| **id** | [**string**] | Monitor ID | defaults to undefined|
+| **id** | [**string**] |  | defaults to undefined|
 
 
 ### Return type
 
 **Monitor**
+
+### Authorization
+
+[BearerAuth](../README.md#BearerAuth)
+
+### HTTP request headers
+
+ - **Content-Type**: Not defined
+ - **Accept**: application/json
+
+
+### HTTP response details
+| Status code | Description | Response headers |
+|-------------|-------------|------------------|
+|**200** | ok |  -  |
+|**400** | 400 |  -  |
+|**401** | 401 |  -  |
+|**404** | 404 |  -  |
+|**500** | 500 |  -  |
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
+# **listMonitorRuns**
+> MonitorRunsList listMonitorRuns()
+
+
+### Example
+
+```typescript
+import {
+    MonitorApi,
+    Configuration
+} from '@pulse/shared';
+
+const configuration = new Configuration();
+const apiInstance = new MonitorApi(configuration);
+
+let id: string; // (optional) (default to undefined)
+let size: number; // (optional) (default to 50)
+let offset: number; // (optional) (default to 0)
+
+const { status, data } = await apiInstance.listMonitorRuns(
+    id,
+    size,
+    offset
+);
+```
+
+### Parameters
+
+|Name | Type | Description  | Notes|
+|------------- | ------------- | ------------- | -------------|
+| **id** | [**string**] |  | (optional) defaults to undefined|
+| **size** | [**number**] |  | (optional) defaults to 50|
+| **offset** | [**number**] |  | (optional) defaults to 0|
+
+
+### Return type
+
+**MonitorRunsList**
 
 ### Authorization
 

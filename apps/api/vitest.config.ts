@@ -9,7 +9,7 @@ export default defineConfig({
     globalSetup: "./tests/setup/global.ts",
     coverage: {
       provider: "v8",
-      exclude: ["database/**", "src/database/types/**"],
+      exclude: ["database/**", "src/models/types/**"],
     },
   },
 });

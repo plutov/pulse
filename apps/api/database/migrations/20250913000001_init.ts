@@ -11,7 +11,7 @@ export async function up(knex: Knex): Promise<void> {
     table.index("username");
   });
 
-  return knex.schema.createTable("monitors", (table) => {
+  await knex.schema.createTable("monitors", (table) => {
     table.uuid("id").primary();
     table
       .uuid("author")

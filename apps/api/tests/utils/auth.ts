@@ -1,6 +1,6 @@
 import * as jwt from "jsonwebtoken";
 import { getTestDb } from "../setup/database";
-import { UserRepository } from "../../src/models/repositories/user-repository";
+import { UserRepository } from "../../src/models/repositories/users";
 
 export const TEST_USER_PASSWORD = "admin123";
 

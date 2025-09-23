@@ -2,60 +2,18 @@ import { describe, it, expect, beforeEach, afterAll, beforeAll } from "vitest";
 import * as Hapi from "@hapi/hapi";
 import { createTestServer } from "../setup/server";
 import { closeTestDb, getTestDb } from "../setup/database";
-import {
-  ErrorResponse,
-  Monitor,
-  CreateMonitorPayload,
-  HttpConfig,
-  MonitorType,
-  WithStatusStatusEnum,
-} from "@pulse/shared";
+import { ErrorResponse, Monitor, MonitorRunsList } from "@pulse/shared";
 import { createTestUser, getAuthHeaders } from "../utils/auth";
 import { randomUUID } from "crypto";
-import { UserRepository } from "../../src/models/repositories/user-repository";
 import { ApiErrorsEnum } from "../../src/api/errors";
-
-interface TestMonitorData {
-  name: string;
-  monitorType?: MonitorType;
-  schedule?: string;
-  status?: WithStatusStatusEnum;
-  config?: HttpConfig;
-}
+import { createTestMonitor } from "../utils/monitors";
+import { createTestRun } from "../utils/runs";
+import { UserRepository } from "../../src/models/repositories/users";
 
 describe("Monitors API", () => {
   let server: Hapi.Server;
   const userId = randomUUID();
   const userName = `user-${userId}`;
-
-  const createMonitor = async (
-    monitorData: TestMonitorData,
-  ): Promise<Monitor | ErrorResponse> => {
-    const payload: CreateMonitorPayload = {
-      name: monitorData.name,
-      monitorType: monitorData.monitorType || MonitorType.http,
-      schedule: monitorData.schedule || "*/5 * * * *",
-      status: monitorData.status || WithStatusStatusEnum.active,
-      config: monitorData.config || {
-        url: "https://example.com",
-        method: "GET",
-      },
-    };
-    const response = await server.inject({
-      method: "POST",
-      url: "/monitors",
-      payload,
-      headers: getAuthHeaders(userId),
-    });
-
-    if (response.statusCode === 201) {
-      const monitor: Monitor = JSON.parse(response.payload);
-      return monitor;
-    }
-
-    const error: ErrorResponse = JSON.parse(response.payload);
-    return error;
-  };
 
   beforeAll(async () => {
     server = await createTestServer();
@@ -70,6 +28,7 @@ describe("Monitors API", () => {
 
   afterAll(async () => {
     const db = getTestDb();
+    await db.raw("TRUNCATE TABLE monitors RESTART IDENTITY CASCADE");
     const userRepository = new UserRepository(db);
     await userRepository.delete(userId);
     await server.stop();
@@ -89,10 +48,7 @@ describe("Monitors API", () => {
     });
 
     it("should return monitors when they exist", async () => {
-      await createMonitor({
-        name: "test-monitor",
-        monitorType: MonitorType.http,
-      });
+      await createTestMonitor(server, userId, {});
 
       const response = await server.inject({
         method: "GET",
@@ -104,14 +60,14 @@ describe("Monitors API", () => {
       const monitors: Monitor[] = JSON.parse(response.payload);
       expect(monitors).toHaveLength(1);
       expect(monitors[0]).toMatchObject({
-        id: expect.any(String) as string,
-        name: "test-monitor",
-        monitorType: "http",
-        status: "active",
-        schedule: "*/5 * * * *",
+        id: expect.any(String),
+        name: expect.any(String),
+        monitorType: expect.any(String),
+        status: expect.any(String),
+        schedule: expect.any(String),
         config: {
-          url: "https://example.com",
-          method: "GET",
+          url: expect.any(String),
+          method: expect.any(String),
         },
         author: { id: userId, username: userName },
       });
@@ -152,18 +108,22 @@ describe("Monitors API", () => {
     });
 
     it("should create a new monitor", async () => {
-      const monitor = (await createMonitor({
+      const monitor = (await createTestMonitor(server, userId, {
         name: "new-monitor",
-        monitorType: MonitorType.http,
-        schedule: "*/5 * * * *",
-        status: WithStatusStatusEnum.active,
+        status: "active",
+        schedule: "*/10 * * * *",
+        monitorType: "http",
+        config: {
+          url: "https://example.com",
+          method: "GET",
+        },
       })) as Monitor;
       expect(monitor).toMatchObject({
-        id: expect.any(String) as string,
+        id: expect.any(String),
         name: "new-monitor",
         monitorType: "http",
         status: "active",
-        schedule: "*/5 * * * *",
+        schedule: "*/10 * * * *",
         config: {
           url: "https://example.com",
           method: "GET",
@@ -173,13 +133,13 @@ describe("Monitors API", () => {
     });
 
     it("should return 409 for a duplicate name", async () => {
-      await createMonitor({
-        name: "duplicate-monitor",
-      });
+      await createTestMonitor(server, userId, {});
 
-      const err = (await createMonitor({
-        name: "duplicate-monitor",
-      })) as ErrorResponse;
+      const err = (await createTestMonitor(
+        server,
+        userId,
+        {},
+      )) as ErrorResponse;
       expect(err.message).toBe("Monitor with this name already exists");
       expect(err.statusCode).toBe(409);
     });
@@ -187,7 +147,7 @@ describe("Monitors API", () => {
 
   describe("GET /monitors/{id}", () => {
     it("should return monitor by id", async () => {
-      const createdMonitor = (await createMonitor({
+      const createdMonitor = (await createTestMonitor(server, userId, {
         name: "test-monitor",
       })) as Monitor;
 
@@ -229,9 +189,11 @@ describe("Monitors API", () => {
 
   describe("DELETE /monitors/{id}", () => {
     it("should delete monitor by id", async () => {
-      const createdMonitor = (await createMonitor({
-        name: "to-delete-monitor",
-      })) as Monitor;
+      const createdMonitor = (await createTestMonitor(
+        server,
+        userId,
+        {},
+      )) as Monitor;
 
       const response = await server.inject({
         method: "DELETE",
@@ -272,6 +234,225 @@ describe("Monitors API", () => {
       expect(response.statusCode).toBe(400);
       const error: ErrorResponse = JSON.parse(response.payload);
       expect(error.message).toContain(ApiErrorsEnum.ValidationFailed);
+    });
+  });
+
+  describe("GET /runs", () => {
+    it("should return empty list when no runs exist", async () => {
+      const response = await server.inject({
+        method: "GET",
+        url: "/runs",
+        headers: getAuthHeaders(userId),
+      });
+
+      expect(response.statusCode).toBe(200);
+      const result = JSON.parse(response.payload) as MonitorRunsList;
+      expect(result.rows).toEqual([]);
+      expect(result.total).toBe(0);
+    });
+
+    it("should return all runs with default pagination", async () => {
+      const db = getTestDb();
+      const monitor = (await createTestMonitor(server, userId, {})) as Monitor;
+      const run1 = await createTestRun(db, { monitorId: monitor.id });
+      const run2 = await createTestRun(db, { monitorId: monitor.id });
+      const run3 = await createTestRun(db, { monitorId: monitor.id });
+
+      const response = await server.inject({
+        method: "GET",
+        url: "/runs",
+        headers: getAuthHeaders(userId),
+      });
+
+      expect(response.statusCode).toBe(200);
+      const result = JSON.parse(response.payload) as MonitorRunsList;
+      expect(result.total).toBe(3);
+      expect(result.rows).toHaveLength(3);
+
+      const runIds = result.rows!.map((run) => run.id);
+      expect(runIds).toEqual(
+        expect.arrayContaining([run1.id, run2.id, run3.id]),
+      );
+    });
+
+    it("should filter runs by monitorId", async () => {
+      const db = getTestDb();
+      const monitor1 = (await createTestMonitor(server, userId, {})) as Monitor;
+      const monitor2 = (await createTestMonitor(server, userId, {
+        name: "second-monitor",
+      })) as Monitor;
+      const run1 = await createTestRun(db, { monitorId: monitor1.id });
+      const run2 = await createTestRun(db, { monitorId: monitor1.id });
+      const run3 = await createTestRun(db, { monitorId: monitor2.id });
+
+      const response = await server.inject({
+        method: "GET",
+        url: `/runs?monitorId=${monitor1.id}`,
+        headers: getAuthHeaders(userId),
+      });
+
+      expect(response.statusCode).toBe(200);
+      const result = JSON.parse(response.payload) as MonitorRunsList;
+      expect(result.total).toBe(2);
+      expect(result.rows).toHaveLength(2);
+      const runIds = result.rows!.map((run) => run.id);
+      expect(runIds).toEqual(expect.arrayContaining([run1.id, run2.id]));
+      expect(runIds).not.toContain(run3.id);
+    });
+
+    it("should respect size parameter for pagination", async () => {
+      const db = getTestDb();
+      const monitor = (await createTestMonitor(server, userId, {})) as Monitor;
+      for (let i = 0; i < 5; i++) {
+        await createTestRun(db, { monitorId: monitor.id });
+      }
+
+      const response = await server.inject({
+        method: "GET",
+        url: "/runs?size=3",
+        headers: getAuthHeaders(userId),
+      });
+
+      expect(response.statusCode).toBe(200);
+      const result = JSON.parse(response.payload) as MonitorRunsList;
+      expect(result.total).toBe(5);
+      expect(result.rows).toHaveLength(3);
+    });
+
+    it("should respect offset parameter for pagination", async () => {
+      const db = getTestDb();
+      const monitor = (await createTestMonitor(server, userId, {})) as Monitor;
+      for (let i = 0; i < 5; i++) {
+        await createTestRun(db, { monitorId: monitor.id });
+      }
+
+      // Get first page
+      const firstPageResponse = await server.inject({
+        method: "GET",
+        url: "/runs?size=5&offset=2",
+        headers: getAuthHeaders(userId),
+      });
+
+      expect(firstPageResponse.statusCode).toBe(200);
+      const firstPage = JSON.parse(
+        firstPageResponse.payload,
+      ) as MonitorRunsList;
+      expect(firstPage.total).toBe(5);
+      expect(firstPage.rows).toHaveLength(3);
+    });
+
+    it("validate request", async () => {
+      // Test size too small
+      const tooSmallResponse = await server.inject({
+        method: "GET",
+        url: "/runs?size=0",
+        headers: getAuthHeaders(userId),
+      });
+
+      expect(tooSmallResponse.statusCode).toBe(400);
+      const errorResponse = JSON.parse(
+        tooSmallResponse.payload,
+      ) as ErrorResponse;
+      expect(errorResponse.validationMessages).toContainEqual(
+        expect.objectContaining({
+          message: expect.stringContaining("Size must be at least 1"),
+          path: ["size"],
+        }),
+      );
+
+      // Test size too large
+      const tooLargeResponse = await server.inject({
+        method: "GET",
+        url: "/runs?size=1001",
+        headers: getAuthHeaders(userId),
+      });
+
+      expect(tooLargeResponse.statusCode).toBe(400);
+      const errorResponse2 = JSON.parse(
+        tooLargeResponse.payload,
+      ) as ErrorResponse;
+      expect(errorResponse2.validationMessages).toContainEqual(
+        expect.objectContaining({
+          message: expect.stringContaining("Size cannot exceed 1000"),
+          path: ["size"],
+        }),
+      );
+    });
+
+    it("should validate offset parameter", async () => {
+      const response = await server.inject({
+        method: "GET",
+        url: "/runs?offset=-1",
+        headers: getAuthHeaders(userId),
+      });
+
+      expect(response.statusCode).toBe(400);
+      const errorResponse = JSON.parse(response.payload) as ErrorResponse;
+      expect(errorResponse.validationMessages).toContainEqual(
+        expect.objectContaining({
+          message: expect.stringContaining("Offset cannot be negative"),
+          path: ["offset"],
+        }),
+      );
+    });
+
+    it("should validate monitorId parameter", async () => {
+      const response = await server.inject({
+        method: "GET",
+        url: "/runs?monitorId=invalid-uuid",
+        headers: getAuthHeaders(userId),
+      });
+
+      expect(response.statusCode).toBe(400);
+      const errorResponse = JSON.parse(response.payload) as ErrorResponse;
+      expect(errorResponse.validationMessages).toContainEqual(
+        expect.objectContaining({
+          message: expect.stringContaining("Monitor ID must be a valid UUIDv4"),
+          path: ["monitorId"],
+        }),
+      );
+    });
+
+    it("should require authentication", async () => {
+      const response = await server.inject({
+        method: "GET",
+        url: "/runs",
+      });
+
+      expect(response.statusCode).toBe(401);
+    });
+
+    it("should return runs with correct data structure", async () => {
+      const db = getTestDb();
+      const monitor = (await createTestMonitor(server, userId, {})) as Monitor;
+      const runDb = await createTestRun(db, {
+        monitorId: monitor.id,
+      });
+
+      const response = await server.inject({
+        method: "GET",
+        url: "/runs",
+        headers: getAuthHeaders(userId),
+      });
+
+      expect(response.statusCode).toBe(200);
+      const result = JSON.parse(response.payload) as MonitorRunsList;
+      expect(result.rows).toHaveLength(1);
+
+      const run = result.rows![0];
+      expect(run).toMatchObject({
+        id: runDb.id,
+        status: expect.any(String),
+        durationMs: expect.any(Number),
+        createdAt: expect.any(String),
+        monitor: {
+          id: monitor.id,
+          name: expect.any(String),
+        },
+        details: {
+          statusCode: expect.any(Number),
+        },
+      });
     });
   });
 });

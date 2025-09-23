@@ -1,7 +1,7 @@
 import * as Hapi from "@hapi/hapi";
 import * as jwt from "hapi-auth-jwt2";
 import { JwtPayload } from "jsonwebtoken";
-import { UserRepository } from "../models/repositories/user-repository";
+import { UserRepository } from "../models/repositories/users";
 
 const userRepository = new UserRepository();
 

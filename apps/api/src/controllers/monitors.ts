@@ -1,15 +1,21 @@
 import * as Hapi from "@hapi/hapi";
 import * as Boom from "@hapi/boom";
-import { CreateMonitorPayload } from "@pulse/shared";
-import { MonitorRepository } from "../models/repositories/monitor-repository";
+import { CreateMonitorPayload, MonitorRunsList } from "@pulse/shared";
+import { MonitorRepository } from "../models/repositories/monitors";
 import {
   convertMonitorRowToApi,
   convertMonitorRowsToApi,
   convertCreateMonitorPayloadToDb,
-} from "../models/repositories/monitor-repository";
+} from "../models/repositories/monitors";
 import { randomUUID } from "crypto";
+import {
+  convertRunRowsToApi,
+  ListRunsOptions,
+  RunRepository,
+} from "../models/repositories/runs";
 
 const monitorRepository = new MonitorRepository();
+const runRepository = new RunRepository();
 
 export async function getAllMonitorsHandler() {
   try {
@@ -95,5 +101,29 @@ export async function deleteMonitorHandler(
     }
     console.error("Error deleting monitor:", error);
     throw Boom.internal("Failed to delete monitor");
+  }
+}
+
+export async function listMonitorRuns(request: Hapi.Request) {
+  try {
+    const params: ListRunsOptions = {
+      monitorId: request.query["monitorId"] as string | undefined,
+      size: request.query["size"]
+        ? parseInt(request.query["size"] as string, 10)
+        : undefined,
+      offset: request.query["offset"]
+        ? parseInt(request.query["offset"] as string, 10)
+        : undefined,
+    };
+    const rows = await runRepository.list(params);
+    const count = await runRepository.count(params);
+    const res: MonitorRunsList = {
+      rows: convertRunRowsToApi(rows),
+      total: count,
+    };
+    return res;
+  } catch (error) {
+    console.error("Error fetching monitor runs:", error);
+    throw Boom.internal("Failed to fetch monitor runs");
   }
 }

@@ -62,3 +62,20 @@ export const monitorIdParamSchema = Joi.object({
     "any.required": "ID is required",
   }),
 });
+
+export const listMonitorRunsParamsSchema = Joi.object({
+  monitorId: Joi.string().guid({ version: "uuidv4" }).messages({
+    "string.guid": "Monitor ID must be a valid UUIDv4",
+  }),
+  size: Joi.number().integer().min(1).max(1000).default(50).messages({
+    "number.base": "Size must be a number",
+    "number.integer": "Size must be an integer",
+    "number.min": "Size must be at least 1",
+    "number.max": "Size cannot exceed 1000",
+  }),
+  offset: Joi.number().integer().min(0).default(0).messages({
+    "number.base": "Offset must be a number",
+    "number.integer": "Offset must be an integer",
+    "number.min": "Offset cannot be negative",
+  }),
+}).options({ abortEarly: false });

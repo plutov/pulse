@@ -72,10 +72,10 @@ paths:
         - monitor
       security:
         - BearerAuth: []
-      summary: Get Monitor by ID
-      operationId: getMonitorById
+      summary: Get Monitor
+      operationId: getMonitor
       parameters:
-        - $ref: "#/components/parameters/MonitorIdParam"
+        - $ref: "#/components/parameters/MonitorId"
       responses:
         "200":
           description: ok
@@ -99,10 +99,37 @@ paths:
       summary: Delete Monitor
       operationId: deleteMonitor
       parameters:
-        - $ref: "#/components/parameters/MonitorIdParam"
+        - $ref: "#/components/parameters/MonitorId"
       responses:
         "204":
           description: Monitor deleted successfully
+        "400":
+          $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+        "404":
+          $ref: "#/components/responses/NotFoundError"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
+  /runs:
+    get:
+      tags:
+        - monitor
+      security:
+        - BearerAuth: []
+      summary: Get Monitor Runs
+      operationId: listMonitorRuns
+      parameters:
+        - $ref: "#/components/parameters/MonitorIdQuery"
+        - $ref: "#/components/parameters/Size"
+        - $ref: "#/components/parameters/Offset"
+      responses:
+        "200":
+          description: ok
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MonitorRunsList"
         "400":
           $ref: "#/components/responses/BadRequestError"
         "401":
@@ -258,6 +285,17 @@ components:
         - $ref: "#/components/schemas/WithSchedule"
         - $ref: "#/components/schemas/WithStatus"
         - $ref: "#/components/schemas/WithConfig"
+    MonitorMinimal:
+      allOf:
+        - $ref: "#/components/schemas/WithId"
+        - $ref: "#/components/schemas/WithName"
+    WithMonitorMinimal:
+      required:
+        - monitor
+      type: object
+      properties:
+        monitor:
+          $ref: "#/components/schemas/MonitorMinimal"
     CreateMonitorPayload:
       allOf:
         - $ref: "#/components/schemas/WithName"
@@ -301,6 +339,59 @@ components:
       properties:
         user:
           $ref: "#/components/schemas/User"
+    MonitorRunsList:
+      type: object
+      properties:
+        total:
+          type: integer
+        rows:
+          type: array
+          items:
+            $ref: "#/components/schemas/MonitorRun"
+    WithMonitorRunStatus:
+      required:
+        - status
+      type: object
+      properties:
+        status:
+          $ref: "#/components/schemas/MonitorRunStatus"
+    MonitorRunStatus:
+      type: string
+      enum:
+        - success
+        - failure
+        - timeout
+    WithDurationMs:
+      required:
+        - durationMs
+      type: object
+      properties:
+        durationMs:
+          type: integer
+    WithMonitorRunDetails:
+      required:
+        - details
+      type: object
+      properties:
+        details:
+          $ref: "#/components/schemas/MonitorRunDetails"
+    MonitorRunDetails:
+      oneOf:
+        - $ref: "#/components/schemas/HttpRunDetails"
+    HttpRunDetails:
+      required:
+        - statusCode
+      properties:
+        statusCode:
+          type: integer
+    MonitorRun:
+      allOf:
+        - $ref: "#/components/schemas/WithId"
+        - $ref: "#/components/schemas/WithCreatedAt"
+        - $ref: "#/components/schemas/WithMonitorMinimal"
+        - $ref: "#/components/schemas/WithMonitorRunStatus"
+        - $ref: "#/components/schemas/WithDurationMs"
+        - $ref: "#/components/schemas/WithMonitorRunDetails"
   requestBodies:
     LoginBody:
       required: true
@@ -340,11 +431,34 @@ components:
           schema:
             $ref: "#/components/schemas/ErrorResponse"
   parameters:
-    MonitorIdParam:
+    MonitorId:
       name: id
       in: path
       required: true
       schema:
         type: string
         format: uuid
-      description: Monitor ID
+    MonitorIdQuery:
+      name: id
+      in: query
+      required: false
+      schema:
+        type: string
+        format: uuid
+    Size:
+      name: size
+      in: query
+      required: false
+      schema:
+        type: integer
+        default: 50
+        minimum: 1
+        maximum: 1000
+    Offset:
+      name: offset
+      in: query
+      required: false
+      schema:
+        type: integer
+        default: 0
+        minimum: 0

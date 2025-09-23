@@ -1,7 +1,7 @@
 import * as Hapi from "@hapi/hapi";
 import * as Boom from "@hapi/boom";
 import { sign } from "jsonwebtoken";
-import { UserRepository } from "../models/repositories/user-repository";
+import { UserRepository } from "../models/repositories/users";
 import { LoginResponse } from "@pulse/shared";
 
 const userRepository = new UserRepository();

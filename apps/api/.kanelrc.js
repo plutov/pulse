@@ -11,7 +11,7 @@ module.exports = {
     database: process.env["DB_NAME"],
     ssl: process.env["DB_SSL"] === "true",
   },
-  outputPath: "./src/database/types",
+  outputPath: "./src/models/types",
   customTypeMap: {
     "pg_catalog.uuid": "string",
   },

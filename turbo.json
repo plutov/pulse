@@ -11,7 +11,7 @@
     },
     "generate": {
       "dependsOn": [],
-      "outputs": ["src/apigen/**", "src/database/types/**"]
+      "outputs": ["src/apigen/**", "src/models/types/**"]
     },
     "lint": {
       "dependsOn": ["^build"]
