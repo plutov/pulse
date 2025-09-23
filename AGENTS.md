@@ -77,6 +77,10 @@ When implementing API endpoints:
 6. Write comprehensive integration tests
 7. Verify tests pass with testcontainers
 
+### Logging
+
+Do not use `console.log`. Use the Pino logger.
+
 ## How to Work with Web
 
 ### Tech Stack

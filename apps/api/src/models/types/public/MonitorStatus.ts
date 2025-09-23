@@ -3,8 +3,8 @@
 
 /** Represents the enum public.monitor_status */
 enum MonitorStatus {
-  active = 'active',
-  paused = 'paused',
-};
+  active = "active",
+  paused = "paused",
+}
 
 export default MonitorStatus;

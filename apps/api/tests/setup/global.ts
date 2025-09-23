@@ -6,24 +6,22 @@ import { RedisContainer, StartedRedisContainer } from "@testcontainers/redis";
 import { execSync } from "child_process";
 import * as path from "path";
 import { resetDb } from "../../src/models/connection";
+import { logger } from "../../src/logging";
 
 let postgresContainer: StartedPostgreSqlContainer;
 let redisContainer: StartedRedisContainer;
 
 export async function setup() {
-  console.log("Setting up test containers...");
+  logger.info("setting up testcontainers...");
 
-  // Start PostgreSQL container
   postgresContainer = await new PostgreSqlContainer("postgres:15-alpine")
     .withDatabase("test_db")
     .withUsername("test_user")
     .withPassword("test_password")
     .start();
 
-  // Start Redis container
   redisContainer = await new RedisContainer("redis:7-alpine").start();
 
-  // Set environment variables for tests
   process.env["DB_HOST"] = postgresContainer.getHost();
   process.env["DB_PORT"] = postgresContainer.getPort().toString();
   process.env["DB_USER"] = "test_user";
@@ -34,10 +32,9 @@ export async function setup() {
   process.env["REDIS_DB"] = "0";
   process.env["JWT_SECRET"] = "test-jwt-secret-for-testing-purposes-only";
 
-  // Reset the database connection to pick up new environment variables
   resetDb();
 
-  console.log("Running migrations...");
+  logger.info("running migrations...");
   try {
     execSync("npx knex migrate:latest --knexfile knexfile.ts", {
       stdio: "inherit",
@@ -45,15 +42,15 @@ export async function setup() {
       env: { ...process.env },
     });
   } catch (error) {
-    console.error("Migration failed:", error);
+    logger.error(error, "migrations failed");
     throw error;
   }
 
-  console.log("Migrations completed.");
+  logger.info("migrations completed");
 }
 
 export async function teardown() {
-  console.log("Stopping test containers...");
+  logger.info("stopping testcontainers...");
 
   // Reset the database connection before stopping containers
   resetDb();

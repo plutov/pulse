@@ -21,13 +21,14 @@ describe("Monitors API", () => {
   });
 
   beforeEach(async () => {
-    server = await createTestServer();
     const db = getTestDb();
+    await db.raw("TRUNCATE TABLE runs RESTART IDENTITY CASCADE");
     await db.raw("TRUNCATE TABLE monitors RESTART IDENTITY CASCADE");
   });
 
   afterAll(async () => {
     const db = getTestDb();
+    await db.raw("TRUNCATE TABLE runs RESTART IDENTITY CASCADE");
     await db.raw("TRUNCATE TABLE monitors RESTART IDENTITY CASCADE");
     const userRepository = new UserRepository(db);
     await userRepository.delete(userId);

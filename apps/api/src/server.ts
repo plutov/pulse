@@ -6,10 +6,15 @@ import authPlugin from "./plugins/auth";
 import monitorsPlugin from "./plugins/monitors";
 import { Boom } from "@hapi/boom";
 import { ErrorResponse } from "@pulse/shared";
+import { MonitorScheduler } from "./services/scheduler";
+import { getDb } from "./models/connection";
+import { Knex } from "knex";
 
 interface ServerOptions {
   port?: number | string;
   silent?: boolean;
+  startScheduler?: boolean;
+  db?: Knex;
 }
 
 export async function createServer(
@@ -81,6 +86,20 @@ export async function createServer(
   });
 
   await server.register([authStrategy, authPlugin, monitorsPlugin]);
+
+  // Initialize scheduler if enabled
+  if (options.startScheduler !== false) {
+    const db = options.db || getDb();
+    const scheduler = new MonitorScheduler(db);
+
+    server.ext("onPostStart", async () => {
+      await scheduler.start();
+    });
+
+    server.ext("onPreStop", async () => {
+      scheduler.stop();
+    });
+  }
 
   return server;
 }
