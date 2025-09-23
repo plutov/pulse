@@ -20,6 +20,7 @@ const routes: RouteRecordRaw[] = [
     meta: { requiresAuth: true },
     children: [
       { path: "", component: () => import("./../pages/MonitorsPage.vue") },
+      { path: "create", component: () => import("./../pages/CreateMonitorPage.vue") },
     ],
   },
   {
