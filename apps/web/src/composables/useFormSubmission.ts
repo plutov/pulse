@@ -74,6 +74,10 @@ export function useFormSubmission<T>(options: UseFormSubmissionOptions<T>) {
 
         if (error.response?.status === 400 && response.validationMessages) {
           setValidationErrors(response.validationMessages);
+          $q.notify({
+            type: "negative",
+            message: response.message,
+          });
         } else {
           $q.notify({
             type: "negative",
@@ -101,4 +105,3 @@ export function useFormSubmission<T>(options: UseFormSubmissionOptions<T>) {
     clearValidationErrors,
   };
 }
-

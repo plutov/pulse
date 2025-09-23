@@ -4,8 +4,8 @@
       v-model="currentStep"
       ref="stepper"
       color="primary"
-      animated
       vertical
+      header-nav
       class="q-pa-md"
     >
       <q-step
@@ -14,12 +14,9 @@
         :name="index + 1"
         :title="step.title"
         :caption="step.caption"
-        :icon="step.icon"
         :done="index + 1 < currentStep"
-        :done-icon="step.doneIcon || 'check'"
-        :active-icon="step.activeIcon || step.icon"
-        :error-icon="step.errorIcon || 'warning'"
-        :header-nav="step.headerNav !== false"
+        :done-icon="'check'"
+        :error-icon="'warning'"
       >
         <component
           :is="step.component"
@@ -52,7 +49,6 @@
             @click="previousStep"
             label="Back"
             class="q-ml-sm"
-            :disable="loading"
           />
         </q-stepper-navigation>
       </q-step>
@@ -69,10 +65,6 @@ export interface FormStep<T> {
   title: string;
   caption?: string;
   icon?: string;
-  doneIcon?: string;
-  activeIcon?: string;
-  errorIcon?: string;
-  headerNav?: boolean;
   component: Component;
   isValid?: (data: Partial<T>) => boolean;
 }
@@ -116,11 +108,4 @@ const submit = () => {
   emit("submit", props.modelValue);
 };
 </script>
-
-<style scoped>
-.form-stepper {
-  max-width: 600px;
-  margin: 0 auto;
-}
-</style>
 
