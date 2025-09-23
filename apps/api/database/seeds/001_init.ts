@@ -1,8 +1,8 @@
 import type { Knex } from "knex";
 import { randomUUID } from "crypto";
 import * as bcrypt from "bcrypt";
-import MonitorType from "../../src/database/types/public/MonitorType";
-import MonitorStatus from "../../src/database/types/public/MonitorStatus";
+import MonitorType from "../../src/models/types/public/MonitorType";
+import MonitorStatus from "../../src/models/types/public/MonitorStatus";
 
 export async function seed(knex: Knex): Promise<void> {
   await knex("monitors").del();

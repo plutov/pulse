@@ -12,7 +12,7 @@ import {
 } from "@pulse/shared";
 import { createTestUser, getAuthHeaders } from "../utils/auth";
 import { randomUUID } from "crypto";
-import { UserRepository } from "../../src/database/repositories/user-repository";
+import { UserRepository } from "../../src/models/repositories/user-repository";
 import { ApiErrorsEnum } from "../../src/api/errors";
 
 interface TestMonitorData {

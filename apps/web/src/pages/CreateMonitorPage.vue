@@ -94,4 +94,3 @@ const handleSubmit = async (data: Partial<CreateMonitorPayload>) => {
   await submit(data as CreateMonitorPayload);
 };
 </script>
-

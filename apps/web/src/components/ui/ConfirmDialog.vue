@@ -1,5 +1,9 @@
 <template>
-  <q-dialog :model-value="modelValue" persistent @update:model-value="emit('update:modelValue', $event)">
+  <q-dialog
+    :model-value="modelValue"
+    persistent
+    @update:model-value="emit('update:modelValue', $event)"
+  >
     <q-card style="min-width: 350px">
       <q-card-section>
         <div class="text-h6">{{ title }}</div>
@@ -11,11 +15,11 @@
 
       <q-card-actions align="right" class="text-primary">
         <q-btn flat :label="cancelLabel" @click="onCancel" />
-        <q-btn 
-          flat 
-          :label="confirmLabel" 
+        <q-btn
+          flat
+          :label="confirmLabel"
           :color="confirmColor"
-          @click="onConfirm" 
+          @click="onConfirm"
           :loading="loading"
         />
       </q-card-actions>

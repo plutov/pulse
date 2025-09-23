@@ -1,6 +1,7 @@
 import * as Hapi from "@hapi/hapi";
 import { Engine as CatboxRedis } from "@hapi/catbox-redis";
 import HapiPino from "hapi-pino";
+import { authStrategy } from "./middleware/auth";
 import authPlugin from "./plugins/auth";
 import monitorsPlugin from "./plugins/monitors";
 import { Boom } from "@hapi/boom";
@@ -79,7 +80,7 @@ export async function createServer(
     },
   });
 
-  await server.register([authPlugin, monitorsPlugin]);
+  await server.register([authStrategy, authPlugin, monitorsPlugin]);
 
   return server;
 }

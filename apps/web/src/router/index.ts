@@ -8,7 +8,7 @@ import {
 import routes from "./routes";
 import { useAuthStore } from "stores/auth";
 
-export default defineRouter(function (/* { store, ssrContext } */) {
+export default defineRouter(function () {
   const createHistory = process.env.SERVER
     ? createMemoryHistory
     : process.env.VUE_ROUTER_MODE === "history"
@@ -21,7 +21,7 @@ export default defineRouter(function (/* { store, ssrContext } */) {
     history: createHistory(process.env.VUE_ROUTER_BASE),
   });
 
-  Router.beforeEach((to, from, next) => {
+  Router.beforeEach((to, _from, next) => {
     const authStore = useAuthStore();
 
     // Initialize auth state from localStorage on first navigation

@@ -5,7 +5,7 @@ import {
 import { RedisContainer, StartedRedisContainer } from "@testcontainers/redis";
 import { execSync } from "child_process";
 import * as path from "path";
-import { resetDb } from "../../src/database/connection";
+import { resetDb } from "../../src/models/connection";
 
 let postgresContainer: StartedPostgreSqlContainer;
 let redisContainer: StartedRedisContainer;

@@ -9,7 +9,7 @@ import {
 } from "../utils/auth";
 import { LoginResponse } from "@pulse/shared";
 import { randomUUID } from "crypto";
-import { UserRepository } from "../../src/database/repositories/user-repository";
+import { UserRepository } from "../../src/models/repositories/user-repository";
 import { ApiErrorsEnum } from "../../src/api/errors";
 
 describe("Auth", () => {

@@ -146,7 +146,7 @@ const confirmDelete = async () => {
   try {
     const monitorApi = getMonitorApi();
     await monitorApi.deleteMonitor(deleteDialog.value.monitorToDelete.id);
-    
+
     $q.notify({
       type: "positive",
       message: "Monitor deleted successfully",
