@@ -187,12 +187,12 @@ import {
 const configuration = new Configuration();
 const apiInstance = new MonitorApi(configuration);
 
-let id: string; // (optional) (default to undefined)
+let monitorId: string; // (optional) (default to undefined)
 let size: number; // (optional) (default to 50)
 let offset: number; // (optional) (default to 0)
 
 const { status, data } = await apiInstance.listMonitorRuns(
-    id,
+    monitorId,
     size,
     offset
 );
@@ -202,7 +202,7 @@ const { status, data } = await apiInstance.listMonitorRuns(
 
 |Name | Type | Description  | Notes|
 |------------- | ------------- | ------------- | -------------|
-| **id** | [**string**] |  | (optional) defaults to undefined|
+| **monitorId** | [**string**] |  | (optional) defaults to undefined|
 | **size** | [**number**] |  | (optional) defaults to 50|
 | **offset** | [**number**] |  | (optional) defaults to 0|
 

@@ -73,6 +73,7 @@ Class | Method | HTTP request | Description
  - [MonitorRunStatus](docs/MonitorRunStatus.md)
  - [MonitorRunsList](docs/MonitorRunsList.md)
  - [MonitorType](docs/MonitorType.md)
+ - [MonitorsList](docs/MonitorsList.md)
  - [User](docs/User.md)
  - [ValidationMessage](docs/ValidationMessage.md)
  - [WithAuthor](docs/WithAuthor.md)

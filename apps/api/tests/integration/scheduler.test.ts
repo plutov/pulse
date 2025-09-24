@@ -3,7 +3,7 @@ import { describe, it, expect, beforeEach, afterAll, beforeAll } from "vitest";
 import { MonitorScheduler } from "../../src/services/scheduler";
 import { closeTestDb, getTestDb } from "../setup/database";
 import { createTestUser } from "../utils/auth";
-import { HttpRunDetails, Monitor, WithStatusStatusEnum } from "@pulse/shared";
+import { HttpRunDetails, WithStatusStatusEnum } from "@pulse/shared";
 import { MonitorRepository } from "../../src/models/repositories/monitors";
 import { RunRepository } from "../../src/models/repositories/runs";
 import { UserRepository } from "../../src/models/repositories/users";
@@ -39,7 +39,7 @@ describe("Monitor Scheduler", () => {
 
   describe("Monitor Scheduling", () => {
     it("should schedule active monitors on startup", async () => {
-      const monitor = (await createTestMonitor(server, userId, {})) as Monitor;
+      const monitor = await createTestMonitor(server, userId, {});
 
       await scheduler.start();
 
@@ -48,9 +48,9 @@ describe("Monitor Scheduler", () => {
     });
 
     it("should not schedule inactive monitors on startup", async () => {
-      const monitor = (await createTestMonitor(server, userId, {
+      const monitor = await createTestMonitor(server, userId, {
         status: WithStatusStatusEnum.paused,
-      })) as Monitor;
+      });
 
       await scheduler.start();
 
@@ -61,13 +61,13 @@ describe("Monitor Scheduler", () => {
 
   describe("Monitor Execution", () => {
     it("should handle HTTP failure responses", async () => {
-      const monitor = (await createTestMonitor(server, userId, {
+      const monitor = await createTestMonitor(server, userId, {
         name: "failure-test",
         config: {
           url: server.info.uri + "/invalid-uri",
           method: "GET",
         },
-      })) as Monitor;
+      });
 
       await scheduler.executeMonitor(monitor);
 
@@ -79,11 +79,11 @@ describe("Monitor Scheduler", () => {
 
   describe("Monitor Management", () => {
     it("should reschedule monitor when configuration changes", async () => {
-      const monitor = (await createTestMonitor(server, userId, {
+      const monitor = await createTestMonitor(server, userId, {
         name: "reschedule-test",
         status: WithStatusStatusEnum.active,
         schedule: "*/5 * * * *",
-      })) as Monitor;
+      });
 
       scheduler.scheduleMonitor(monitor);
       expect(scheduler.isMonitorScheduled(monitor.id)).toBe(true);
@@ -96,11 +96,11 @@ describe("Monitor Scheduler", () => {
     });
 
     it("should unschedule monitor when status changes to inactive", async () => {
-      const monitor = (await createTestMonitor(server, userId, {
+      const monitor = await createTestMonitor(server, userId, {
         name: "inactive-test",
         status: WithStatusStatusEnum.active,
         schedule: "*/5 * * * *",
-      })) as Monitor;
+      });
 
       scheduler.scheduleMonitor(monitor);
       expect(scheduler.isMonitorScheduled(monitor.id)).toBe(true);
@@ -115,13 +115,13 @@ describe("Monitor Scheduler", () => {
     });
 
     it("should unschedule specific monitor", async () => {
-      const monitor1 = (await createTestMonitor(server, userId, {
+      const monitor1 = await createTestMonitor(server, userId, {
         schedule: "*/5 * * * *",
-      })) as Monitor;
+      });
 
-      const monitor2 = (await createTestMonitor(server, userId, {
+      const monitor2 = await createTestMonitor(server, userId, {
         schedule: "*/10 * * * *",
-      })) as Monitor;
+      });
 
       scheduler.scheduleMonitor(monitor1);
       scheduler.scheduleMonitor(monitor2);

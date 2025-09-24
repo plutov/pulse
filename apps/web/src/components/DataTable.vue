@@ -5,9 +5,12 @@
     :row-key="rowKey"
     :loading="loading"
     :sortable="sortable"
+    :pagination="initialPagination"
+    :hide-bottom="!pagination"
+    @request="onRequest"
+    :rows-per-page-options="rowsPerPageOptions"
     flat
     bordered
-    hide-bottom
     v-bind="$attrs"
   >
     <template
@@ -67,6 +70,7 @@
 import { computed } from "vue";
 import type { QTableColumn } from "quasar";
 import type { Component } from "vue";
+import { type PaginationParams } from "src/composables/useDataTable";
 
 interface DataTableColumn<T> extends Omit<QTableColumn, "field"> {
   name: string;
@@ -83,18 +87,25 @@ interface DataTableAction<T> {
 
 interface Props<T> {
   data: T[];
+  pagination?: PaginationParams;
   columns: DataTableColumn<T>[];
   loading?: boolean;
   rowKey?: string | ((row: T) => string | number);
   sortable?: boolean;
   actions?: DataTableAction<T>[];
+  rowsPerPageOptions?: number[];
 }
 
 const props = withDefaults(defineProps<Props<T>>(), {
   loading: false,
   rowKey: "id",
   sortable: false,
+  rowsPerPageOptions: () => [10, 25, 50, 100],
 });
+
+const emit = defineEmits<{
+  request: [payload: { pagination: { page: number; rowsPerPage: number } }];
+}>();
 
 const tableColumns = computed(() => {
   const cols = [...props.columns];
@@ -113,4 +124,18 @@ const tableColumns = computed(() => {
 const columnsWithSlots = computed(() =>
   props.columns.filter((col) => col.component || col.field),
 );
+
+const initialPagination = {
+  page: 1,
+  rowsPerPage: 50,
+  rowsNumber: 50,
+};
+
+const onRequest = (requestProps: {
+  pagination: { page: number; rowsPerPage: number };
+}) => {
+  if (props.pagination) {
+    emit("request", requestProps);
+  }
+};
 </script>

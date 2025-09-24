@@ -6,7 +6,7 @@ import { ErrorResponse, Monitor } from "@pulse/shared";
 import { createTestUser, getAuthHeaders } from "../utils/auth";
 import { randomUUID } from "crypto";
 import { ApiErrorsEnum } from "../../src/api/errors";
-import { createTestMonitor } from "../utils/monitors";
+import { createTestMonitor, createTestMonitorOrFail } from "../utils/monitors";
 import { UserRepository } from "../../src/models/repositories/users";
 import { MonitorRepository } from "../../src/models/repositories/monitors";
 
@@ -34,7 +34,7 @@ describe("Monitors API", () => {
 
   describe("GET /monitors", () => {
     it("should return monitors", async () => {
-      const monitor = (await createTestMonitor(server, userId, {})) as Monitor;
+      const monitor = await createTestMonitor(server, userId, {});
 
       const response = await server.inject({
         method: "GET",
@@ -167,7 +167,7 @@ describe("Monitors API", () => {
         name: "duplicate-monitor",
       });
 
-      const err = (await createTestMonitor(server, userId, {
+      const err = (await createTestMonitorOrFail(server, userId, {
         name: "duplicate-monitor",
       })) as ErrorResponse;
       expect(err.message).toBe("Monitor with this name already exists");
@@ -177,11 +177,7 @@ describe("Monitors API", () => {
 
   describe("GET /monitors/{id}", () => {
     it("should return monitor by id", async () => {
-      const createdMonitor = (await createTestMonitor(
-        server,
-        userId,
-        {},
-      )) as Monitor;
+      const createdMonitor = await createTestMonitor(server, userId, {});
 
       const response = await server.inject({
         method: "GET",
@@ -221,11 +217,7 @@ describe("Monitors API", () => {
 
   describe("DELETE /monitors/{id}", () => {
     it("should delete monitor by id", async () => {
-      const createdMonitor = (await createTestMonitor(
-        server,
-        userId,
-        {},
-      )) as Monitor;
+      const createdMonitor = await createTestMonitor(server, userId, {});
 
       const response = await server.inject({
         method: "DELETE",

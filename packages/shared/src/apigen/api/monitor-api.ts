@@ -154,13 +154,13 @@ export const MonitorApiAxiosParamCreator = function (configuration?: Configurati
         /**
          * 
          * @summary Get Monitor Runs
-         * @param {string} [id] 
+         * @param {string} [monitorId] 
          * @param {number} [size] 
          * @param {number} [offset] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        listMonitorRuns: async (id?: string, size?: number, offset?: number, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+        listMonitorRuns: async (monitorId?: string, size?: number, offset?: number, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             const localVarPath = `/runs`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -177,8 +177,8 @@ export const MonitorApiAxiosParamCreator = function (configuration?: Configurati
             // http bearer authentication required
             await setBearerAuthToObject(localVarHeaderParameter, configuration)
 
-            if (id !== undefined) {
-                localVarQueryParameter['id'] = id;
+            if (monitorId !== undefined) {
+                localVarQueryParameter['monitorId'] = monitorId;
             }
 
             if (size !== undefined) {
@@ -286,14 +286,14 @@ export const MonitorApiFp = function(configuration?: Configuration) {
         /**
          * 
          * @summary Get Monitor Runs
-         * @param {string} [id] 
+         * @param {string} [monitorId] 
          * @param {number} [size] 
          * @param {number} [offset] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async listMonitorRuns(id?: string, size?: number, offset?: number, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<MonitorRunsList>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.listMonitorRuns(id, size, offset, options);
+        async listMonitorRuns(monitorId?: string, size?: number, offset?: number, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<MonitorRunsList>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.listMonitorRuns(monitorId, size, offset, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
             const localVarOperationServerBasePath = operationServerMap['MonitorApi.listMonitorRuns']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
@@ -353,14 +353,14 @@ export const MonitorApiFactory = function (configuration?: Configuration, basePa
         /**
          * 
          * @summary Get Monitor Runs
-         * @param {string} [id] 
+         * @param {string} [monitorId] 
          * @param {number} [size] 
          * @param {number} [offset] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        listMonitorRuns(id?: string, size?: number, offset?: number, options?: RawAxiosRequestConfig): AxiosPromise<MonitorRunsList> {
-            return localVarFp.listMonitorRuns(id, size, offset, options).then((request) => request(axios, basePath));
+        listMonitorRuns(monitorId?: string, size?: number, offset?: number, options?: RawAxiosRequestConfig): AxiosPromise<MonitorRunsList> {
+            return localVarFp.listMonitorRuns(monitorId, size, offset, options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -413,14 +413,14 @@ export interface MonitorApiInterface {
     /**
      * 
      * @summary Get Monitor Runs
-     * @param {string} [id] 
+     * @param {string} [monitorId] 
      * @param {number} [size] 
      * @param {number} [offset] 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof MonitorApiInterface
      */
-    listMonitorRuns(id?: string, size?: number, offset?: number, options?: RawAxiosRequestConfig): AxiosPromise<MonitorRunsList>;
+    listMonitorRuns(monitorId?: string, size?: number, offset?: number, options?: RawAxiosRequestConfig): AxiosPromise<MonitorRunsList>;
 
     /**
      * 
@@ -479,15 +479,15 @@ export class MonitorApi extends BaseAPI implements MonitorApiInterface {
     /**
      * 
      * @summary Get Monitor Runs
-     * @param {string} [id] 
+     * @param {string} [monitorId] 
      * @param {number} [size] 
      * @param {number} [offset] 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof MonitorApi
      */
-    public listMonitorRuns(id?: string, size?: number, offset?: number, options?: RawAxiosRequestConfig) {
-        return MonitorApiFp(this.configuration).listMonitorRuns(id, size, offset, options).then((request) => request(this.axios, this.basePath));
+    public listMonitorRuns(monitorId?: string, size?: number, offset?: number, options?: RawAxiosRequestConfig) {
+        return MonitorApiFp(this.configuration).listMonitorRuns(monitorId, size, offset, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**

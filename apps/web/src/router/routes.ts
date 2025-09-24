@@ -1,5 +1,7 @@
 import type { RouteRecordRaw } from "vue-router";
 
+const mainLayout = () => import("./../layouts/MainLayout.vue");
+
 const routes: RouteRecordRaw[] = [
   {
     path: "/login",
@@ -8,7 +10,7 @@ const routes: RouteRecordRaw[] = [
   },
   {
     path: "/",
-    component: () => import("./../layouts/MainLayout.vue"),
+    component: mainLayout,
     meta: { requiresAuth: true },
     children: [
       { path: "", component: () => import("./../pages/IndexPage.vue") },
@@ -16,7 +18,7 @@ const routes: RouteRecordRaw[] = [
   },
   {
     path: "/monitors",
-    component: () => import("./../layouts/MainLayout.vue"),
+    component: mainLayout,
     meta: { requiresAuth: true },
     children: [
       { path: "", component: () => import("./../pages/MonitorsPage.vue") },
@@ -24,6 +26,14 @@ const routes: RouteRecordRaw[] = [
         path: "create",
         component: () => import("./../pages/CreateMonitorPage.vue"),
       },
+    ],
+  },
+  {
+    path: "/runs",
+    component: mainLayout,
+    meta: { requiresAuth: true },
+    children: [
+      { path: "", component: () => import("./../pages/RunsPage.vue") },
     ],
   },
   {

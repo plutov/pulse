@@ -22,6 +22,15 @@ export const createTestMonitor = async (
   server: Hapi.Server,
   userId: string,
   data: TestMonitorData,
+): Promise<Monitor> => {
+  const monitor = await createTestMonitorOrFail(server, userId, data);
+  return monitor as Monitor;
+};
+
+export const createTestMonitorOrFail = async (
+  server: Hapi.Server,
+  userId: string,
+  data: TestMonitorData,
 ): Promise<Monitor | ErrorResponse> => {
   const defaultName = `test-monitor-${randomUUID()}`;
   const payload: CreateMonitorPayload = {

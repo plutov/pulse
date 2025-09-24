@@ -2,7 +2,7 @@ import { describe, it, expect, beforeEach, afterAll, beforeAll } from "vitest";
 import * as Hapi from "@hapi/hapi";
 import { createTestServer } from "../setup/server";
 import { closeTestDb, getTestDb } from "../setup/database";
-import { ErrorResponse, Monitor, MonitorRunsList } from "@pulse/shared";
+import { ErrorResponse, MonitorRunsList } from "@pulse/shared";
 import { createTestUser, getAuthHeaders } from "../utils/auth";
 import { randomUUID } from "crypto";
 import { createTestMonitor } from "../utils/monitors";
@@ -34,11 +34,10 @@ describe("Runs API", () => {
 
   describe("GET /runs", () => {
     it("should return all runs with default pagination", async () => {
-      const db = getTestDb();
-      const monitor = (await createTestMonitor(server, userId, {})) as Monitor;
-      const run1 = await createTestRun(db, { monitorId: monitor.id });
-      const run2 = await createTestRun(db, { monitorId: monitor.id });
-      const run3 = await createTestRun(db, { monitorId: monitor.id });
+      const monitor = await createTestMonitor(server, userId, {});
+      const run1 = await createTestRun({ monitorId: monitor.id });
+      const run2 = await createTestRun({ monitorId: monitor.id });
+      const run3 = await createTestRun({ monitorId: monitor.id });
 
       const response = await server.inject({
         method: "GET",
@@ -58,12 +57,11 @@ describe("Runs API", () => {
     });
 
     it("should filter runs by monitorId", async () => {
-      const db = getTestDb();
-      const monitor1 = (await createTestMonitor(server, userId, {})) as Monitor;
-      const monitor2 = (await createTestMonitor(server, userId, {})) as Monitor;
-      const run1 = await createTestRun(db, { monitorId: monitor1.id });
-      const run2 = await createTestRun(db, { monitorId: monitor1.id });
-      const run3 = await createTestRun(db, { monitorId: monitor2.id });
+      const monitor1 = await createTestMonitor(server, userId, {});
+      const monitor2 = await createTestMonitor(server, userId, {});
+      const run1 = await createTestRun({ monitorId: monitor1.id });
+      const run2 = await createTestRun({ monitorId: monitor1.id });
+      const run3 = await createTestRun({ monitorId: monitor2.id });
 
       const response = await server.inject({
         method: "GET",
@@ -81,10 +79,9 @@ describe("Runs API", () => {
     });
 
     it("should respect size parameter for pagination", async () => {
-      const db = getTestDb();
-      const monitor = (await createTestMonitor(server, userId, {})) as Monitor;
+      const monitor = await createTestMonitor(server, userId, {});
       for (let i = 0; i < 5; i++) {
-        await createTestRun(db, { monitorId: monitor.id });
+        await createTestRun({ monitorId: monitor.id });
       }
 
       const response = await server.inject({
@@ -100,10 +97,9 @@ describe("Runs API", () => {
     });
 
     it("should respect offset parameter for pagination", async () => {
-      const db = getTestDb();
-      const monitor = (await createTestMonitor(server, userId, {})) as Monitor;
+      const monitor = await createTestMonitor(server, userId, {});
       for (let i = 0; i < 5; i++) {
-        await createTestRun(db, { monitorId: monitor.id });
+        await createTestRun({ monitorId: monitor.id });
       }
 
       const firstPageResponse = await server.inject({
@@ -202,9 +198,8 @@ describe("Runs API", () => {
     });
 
     it("should return runs with correct data structure", async () => {
-      const db = getTestDb();
-      const monitor = (await createTestMonitor(server, userId, {})) as Monitor;
-      const runDb = await createTestRun(db, {
+      const monitor = await createTestMonitor(server, userId, {});
+      const runDb = await createTestRun({
         monitorId: monitor.id,
       });
 

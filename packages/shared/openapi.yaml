@@ -339,6 +339,18 @@ components:
       properties:
         user:
           $ref: "#/components/schemas/User"
+    MonitorsList:
+      type: object
+      required:
+        - total
+        - rows
+      properties:
+        total:
+          type: integer
+        rows:
+          type: array
+          items:
+            $ref: "#/components/schemas/Monitor"
     MonitorRunsList:
       type: object
       required:
@@ -442,7 +454,7 @@ components:
         type: string
         format: uuid
     MonitorIdQuery:
-      name: id
+      name: monitorId
       in: query
       required: false
       schema:

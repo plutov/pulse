@@ -10,6 +10,7 @@ export * from './monitor-run';
 export * from './monitor-run-status';
 export * from './monitor-runs-list';
 export * from './monitor-type';
+export * from './monitors-list';
 export * from './user';
 export * from './validation-message';
 export * from './with-author';

@@ -2,8 +2,8 @@ import { HttpRunDetails } from "@pulse/shared";
 import RunStatus from "../../src/models/types/public/RunStatus";
 import Runs from "../../src/models/types/public/Runs";
 import { RunRepository } from "../../src/models/repositories/runs";
-import { Knex } from "knex";
 import { randomUUID } from "crypto";
+import { getTestDb } from "../setup/database";
 
 interface TestRunData {
   monitorId: string;
@@ -12,10 +12,8 @@ interface TestRunData {
   details?: HttpRunDetails;
 }
 
-export const createTestRun = async (
-  db: Knex,
-  data: TestRunData,
-): Promise<Runs> => {
+export const createTestRun = async (data: TestRunData): Promise<Runs> => {
+  const db = getTestDb();
   const runsRepository = new RunRepository(db);
   return runsRepository.create({
     id: randomUUID(),

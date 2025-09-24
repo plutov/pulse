@@ -2,12 +2,22 @@
   <q-page class="q-pa-md">
     <div class="row justify-between items-center q-mb-md">
       <h4 class="q-ma-none">Monitors</h4>
-      <q-btn
-        color="accent"
-        label="Create Monitor"
-        icon="add"
-        @click="createMonitor"
-      />
+      <div class="row q-gutter-sm">
+        <q-btn
+          flat
+          dense
+          icon="refresh"
+          @click="refresh"
+          :loading="loading"
+          label="Refresh"
+        />
+        <q-btn
+          color="accent"
+          label="Create Monitor"
+          icon="add"
+          @click="createMonitor"
+        />
+      </div>
     </div>
 
     <DataTable
@@ -118,6 +128,13 @@ const deleteDialog = ref({
 });
 
 const tableActions = [
+  {
+    label: "Runs",
+    icon: "play_arrow",
+    handler: (monitor: Monitor) => {
+      void $router.push(`/runs?monitorId=${monitor.id}`);
+    },
+  },
   {
     label: "Delete",
     icon: "delete",

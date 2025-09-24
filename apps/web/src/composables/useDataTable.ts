@@ -3,19 +3,48 @@ import { useQuasar } from "quasar";
 import axios from "axios";
 import type { ErrorResponse } from "@pulse/shared";
 
+export interface PaginationParams {
+  page: number;
+  rowsPerPage: number;
+  rowsNumber: number;
+}
+
+interface PaginatedResponse<T> {
+  data?: {
+    rows: T[];
+    total: number;
+  };
+}
+
 interface UseDataTableOptions<T> {
-  fetchFn: () => Promise<{ data?: T[] }>;
+  fetchFn: (
+    page: number,
+    size: number,
+  ) => Promise<{ data?: T[] } | PaginatedResponse<T>>;
   onError?: (error: string) => void;
   autoFetch?: boolean;
+  paginated?: boolean;
+  defaultPageSize?: number;
 }
 
 export function useDataTable<T>(options: UseDataTableOptions<T>) {
-  const { fetchFn, onError, autoFetch = true } = options;
+  const {
+    fetchFn,
+    onError,
+    autoFetch = true,
+    paginated = false,
+    defaultPageSize = 50,
+  } = options;
   const $q = useQuasar();
 
   const data = ref<T[]>([]);
   const loading = ref(false);
   const error = ref<string | null>(null);
+  const pagination = ref<PaginationParams>({
+    page: 1,
+    rowsPerPage: defaultPageSize,
+    rowsNumber: 0,
+  });
 
   const handleError = (errorMessage: string) => {
     error.value = errorMessage;
@@ -34,8 +63,18 @@ export function useDataTable<T>(options: UseDataTableOptions<T>) {
     error.value = null;
 
     try {
-      const response = await fetchFn();
-      if (response.data) {
+      const currentPage = pagination.value.page;
+      const currentSize = pagination.value.rowsPerPage;
+
+      const response = await fetchFn(currentPage, currentSize);
+
+      if (paginated && response.data && "rows" in response.data) {
+        const paginatedData = response.data as { rows: T[]; total: number };
+        data.value = paginatedData.rows;
+        pagination.value.rowsNumber = paginatedData.total;
+        pagination.value.page = currentPage;
+        pagination.value.rowsPerPage = currentSize;
+      } else if (response.data && Array.isArray(response.data)) {
         data.value = response.data;
       }
     } catch (err: unknown) {
@@ -56,6 +95,18 @@ export function useDataTable<T>(options: UseDataTableOptions<T>) {
 
   const refresh = () => fetch();
 
+  const onRequest = (requestProps: {
+    pagination: { page: number; rowsPerPage: number };
+  }) => {
+    const { page, rowsPerPage } = requestProps.pagination;
+    const currentPage = rowsPerPage !== pagination.value.rowsPerPage ? 1 : page;
+
+    pagination.value.page = currentPage;
+    pagination.value.rowsPerPage = rowsPerPage;
+
+    void fetch();
+  };
+
   onMounted(() => {
     if (autoFetch) {
       void fetch();
@@ -68,5 +119,7 @@ export function useDataTable<T>(options: UseDataTableOptions<T>) {
     error,
     fetch,
     refresh,
+    pagination,
+    onRequest: paginated ? onRequest : undefined,
   };
 }

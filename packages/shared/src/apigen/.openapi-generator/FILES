@@ -22,6 +22,7 @@ docs/MonitorRun.md
 docs/MonitorRunStatus.md
 docs/MonitorRunsList.md
 docs/MonitorType.md
+docs/MonitorsList.md
 docs/User.md
 docs/ValidationMessage.md
 docs/WithAuthor.md
@@ -56,6 +57,7 @@ models/monitor-run.ts
 models/monitor-runs-list.ts
 models/monitor-type.ts
 models/monitor.ts
+models/monitors-list.ts
 models/user.ts
 models/validation-message.ts
 models/with-author.ts

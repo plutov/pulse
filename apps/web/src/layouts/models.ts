@@ -19,6 +19,12 @@ export const menuList: MenuItem[] = [
     route: "/monitors",
   },
   {
+    type: "link",
+    icon: "play_arrow",
+    label: "Runs",
+    route: "/runs",
+  },
+  {
     type: "logout",
     icon: "logout",
     label: "Logout",
