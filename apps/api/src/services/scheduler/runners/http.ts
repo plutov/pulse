@@ -1,15 +1,16 @@
 import { Monitor, HttpConfig } from "@pulse/shared";
 import { MonitorRunner, MonitorRunResult } from "../types";
 
+const timeoutMs = 30000;
+
 export class HttpMonitorRunner implements MonitorRunner {
   async run(monitor: Monitor): Promise<MonitorRunResult> {
     const startTime = Date.now();
     const config = monitor.config as HttpConfig;
 
     try {
-      // Create AbortController for timeout
       const controller = new AbortController();
-      const timeoutId = setTimeout(() => controller.abort(), 30000);
+      const timeoutId = setTimeout(() => controller.abort(), timeoutMs);
 
       const response = await fetch(config.url, {
         method: config.method,
@@ -21,22 +22,21 @@ export class HttpMonitorRunner implements MonitorRunner {
 
       return {
         status: response.ok ? "success" : "failure",
-        durationMs: Math.max(durationMs, 1), // Ensure at least 1ms
+        durationMs: durationMs,
         details: {
           statusCode: response.status,
         },
       };
     } catch (error) {
-      const durationMs = Math.max(Date.now() - startTime, 1); // Ensure at least 1ms
+      const durationMs = Date.now() - startTime;
 
-      // Handle timeout or other network errors
       const isTimeout = error instanceof Error && error.name === "AbortError";
 
       return {
         status: isTimeout ? "timeout" : "failure",
         durationMs,
         details: {
-          statusCode: 0, // 0 indicates network error
+          statusCode: 0,
         },
       };
     }

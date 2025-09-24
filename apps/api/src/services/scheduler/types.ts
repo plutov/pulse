@@ -1,6 +1,6 @@
 import * as cron from "node-cron";
 
-import { Monitor, MonitorRunStatus, HttpRunDetails } from "@pulse/shared";
+import { Monitor, type MonitorRunStatus, HttpRunDetails } from "@pulse/shared";
 
 export interface MonitorRunResult {
   status: MonitorRunStatus;
