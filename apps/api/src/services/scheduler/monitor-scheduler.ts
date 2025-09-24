@@ -1,22 +1,26 @@
 import * as cron from "node-cron";
-import { Monitor } from "@pulse/shared";
+import { Monitor, MonitorType } from "@pulse/shared";
 import {
   convertMonitorRowToApi,
   MonitorRepository,
 } from "../../models/repositories/monitors";
 import { RunRepository } from "../../models/repositories/runs";
-import { MonitorRunnerFactory } from "./runner-factory";
-import { SchedulerJob } from "./types";
+import { MonitorRunner, SchedulerJob } from "./types";
 import RunStatus from "../../models/types/public/RunStatus";
 import { Knex } from "knex";
 import MonitorStatus from "../../models/types/public/MonitorStatus";
 import { randomUUID } from "crypto";
 import { logger } from "../../logging";
+import { HttpMonitorRunner } from "./runners/http";
 
 export class MonitorScheduler {
   private jobs: Map<string, SchedulerJob> = new Map();
   private monitorRepo: MonitorRepository;
   private runRepo: RunRepository;
+
+  private runners: Map<MonitorType, MonitorRunner> = new Map([
+    ["http", new HttpMonitorRunner()],
+  ]);
 
   constructor(db?: Knex) {
     this.monitorRepo = new MonitorRepository(db);
@@ -27,17 +31,15 @@ export class MonitorScheduler {
     logger.info("starting monitor scheduler...");
 
     try {
-      const monitors = await this.monitorRepo.findAll();
+      const monitors = await this.monitorRepo.findAll({ active: true });
       let scheduledCount = 0;
 
       for (const monitorRow of monitors) {
         try {
           const monitor: Monitor = convertMonitorRowToApi(monitorRow);
 
-          if (monitor.status === MonitorStatus.active) {
-            this.scheduleMonitor(monitor);
-            scheduledCount++;
-          }
+          this.scheduleMonitor(monitor);
+          scheduledCount++;
         } catch (error) {
           logger.error(error, `failed to schedule monitor ${monitorRow.id}`);
         }
@@ -97,7 +99,13 @@ export class MonitorScheduler {
 
     let dbStatus: RunStatus = RunStatus.failure;
     try {
-      const runner = MonitorRunnerFactory.getRunner(monitor.monitorType);
+      const runner = this.runners.get(monitor.monitorType);
+      if (!runner) {
+        throw new Error(
+          `No runner found for monitor type: ${monitor.monitorType}`,
+        );
+      }
+
       const result = await runner.run(monitor);
       dbStatus = result.status as RunStatus;
 

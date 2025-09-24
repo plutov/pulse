@@ -9,6 +9,10 @@ export interface MonitorWithAuthor extends Monitors {
   author_username: string;
 }
 
+export interface ListMonitorsOptions {
+  active?: boolean;
+}
+
 export class MonitorRepository {
   private db: Knex;
   private tableName = "monitors";
@@ -17,11 +21,16 @@ export class MonitorRepository {
     this.db = database || getDb();
   }
 
-  async findAll(): Promise<MonitorWithAuthor[]> {
-    return this.db(this.tableName)
+  async findAll(options: ListMonitorsOptions): Promise<MonitorWithAuthor[]> {
+    const q = this.db(this.tableName)
       .select("monitors.*", "users.username as author_username")
-      .join("users", "monitors.author", "users.id")
-      .orderBy("monitors.created_at", "desc");
+      .join("users", "monitors.author", "users.id");
+
+    if (options.active) {
+      q.where("monitors.status", MonitorStatus.active);
+    }
+    q.orderBy("monitors.created_at", "desc");
+    return q;
   }
 
   async findById(id: string): Promise<MonitorWithAuthor | undefined> {

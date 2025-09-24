@@ -3,9 +3,9 @@
 
 /** Represents the enum public.run_status */
 enum RunStatus {
-  success = "success",
-  failure = "failure",
-  timeout = "timeout",
-}
+  success = 'success',
+  failure = 'failure',
+  timeout = 'timeout',
+};
 
 export default RunStatus;

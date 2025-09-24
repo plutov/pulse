@@ -13,13 +13,22 @@ import {
   ListRunsOptions,
   RunRepository,
 } from "../models/repositories/runs";
+import { MonitorScheduler } from "../services/scheduler";
+import MonitorStatus from "../models/types/public/MonitorStatus";
 
 const monitorRepository = new MonitorRepository();
 const runRepository = new RunRepository();
 
+// Global scheduler instance - this will be set by the server
+let schedulerInstance: MonitorScheduler | null = null;
+
+export function setSchedulerInstance(scheduler: MonitorScheduler) {
+  schedulerInstance = scheduler;
+}
+
 export async function getAllMonitorsHandler() {
   try {
-    const rows = await monitorRepository.findAll();
+    const rows = await monitorRepository.findAll({});
     return convertMonitorRowsToApi(rows);
   } catch (error) {
     console.error("Error fetching monitors:", error);
@@ -53,6 +62,12 @@ export async function createMonitorHandler(
     }
 
     const newMonitor = convertMonitorRowToApi(createdMonitor);
+
+    // Schedule the monitor if it's active and scheduler is available
+    if (schedulerInstance && newMonitor.status === MonitorStatus.active) {
+      schedulerInstance.scheduleMonitor(newMonitor);
+    }
+
     return h.response(newMonitor).code(201);
   } catch (error) {
     if (Boom.isBoom(error)) {
@@ -89,9 +104,20 @@ export async function deleteMonitorHandler(
   try {
     const id = request.params["id"] as string;
 
+    // Check if monitor exists before deleting
+    const existingMonitor = await monitorRepository.findById(id);
+    if (!existingMonitor) {
+      throw Boom.notFound(`Monitor with ID ${id} not found`);
+    }
+
     const deleted = await monitorRepository.delete(id);
     if (!deleted) {
       throw Boom.notFound(`Monitor with ID ${id} not found`);
+    }
+
+    // Unschedule the monitor if scheduler is available
+    if (schedulerInstance) {
+      schedulerInstance.unscheduleMonitor(id);
     }
 
     return h.response().code(204);

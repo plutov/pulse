@@ -9,6 +9,7 @@ import { ErrorResponse } from "@pulse/shared";
 import { MonitorScheduler } from "./services/scheduler";
 import { getDb } from "./models/connection";
 import { Knex } from "knex";
+import { setSchedulerInstance } from "./controllers/monitors";
 
 interface ServerOptions {
   port?: number | string;
@@ -91,6 +92,9 @@ export async function createServer(
   if (options.startScheduler !== false) {
     const db = options.db || getDb();
     const scheduler = new MonitorScheduler(db);
+
+    // Pass scheduler instance to controllers
+    setSchedulerInstance(scheduler);
 
     server.ext("onPostStart", async () => {
       await scheduler.start();
