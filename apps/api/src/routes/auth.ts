@@ -1,6 +1,6 @@
 import * as Hapi from "@hapi/hapi";
 import { loginHandler } from "../controllers/auth";
-import { loginSchema } from "../api/schemas";
+import { loginSchema } from "../api/schemas/auth";
 import { validationFailAction } from "../api/errors";
 
 export const authRoutes: Hapi.ServerRoute[] = [

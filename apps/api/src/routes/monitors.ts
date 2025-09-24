@@ -9,8 +9,8 @@ import {
 import {
   createMonitorSchema,
   monitorIdParamSchema,
-  listMonitorRunsParamsSchema,
-} from "../api/schemas";
+} from "../api/schemas/monitors";
+import { listMonitorRunsParamsSchema } from "../api/schemas/runs";
 import { validationFailAction } from "../api/errors";
 
 export const monitorRoutes: Hapi.ServerRoute[] = [

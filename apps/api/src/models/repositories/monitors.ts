@@ -61,6 +61,11 @@ export class MonitorRepository {
     const deletedCount = await this.db(this.tableName).where({ id }).del();
     return deletedCount > 0;
   }
+
+  async deleteByAuthor(author: string): Promise<boolean> {
+    const deletedCount = await this.db(this.tableName).where({ author }).del();
+    return deletedCount > 0;
+  }
 }
 
 export function convertMonitorRowToApi(row: MonitorWithAuthor): Monitor {

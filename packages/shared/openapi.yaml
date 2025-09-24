@@ -341,6 +341,9 @@ components:
           $ref: "#/components/schemas/User"
     MonitorRunsList:
       type: object
+      required:
+        - total
+        - rows
       properties:
         total:
           type: integer

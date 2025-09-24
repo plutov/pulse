@@ -8,6 +8,7 @@ import {
   WithStatusStatusEnum,
 } from "@pulse/shared";
 import { getAuthHeaders } from "./auth";
+import { randomUUID } from "crypto";
 
 interface TestMonitorData {
   name?: string;
@@ -22,8 +23,9 @@ export const createTestMonitor = async (
   userId: string,
   data: TestMonitorData,
 ): Promise<Monitor | ErrorResponse> => {
+  const defaultName = `test-monitor-${randomUUID()}`;
   const payload: CreateMonitorPayload = {
-    name: data.name || "test-monitor",
+    name: data.name || defaultName,
     monitorType: data.monitorType || MonitorType.http,
     schedule: data.schedule || "*/5 * * * *",
     status: data.status || WithStatusStatusEnum.active,

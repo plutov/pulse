@@ -30,26 +30,21 @@ export class MonitorScheduler {
   async start(): Promise<void> {
     logger.info("starting monitor scheduler...");
 
-    try {
-      const monitors = await this.monitorRepo.findAll({ active: true });
-      let scheduledCount = 0;
+    const monitors = await this.monitorRepo.findAll({ active: true });
+    let scheduledCount = 0;
 
-      for (const monitorRow of monitors) {
-        try {
-          const monitor: Monitor = convertMonitorRowToApi(monitorRow);
+    for (const monitorRow of monitors) {
+      try {
+        const monitor: Monitor = convertMonitorRowToApi(monitorRow);
 
-          this.scheduleMonitor(monitor);
-          scheduledCount++;
-        } catch (error) {
-          logger.error(error, `failed to schedule monitor ${monitorRow.id}`);
-        }
+        this.scheduleMonitor(monitor);
+        scheduledCount++;
+      } catch (error) {
+        logger.error(error, `failed to schedule monitor ${monitorRow.id}`);
       }
-
-      logger.info(`scheduled ${scheduledCount} active monitors`);
-    } catch (error) {
-      logger.error(error, "failed to start monitor scheduler");
-      throw error;
     }
+
+    logger.info(`scheduled ${scheduledCount} active monitors`);
   }
 
   scheduleMonitor(monitor: Monitor): void {
@@ -98,6 +93,8 @@ export class MonitorScheduler {
     logger.info(`executing monitor ${monitor.id}`);
 
     let dbStatus: RunStatus = RunStatus.failure;
+    let resultDetails = { statusCode: 0 };
+
     try {
       const runner = this.runners.get(monitor.monitorType);
       if (!runner) {
@@ -108,14 +105,7 @@ export class MonitorScheduler {
 
       const result = await runner.run(monitor);
       dbStatus = result.status as RunStatus;
-
-      await this.runRepo.create({
-        id: randomUUID(),
-        monitor_id: monitor.id,
-        status: dbStatus,
-        duration_ms: result.durationMs,
-        result_details: result.details,
-      });
+      resultDetails = result.details;
 
       logger.info(
         `monitor ${monitor.name} executed successfully: ${result.status}`,
@@ -130,9 +120,7 @@ export class MonitorScheduler {
       monitor_id: monitor.id,
       status: dbStatus,
       duration_ms: executionTime,
-      result_details: {
-        statusCode: 0,
-      },
+      result_details: resultDetails,
     });
   }
 

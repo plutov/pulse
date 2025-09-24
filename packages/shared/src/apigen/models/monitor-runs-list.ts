@@ -28,12 +28,12 @@ export interface MonitorRunsList {
      * @type {number}
      * @memberof MonitorRunsList
      */
-    'total'?: number;
+    'total': number;
     /**
      * 
      * @type {Array<MonitorRun>}
      * @memberof MonitorRunsList
      */
-    'rows'?: Array<MonitorRun>;
+    'rows': Array<MonitorRun>;
 }
 

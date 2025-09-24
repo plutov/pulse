@@ -10,6 +10,7 @@ import { MonitorScheduler } from "./services/scheduler";
 import { getDb } from "./models/connection";
 import { Knex } from "knex";
 import { setSchedulerInstance } from "./controllers/monitors";
+import healthzPlugin from "./plugins/healthz";
 
 interface ServerOptions {
   port?: number | string;
@@ -86,7 +87,12 @@ export async function createServer(
     },
   });
 
-  await server.register([authStrategy, authPlugin, monitorsPlugin]);
+  await server.register([
+    authStrategy,
+    healthzPlugin,
+    authPlugin,
+    monitorsPlugin,
+  ]);
 
   // Initialize scheduler if enabled
   if (options.startScheduler !== false) {

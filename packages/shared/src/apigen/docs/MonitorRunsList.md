@@ -5,8 +5,8 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**total** | **number** |  | [optional] [default to undefined]
-**rows** | [**Array&lt;MonitorRun&gt;**](MonitorRun.md) |  | [optional] [default to undefined]
+**total** | **number** |  | [default to undefined]
+**rows** | [**Array&lt;MonitorRun&gt;**](MonitorRun.md) |  | [default to undefined]
 
 ## Example
 
