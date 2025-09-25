@@ -34,16 +34,18 @@ export interface HttpConfig {
     'method': HttpConfigMethodEnum;
 }
 
-export const HttpConfigMethodEnum = {
-    get: 'GET',
-    post: 'POST',
-    put: 'PUT',
-    delete: 'DELETE',
-    head: 'HEAD',
-    options: 'OPTIONS',
-    patch: 'PATCH'
-} as const;
-
-export type HttpConfigMethodEnum = typeof HttpConfigMethodEnum[keyof typeof HttpConfigMethodEnum];
+/**
+    * @export
+    * @enum {string}
+    */
+export enum HttpConfigMethodEnum {
+    get = 'GET',
+    post = 'POST',
+    put = 'PUT',
+    delete = 'DELETE',
+    head = 'HEAD',
+    options = 'OPTIONS',
+    patch = 'PATCH'
+}
 
 

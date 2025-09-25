@@ -20,11 +20,9 @@
  * @enum {string}
  */
 
-export const MonitorType = {
-    http: 'http'
-} as const;
-
-export type MonitorType = typeof MonitorType[keyof typeof MonitorType];
+export enum MonitorType {
+    http = 'http'
+}
 
 
 

@@ -1,8 +1,8 @@
 import { ref } from "vue";
 import { useQuasar } from "quasar";
 import { useRouter } from "vue-router";
-import axios from "axios";
-import type { ErrorResponse, ValidationMessage } from "@pulse/shared";
+import type { ValidationMessage } from "@pulse/shared";
+import { notifyOnError } from "./notify";
 
 interface UseFormSubmissionOptions<T> {
   submitFn: (data: T) => Promise<unknown>;
@@ -69,31 +69,12 @@ export function useFormSubmission<T>(options: UseFormSubmissionOptions<T>) {
 
       return true;
     } catch (error: unknown) {
-      if (axios.isAxiosError(error)) {
-        const response = error.response?.data as ErrorResponse;
-
-        if (error.response?.status === 400 && response.validationMessages) {
-          setValidationErrors(response.validationMessages);
-          $q.notify({
-            type: "negative",
-            message: response.message,
-          });
-        } else {
-          $q.notify({
-            type: "negative",
-            message: response?.message || "Submission failed",
-          });
-        }
-      } else {
-        $q.notify({
-          type: "negative",
-          message: "An unexpected error occurred",
-        });
-      }
-      return false;
+      notifyOnError(error, setValidationErrors);
     } finally {
       loading.value = false;
     }
+
+    return false;
   };
 
   return {

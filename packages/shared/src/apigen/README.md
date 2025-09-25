@@ -52,6 +52,7 @@ All URIs are relative to *http://localhost*
 Class | Method | HTTP request | Description
 ------------ | ------------- | ------------- | -------------
 *AuthApi* | [**login**](docs/AuthApi.md#login) | **POST** /auth/login | User Login
+*ChartsApi* | [**getTimeSeriesChartData**](docs/ChartsApi.md#gettimeserieschartdata) | **POST** /charts/timeSeries | Get Time Series Chart Data
 *MonitorApi* | [**createMonitor**](docs/MonitorApi.md#createmonitor) | **POST** /monitors | Create Monitor
 *MonitorApi* | [**deleteMonitor**](docs/MonitorApi.md#deletemonitor) | **DELETE** /monitors/{id} | Delete Monitor
 *MonitorApi* | [**getMonitor**](docs/MonitorApi.md#getmonitor) | **GET** /monitors/{id} | Get Monitor
@@ -61,6 +62,7 @@ Class | Method | HTTP request | Description
 
 ### Documentation For Models
 
+ - [ChartInterval](docs/ChartInterval.md)
  - [CreateMonitorPayload](docs/CreateMonitorPayload.md)
  - [ErrorResponse](docs/ErrorResponse.md)
  - [HttpConfig](docs/HttpConfig.md)
@@ -70,23 +72,29 @@ Class | Method | HTTP request | Description
  - [Monitor](docs/Monitor.md)
  - [MonitorMinimal](docs/MonitorMinimal.md)
  - [MonitorRun](docs/MonitorRun.md)
- - [MonitorRunStatus](docs/MonitorRunStatus.md)
  - [MonitorRunsList](docs/MonitorRunsList.md)
+ - [MonitorStatus](docs/MonitorStatus.md)
  - [MonitorType](docs/MonitorType.md)
  - [MonitorsList](docs/MonitorsList.md)
+ - [RunStatus](docs/RunStatus.md)
+ - [TimeSeriesChartData](docs/TimeSeriesChartData.md)
+ - [TimeSeriesChartPayload](docs/TimeSeriesChartPayload.md)
+ - [TimeSeriesDataPoint](docs/TimeSeriesDataPoint.md)
+ - [TimeSeriesMonitorData](docs/TimeSeriesMonitorData.md)
  - [User](docs/User.md)
  - [ValidationMessage](docs/ValidationMessage.md)
  - [WithAuthor](docs/WithAuthor.md)
  - [WithConfig](docs/WithConfig.md)
  - [WithCreatedAt](docs/WithCreatedAt.md)
+ - [WithDataPoints](docs/WithDataPoints.md)
  - [WithDurationMs](docs/WithDurationMs.md)
  - [WithId](docs/WithId.md)
  - [WithMonitorMinimal](docs/WithMonitorMinimal.md)
  - [WithMonitorRunDetails](docs/WithMonitorRunDetails.md)
- - [WithMonitorRunStatus](docs/WithMonitorRunStatus.md)
  - [WithMonitorType](docs/WithMonitorType.md)
  - [WithName](docs/WithName.md)
  - [WithPassword](docs/WithPassword.md)
+ - [WithRunStatus](docs/WithRunStatus.md)
  - [WithSchedule](docs/WithSchedule.md)
  - [WithStatus](docs/WithStatus.md)
  - [WithToken](docs/WithToken.md)

@@ -1,5 +1,6 @@
 import * as Hapi from "@hapi/hapi";
 import * as Boom from "@hapi/boom";
+import { logger } from "../logging";
 import { CreateMonitorPayload, MonitorRunsList } from "@pulse/shared";
 import { MonitorRepository } from "../models/repositories/monitors";
 import {
@@ -30,8 +31,8 @@ export async function getAllMonitorsHandler() {
   try {
     const rows = await monitorRepository.findAll({});
     return convertMonitorRowsToApi(rows);
-  } catch (error) {
-    console.error("Error fetching monitors:", error);
+  } catch (err) {
+    logger.error(err, "Error fetching monitors");
     throw Boom.internal("Failed to fetch monitors");
   }
 }
@@ -73,7 +74,7 @@ export async function createMonitorHandler(
     if (Boom.isBoom(error)) {
       throw error;
     }
-    console.error("Error creating monitor:", error);
+    logger.error("Error creating monitor");
     throw Boom.internal("Failed to create monitor");
   }
 }
@@ -92,7 +93,7 @@ export async function getMonitorByIdHandler(request: Hapi.Request) {
     if (Boom.isBoom(error)) {
       throw error;
     }
-    console.error("Error fetching monitor by ID:", error);
+    logger.error(error, "Error fetching monitor by ID");
     throw Boom.internal("Failed to fetch monitor");
   }
 }
@@ -125,7 +126,7 @@ export async function deleteMonitorHandler(
     if (Boom.isBoom(error)) {
       throw error;
     }
-    console.error("Error deleting monitor:", error);
+    logger.error(error, "Error deleting monitor");
     throw Boom.internal("Failed to delete monitor");
   }
 }
@@ -149,7 +150,7 @@ export async function listMonitorRuns(request: Hapi.Request) {
     };
     return res;
   } catch (error) {
-    console.error("Error fetching monitor runs:", error);
+    logger.error(error, "Error fetching monitor runs");
     throw Boom.internal("Failed to fetch monitor runs");
   }
 }

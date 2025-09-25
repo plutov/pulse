@@ -40,7 +40,7 @@ const formData = ref<Partial<CreateMonitorPayload>>({
   name: "",
   monitorType: MonitorType.http,
   status: "active",
-  schedule: "*/5 * * * *",
+  schedule: "* * * * *",
   config: {
     url: "",
     method: "GET",

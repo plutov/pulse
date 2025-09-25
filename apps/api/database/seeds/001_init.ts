@@ -27,7 +27,7 @@ export async function seed(knex: Knex): Promise<void> {
       description: "",
       monitor_type: MonitorType.http,
       status: MonitorStatus.active,
-      schedule: "*/5 * * * *",
+      schedule: "* * * * *",
       config: {
         url: "https://pliutau.com",
         method: "GET",
@@ -40,7 +40,7 @@ export async function seed(knex: Knex): Promise<void> {
       description: "",
       monitor_type: MonitorType.http,
       status: MonitorStatus.active,
-      schedule: "*/5 * * * *",
+      schedule: "* * * * *",
       config: {
         url: "https://gitprint.me",
         method: "GET",
@@ -53,7 +53,7 @@ export async function seed(knex: Knex): Promise<void> {
       description: "",
       monitor_type: MonitorType.http,
       status: MonitorStatus.active,
-      schedule: "*/5 * * * *",
+      schedule: "* * * * *",
       config: {
         url: "https://packagemain.tech",
         method: "GET",

@@ -2,8 +2,6 @@ import { Knex } from "knex";
 import { getDb } from "../connection";
 import Monitors, { MonitorsInitializer } from "../types/public/Monitors";
 import { CreateMonitorPayload, HttpConfig, Monitor } from "@pulse/shared";
-import MonitorType from "../types/public/MonitorType";
-import MonitorStatus from "../types/public/MonitorStatus";
 
 export interface MonitorWithAuthor extends Monitors {
   author_username: string;
@@ -27,7 +25,7 @@ export class MonitorRepository {
       .join("users", "monitors.author", "users.id");
 
     if (options.active) {
-      q.where("monitors.status", MonitorStatus.active);
+      q.where("monitors.status", "active");
     }
     q.orderBy("monitors.created_at", "desc");
     return q;
@@ -80,8 +78,8 @@ export function convertMonitorRowToApi(row: MonitorWithAuthor): Monitor {
       username: row.author_username,
     },
     schedule: row.schedule,
-    status: row.status as "active" | "paused",
-    config: row.config as HttpConfig, // TODO: handle other types
+    status: row.status,
+    config: row.config as HttpConfig,
   };
   return res;
 }
@@ -98,10 +96,10 @@ export function convertCreateMonitorPayloadToDb(
   return {
     id,
     author: authorId,
-    monitor_type: payload.monitorType as MonitorType,
+    monitor_type: payload.monitorType,
     name: payload.name,
     schedule: payload.schedule,
-    status: payload.status as MonitorStatus,
+    status: payload.status,
     config: payload.config,
   };
 }

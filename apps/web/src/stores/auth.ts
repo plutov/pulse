@@ -19,9 +19,7 @@ export const useAuthStore = defineStore("auth", () => {
         localStorage.setItem("auth_token", response.data.token);
         return response.data.user;
       }
-    } catch (error) {
-      console.error("Login failed:", error);
-    } finally {
+    } catch {
       isLoading.value = false;
     }
 

@@ -7,10 +7,12 @@
     "vitest.config.ts"
   ],
   "compilerOptions": {
-    "module": "nodenext",
+    "module": "commonjs",
     "target": "esnext",
     "lib": ["esnext"],
     "types": ["node"],
-    "strict": true
+    "strict": true,
+    "allowSyntheticDefaultImports": true,
+    "esModuleInterop": true
   }
 }

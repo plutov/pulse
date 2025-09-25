@@ -19,7 +19,7 @@ export class MonitorScheduler {
   private runRepo: RunRepository;
 
   private runners: Map<MonitorType, MonitorRunner> = new Map([
-    ["http", new HttpMonitorRunner()],
+    [MonitorType.http, new HttpMonitorRunner()],
   ]);
 
   constructor(db?: Knex) {

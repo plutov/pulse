@@ -13,20 +13,21 @@
  */
 
 
+// May contain unused imports in some cases
+// @ts-ignore
+import type { TimeSeriesMonitorData } from './time-series-monitor-data';
 
 /**
  * 
  * @export
- * @enum {string}
+ * @interface TimeSeriesChartData
  */
-
-export const MonitorRunStatus = {
-    success: 'success',
-    failure: 'failure',
-    timeout: 'timeout'
-} as const;
-
-export type MonitorRunStatus = typeof MonitorRunStatus[keyof typeof MonitorRunStatus];
-
-
+export interface TimeSeriesChartData {
+    /**
+     * 
+     * @type {Array<TimeSeriesMonitorData>}
+     * @memberof TimeSeriesChartData
+     */
+    'data': Array<TimeSeriesMonitorData>;
+}
 

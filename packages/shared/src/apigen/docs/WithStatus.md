@@ -5,7 +5,7 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**status** | **string** |  | [default to undefined]
+**status** | [**MonitorStatus**](MonitorStatus.md) |  | [default to undefined]
 
 ## Example
 

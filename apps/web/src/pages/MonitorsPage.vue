@@ -51,6 +51,10 @@ import DataTable from "../components/DataTable.vue";
 import StatusBadge from "src/components/ui/StatusBadge.vue";
 import ConfirmDialog from "src/components/ui/ConfirmDialog.vue";
 import { date } from "quasar";
+import { notifyOnError } from "src/composables/notify";
+
+const $router = useRouter();
+const $q = useQuasar();
 
 const monitorTableColumns = [
   {
@@ -109,9 +113,6 @@ const monitorTableColumns = [
   },
 ];
 
-const $router = useRouter();
-const $q = useQuasar();
-
 const { data, loading, refresh } = useDataTable<Monitor>({
   fetchFn: async () => {
     const monitorApi = getMonitorApi();
@@ -167,18 +168,12 @@ const confirmDelete = async () => {
     $q.notify({
       type: "positive",
       message: "Monitor deleted successfully",
-      position: "top",
     });
 
     await refresh();
     deleteDialog.value.show = false;
   } catch (error) {
-    console.error("Failed to delete monitor:", error);
-    $q.notify({
-      type: "negative",
-      message: "Failed to delete monitor",
-      position: "top",
-    });
+    notifyOnError(error);
   } finally {
     deleteDialog.value.loading = false;
   }

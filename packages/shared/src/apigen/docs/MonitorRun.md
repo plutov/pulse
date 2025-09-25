@@ -8,7 +8,7 @@ Name | Type | Description | Notes
 **id** | **string** |  | [default to undefined]
 **createdAt** | **string** |  | [default to undefined]
 **monitor** | [**MonitorMinimal**](MonitorMinimal.md) |  | [default to undefined]
-**status** | [**MonitorRunStatus**](MonitorRunStatus.md) |  | [default to undefined]
+**status** | [**RunStatus**](RunStatus.md) |  | [default to undefined]
 **durationMs** | **number** |  | [default to undefined]
 **details** | [**HttpRunDetails**](HttpRunDetails.md) |  | [default to undefined]
 

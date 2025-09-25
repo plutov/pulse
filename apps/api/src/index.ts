@@ -1,5 +1,6 @@
 import * as Hapi from "@hapi/hapi";
 import { createServer } from "./server";
+import { logger } from "./logging";
 
 const init = async (): Promise<Hapi.Server> => {
   const server = await createServer({
@@ -15,11 +16,11 @@ const init = async (): Promise<Hapi.Server> => {
 };
 
 process.on("unhandledRejection", (err) => {
-  console.error("unhandled rejection:", err);
+  logger.error(err, "unhandled rejection");
   process.exit(1);
 });
 
 init().catch((err) => {
-  console.error("failed to start server:", err);
+  logger.error(err, "failed to start server");
   process.exit(1);
 });

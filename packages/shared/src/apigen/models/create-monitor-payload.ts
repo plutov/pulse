@@ -18,6 +18,9 @@
 import type { HttpConfig } from './http-config';
 // May contain unused imports in some cases
 // @ts-ignore
+import type { MonitorStatus } from './monitor-status';
+// May contain unused imports in some cases
+// @ts-ignore
 import type { MonitorType } from './monitor-type';
 // May contain unused imports in some cases
 // @ts-ignore

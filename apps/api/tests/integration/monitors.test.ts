@@ -133,7 +133,7 @@ describe("Monitors API", () => {
         payload: {
           name: "test-monitor",
           monitorType: "http",
-          schedule: "*/5 * * * *",
+          schedule: "* * * * *",
           status: "active",
           config: {
             url: "https://example.com",
@@ -150,7 +150,7 @@ describe("Monitors API", () => {
           id: expect.any(String),
           name: "test-monitor",
           monitorType: "http",
-          schedule: "*/5 * * * *",
+          schedule: "* * * * *",
           status: "active",
           config: {
             url: "https://example.com",

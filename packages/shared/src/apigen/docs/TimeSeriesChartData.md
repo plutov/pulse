@@ -1,19 +1,19 @@
-# WithMonitorRunStatus
+# TimeSeriesChartData
 
 
 ## Properties
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**status** | [**MonitorRunStatus**](MonitorRunStatus.md) |  | [default to undefined]
+**data** | [**Array&lt;TimeSeriesMonitorData&gt;**](TimeSeriesMonitorData.md) |  | [default to undefined]
 
 ## Example
 
 ```typescript
-import { WithMonitorRunStatus } from '@pulse/shared';
+import { TimeSeriesChartData } from '@pulse/shared';
 
-const instance: WithMonitorRunStatus = {
-    status,
+const instance: TimeSeriesChartData = {
+    data,
 };
 ```
 

@@ -1,12 +1,10 @@
-# MonitorRunStatus
+# MonitorStatus
 
 
 ## Enum
 
-* `success` (value: `'success'`)
+* `active` (value: `'active'`)
 
-* `failure` (value: `'failure'`)
-
-* `timeout` (value: `'timeout'`)
+* `paused` (value: `'paused'`)
 
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)

@@ -3,6 +3,7 @@ import HapiPino from "hapi-pino";
 import { authStrategy } from "./middleware/auth";
 import authPlugin from "./plugins/auth";
 import monitorsPlugin from "./plugins/monitors";
+import chartsPlugin from "./plugins/charts";
 import { Boom } from "@hapi/boom";
 import { ErrorResponse } from "@pulse/shared";
 import { MonitorScheduler } from "./services/scheduler";
@@ -78,6 +79,7 @@ export async function createServer(
     healthzPlugin,
     authPlugin,
     monitorsPlugin,
+    chartsPlugin,
   ]);
 
   // Initialize scheduler if enabled

@@ -1,5 +1,6 @@
 import { Monitor, HttpConfig } from "@pulse/shared";
 import { MonitorRunner, MonitorRunResult } from "../types";
+import RunStatus from "../../../models/types/public/RunStatus";
 
 const timeoutMs = 30000;
 
@@ -21,7 +22,7 @@ export class HttpMonitorRunner implements MonitorRunner {
       const durationMs = Date.now() - startTime;
 
       return {
-        status: response.ok ? "success" : "failure",
+        status: response.ok ? RunStatus.success : RunStatus.failure,
         durationMs: durationMs,
         details: {
           statusCode: response.status,
@@ -33,7 +34,7 @@ export class HttpMonitorRunner implements MonitorRunner {
       const isTimeout = error instanceof Error && error.name === "AbortError";
 
       return {
-        status: isTimeout ? "timeout" : "failure",
+        status: isTimeout ? RunStatus.timeout : RunStatus.failure,
         durationMs,
         details: {
           statusCode: 0,

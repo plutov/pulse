@@ -3,5 +3,6 @@ withSeparateModelsAndApi: true
 apiPackage: api
 modelPackage: models
 enumPropertyNaming: camelCase
+stringEnums: true
 npmName: "@pulse/shared"
 npmVersion: "0.0.0"

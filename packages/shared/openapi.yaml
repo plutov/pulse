@@ -138,6 +138,29 @@ paths:
           $ref: "#/components/responses/NotFoundError"
         "500":
           $ref: "#/components/responses/InternalServerError"
+  /charts/timeSeries:
+    post:
+      tags:
+        - charts
+      security:
+        - BearerAuth: []
+      summary: Get Time Series Chart Data
+      operationId: getTimeSeriesChartData
+      requestBody:
+        $ref: "#/components/requestBodies/TimeSeriesChartBody"
+      responses:
+        "200":
+          description: ok
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/TimeSeriesChartData"
+        "400":
+          $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
 components:
   securitySchemes:
     BearerAuth:
@@ -263,17 +286,19 @@ components:
         schedule:
           type: string
           description: Cron-like schedule string
-          example: "*/5 * * * *"
+          example: "* * * * *"
+    MonitorStatus:
+      type: string
+      enum:
+        - active
+        - paused
     WithStatus:
       required:
         - status
       type: object
       properties:
         status:
-          type: string
-          enum:
-            - active
-            - paused
+          $ref: "#/components/schemas/MonitorStatus"
     Monitor:
       allOf:
         - $ref: "#/components/schemas/WithId"
@@ -363,14 +388,14 @@ components:
           type: array
           items:
             $ref: "#/components/schemas/MonitorRun"
-    WithMonitorRunStatus:
+    WithRunStatus:
       required:
         - status
       type: object
       properties:
         status:
-          $ref: "#/components/schemas/MonitorRunStatus"
-    MonitorRunStatus:
+          $ref: "#/components/schemas/RunStatus"
+    RunStatus:
       type: string
       enum:
         - success
@@ -404,9 +429,66 @@ components:
         - $ref: "#/components/schemas/WithId"
         - $ref: "#/components/schemas/WithCreatedAt"
         - $ref: "#/components/schemas/WithMonitorMinimal"
-        - $ref: "#/components/schemas/WithMonitorRunStatus"
+        - $ref: "#/components/schemas/WithRunStatus"
         - $ref: "#/components/schemas/WithDurationMs"
         - $ref: "#/components/schemas/WithMonitorRunDetails"
+    ChartInterval:
+      type: string
+      enum:
+        - 5m
+        - 1h
+        - 1d
+        - 1w
+        - 30d
+    TimeSeriesChartPayload:
+      required:
+        - monitorIds
+        - timeRange
+        - interval
+      type: object
+      properties:
+        monitorIds:
+          type: array
+          items:
+            type: string
+            format: uuid
+        start:
+          type: string
+          format: date-time
+        end:
+          type: string
+          format: date-time
+        interval:
+          $ref: "#/components/schemas/ChartInterval"
+        timeRange:
+          $ref: "#/components/schemas/ChartInterval"
+    TimeSeriesDataPoint:
+      allOf:
+        - $ref: "#/components/schemas/WithCreatedAt"
+        - $ref: "#/components/schemas/WithRunStatus"
+        - $ref: "#/components/schemas/WithDurationMs"
+    WithDataPoints:
+      required:
+        - dataPoints
+      type: object
+      properties:
+        dataPoints:
+          type: array
+          items:
+            $ref: "#/components/schemas/TimeSeriesDataPoint"
+    TimeSeriesMonitorData:
+      allOf:
+        - $ref: "#/components/schemas/WithMonitorMinimal"
+        - $ref: "#/components/schemas/WithDataPoints"
+    TimeSeriesChartData:
+      required:
+        - data
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: "#/components/schemas/TimeSeriesMonitorData"
   requestBodies:
     LoginBody:
       required: true
@@ -420,6 +502,12 @@ components:
         application/json:
           schema:
             $ref: "#/components/schemas/CreateMonitorPayload"
+    TimeSeriesChartBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/TimeSeriesChartPayload"
   responses:
     BadRequestError:
       description: "400"

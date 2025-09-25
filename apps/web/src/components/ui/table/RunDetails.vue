@@ -3,7 +3,7 @@
 </template>
 
 <script setup lang="ts">
-import { HttpRunDetails } from "@pulse/shared";
+import type { HttpRunDetails } from "@pulse/shared";
 
 defineProps<Props>();
 

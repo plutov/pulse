@@ -15,21 +15,19 @@
 
 // May contain unused imports in some cases
 // @ts-ignore
-import type { MonitorRunStatus } from './monitor-run-status';
+import type { TimeSeriesDataPoint } from './time-series-data-point';
 
 /**
  * 
  * @export
- * @interface WithMonitorRunStatus
+ * @interface WithDataPoints
  */
-export interface WithMonitorRunStatus {
+export interface WithDataPoints {
     /**
      * 
-     * @type {MonitorRunStatus}
-     * @memberof WithMonitorRunStatus
+     * @type {Array<TimeSeriesDataPoint>}
+     * @memberof WithDataPoints
      */
-    'status': MonitorRunStatus;
+    'dataPoints': Array<TimeSeriesDataPoint>;
 }
-
-
 

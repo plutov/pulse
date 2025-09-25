@@ -4,7 +4,7 @@
       v-model="localData.schedule"
       label="Schedule (cron expression)"
       outlined
-      placeholder="*/5 * * * *"
+      placeholder="* * * * *"
       hint="Example: */5 * * * * (every 5 minutes)"
       :error="hasError('schedule')"
       :error-message="getError('schedule')"
@@ -28,7 +28,7 @@ const emit = defineEmits<{
 }>();
 
 const localData = ref({
-  schedule: props.modelValue.schedule || "*/5 * * * *",
+  schedule: props.modelValue.schedule || "* * * * *",
 });
 
 const updateData = () => {
@@ -47,7 +47,7 @@ watch(
   () => props.modelValue,
   (newValue) => {
     localData.value = {
-      schedule: newValue.schedule || "*/5 * * * *",
+      schedule: newValue.schedule || "* * * * *",
     };
   },
   { deep: true },

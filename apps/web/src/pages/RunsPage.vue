@@ -41,7 +41,6 @@
 
 <script setup lang="ts">
 import { ref, onMounted } from "vue";
-import { useQuasar } from "quasar";
 import { useRoute } from "vue-router";
 import { getMonitorApi } from "boot/axios";
 import type { MonitorRun, Monitor } from "@pulse/shared";
@@ -51,8 +50,8 @@ import DataTable from "src/components/DataTable.vue";
 import { date } from "quasar";
 import { useDataTable } from "src/composables/useDataTable";
 import RunDetails from "src/components/ui/table/RunDetails.vue";
+import { notifyOnError } from "src/composables/notify";
 
-const $q = useQuasar();
 const $route = useRoute();
 
 const selectedMonitorId = ref<string | null>(null);
@@ -130,12 +129,8 @@ const fetchMonitors = async () => {
     const monitorApi = getMonitorApi();
     const response = await monitorApi.listMonitors();
     monitorOptions.value = response.data;
-  } catch (error) {
-    console.error("Failed to fetch monitors:", error);
-    $q.notify({
-      type: "negative",
-      message: "Failed to fetch monitors.",
-    });
+  } catch (err: unknown) {
+    notifyOnError(err);
   }
 };
 

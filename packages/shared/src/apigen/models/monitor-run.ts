@@ -21,7 +21,7 @@ import type { HttpRunDetails } from './http-run-details';
 import type { MonitorMinimal } from './monitor-minimal';
 // May contain unused imports in some cases
 // @ts-ignore
-import type { MonitorRunStatus } from './monitor-run-status';
+import type { RunStatus } from './run-status';
 // May contain unused imports in some cases
 // @ts-ignore
 import type { WithCreatedAt } from './with-created-at';
@@ -39,12 +39,12 @@ import type { WithMonitorMinimal } from './with-monitor-minimal';
 import type { WithMonitorRunDetails } from './with-monitor-run-details';
 // May contain unused imports in some cases
 // @ts-ignore
-import type { WithMonitorRunStatus } from './with-monitor-run-status';
+import type { WithRunStatus } from './with-run-status';
 
 /**
  * @type MonitorRun
  * @export
  */
-export type MonitorRun = WithCreatedAt & WithDurationMs & WithId & WithMonitorMinimal & WithMonitorRunDetails & WithMonitorRunStatus;
+export type MonitorRun = WithCreatedAt & WithDurationMs & WithId & WithMonitorMinimal & WithMonitorRunDetails & WithRunStatus;
 
 

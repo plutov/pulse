@@ -15,5 +15,6 @@
 
 
 export * from './api/auth-api';
+export * from './api/charts-api';
 export * from './api/monitor-api';
 
