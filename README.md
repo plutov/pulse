@@ -14,6 +14,7 @@ This is a monorepo built with Turborepo.
 - Knex
 - Vitest
 - Pino
+- Postgres
 
 **Frontend (Web)**
 - Vue 3 + TypeScript
@@ -27,7 +28,7 @@ This is a monorepo built with Turborepo.
 
 - Node.js 24+
 - npm
-- Docker (for local PostgreSQL/Redis)
+- Docker
 
 ### Running Locally
 
@@ -37,7 +38,7 @@ Install all dependencies across the monorepo:
 npm install
 ```
 
-Start the local PostgreSQL and Redis services using Docker:
+Start the local PostgreSQL using Docker:
 
 ```bash
 cd apps/api

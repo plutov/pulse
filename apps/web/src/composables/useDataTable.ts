@@ -72,8 +72,6 @@ export function useDataTable<T>(options: UseDataTableOptions<T>) {
         const paginatedData = response.data as { rows: T[]; total: number };
         data.value = paginatedData.rows;
         pagination.value.rowsNumber = paginatedData.total;
-        pagination.value.page = currentPage;
-        pagination.value.rowsPerPage = currentSize;
       } else if (response.data && Array.isArray(response.data)) {
         data.value = response.data;
       }
@@ -107,6 +105,17 @@ export function useDataTable<T>(options: UseDataTableOptions<T>) {
     void fetch();
   };
 
+  const changePage = (page: number) => {
+    pagination.value.page = page;
+    void fetch();
+  };
+
+  const changeRowsPerPage = (rowsPerPage: number) => {
+    pagination.value.page = 1;
+    pagination.value.rowsPerPage = rowsPerPage;
+    void fetch();
+  };
+
   onMounted(() => {
     if (autoFetch) {
       void fetch();
@@ -120,6 +129,8 @@ export function useDataTable<T>(options: UseDataTableOptions<T>) {
     fetch,
     refresh,
     pagination,
-    onRequest: paginated ? onRequest : undefined,
+    onRequest: onRequest,
+    changePage,
+    changeRowsPerPage,
   };
 }

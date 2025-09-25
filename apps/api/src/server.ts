@@ -1,5 +1,4 @@
 import * as Hapi from "@hapi/hapi";
-import { Engine as CatboxRedis } from "@hapi/catbox-redis";
 import HapiPino from "hapi-pino";
 import { authStrategy } from "./middleware/auth";
 import authPlugin from "./plugins/auth";
@@ -32,19 +31,6 @@ export async function createServer(
         credentials: true,
       },
     },
-    cache: [
-      {
-        name: "redis_cache",
-        provider: {
-          constructor: CatboxRedis,
-          options: {
-            host: process.env["REDIS_HOST"] || "localhost",
-            port: Number(process.env["REDIS_PORT"]) || 6379,
-            database: Number(process.env["REDIS_DB"]) || 0,
-          },
-        },
-      },
-    ],
   });
 
   // Global error handler

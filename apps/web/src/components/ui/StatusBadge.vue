@@ -1,5 +1,5 @@
 <template>
-  <q-badge :color="getBadgeColor(value)" :label="value" />
+  <q-badge outline :color="getBadgeColor(value)" :label="value" />
 </template>
 
 <script setup lang="ts">

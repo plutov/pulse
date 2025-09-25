@@ -50,6 +50,7 @@ import StatusBadge from "src/components/ui/StatusBadge.vue";
 import DataTable from "src/components/DataTable.vue";
 import { date } from "quasar";
 import { useDataTable } from "src/composables/useDataTable";
+import RunDetails from "src/components/ui/table/RunDetails.vue";
 
 const $q = useQuasar();
 const $route = useRoute();
@@ -105,11 +106,12 @@ const runsTableColumns = [
     sortable: false,
   },
   {
-    name: "statusCode",
+    name: "details",
     required: true,
-    label: "Status Code",
+    label: "Details",
     align: "right" as const,
-    field: (row: MonitorRun) => row.details?.statusCode || "N/A",
+    field: (row: MonitorRun) => row.details,
+    component: RunDetails,
     sortable: false,
   },
   {
@@ -140,15 +142,11 @@ const fetchMonitors = async () => {
 const onRequest = (requestProps: {
   pagination: { page: number; rowsPerPage: number };
 }) => {
-  if (baseOnRequest) {
-    baseOnRequest(requestProps);
-  }
+  baseOnRequest(requestProps);
 };
 
 const onMonitorFilterChange = () => {
-  if (pagination?.value) {
-    pagination.value.page = 1;
-  }
+  pagination.value.page = 1;
   void refresh();
 };
 
