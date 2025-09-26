@@ -5,7 +5,7 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**config** | [**HttpConfig**](HttpConfig.md) |  | [default to undefined]
+**config** | [**MonitorConfig**](MonitorConfig.md) |  | [default to undefined]
 
 ## Example
 

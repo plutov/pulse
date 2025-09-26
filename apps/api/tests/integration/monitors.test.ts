@@ -107,20 +107,16 @@ describe("Monitors API", () => {
             message: "Name cannot be empty",
           }),
           expect.objectContaining({
-            message: "Monitor type must be one of [http]",
+            message: "Monitor type must be one of: http, shell",
           }),
           expect.objectContaining({
             message: "Schedule must be a valid cron expression",
           }),
           expect.objectContaining({
-            message: "Status must be one of [active, paused]",
+            message: "Status must be one of: active, paused",
           }),
           expect.objectContaining({
-            message: "URL must be a valid URI",
-          }),
-          expect.objectContaining({
-            message:
-              "Method must be one of [GET, POST, PUT, DELETE, HEAD, OPTIONS, PATCH]",
+            message: '"config" does not match any of the allowed types',
           }),
         ]),
       );
@@ -172,6 +168,158 @@ describe("Monitors API", () => {
       })) as ErrorResponse;
       expect(err.message).toBe("Monitor with this name already exists");
       expect(err.statusCode).toBe(409);
+    });
+
+    it("should validate http monitor config - require url and method", async () => {
+      const response = await server.inject({
+        method: "POST",
+        url: "/monitors",
+        payload: {
+          name: "test-http-monitor",
+          monitorType: "http",
+          schedule: "* * * * *",
+          status: "active",
+          config: {}, // Missing url and method
+        },
+        headers: getAuthHeaders(userId),
+      });
+
+      expect(response.statusCode).toBe(400);
+      const error: ErrorResponse = JSON.parse(response.payload);
+      expect(error.message).toBe(ApiErrorsEnum.ValidationFailed);
+      expect(error.validationMessages).toEqual(
+        expect.arrayContaining([
+          expect.objectContaining({
+            message: "URL is required",
+          }),
+          expect.objectContaining({
+            message: "Method is required",
+          }),
+        ]),
+      );
+    });
+
+    it("should validate shell monitor config - require command", async () => {
+      const response = await server.inject({
+        method: "POST",
+        url: "/monitors",
+        payload: {
+          name: "test-shell-monitor",
+          monitorType: "shell",
+          schedule: "* * * * *",
+          status: "active",
+          config: {}, // Missing command
+        },
+        headers: getAuthHeaders(userId),
+      });
+
+      expect(response.statusCode).toBe(400);
+      const error: ErrorResponse = JSON.parse(response.payload);
+      expect(error.message).toBe(ApiErrorsEnum.ValidationFailed);
+      expect(error.validationMessages).toEqual(
+        expect.arrayContaining([
+          expect.objectContaining({
+            message: "Shell command is required",
+          }),
+        ]),
+      );
+    });
+
+    it("should create shell monitor successfully", async () => {
+      const response = await server.inject({
+        method: "POST",
+        url: "/monitors",
+        payload: {
+          name: "test-shell-monitor",
+          monitorType: "shell",
+          schedule: "* * * * *",
+          status: "active",
+          config: {
+            command: "echo 'test'",
+          },
+        },
+        headers: getAuthHeaders(userId),
+      });
+
+      expect(response.statusCode).toBe(201);
+      const monitor: Monitor = JSON.parse(response.payload);
+      expect(monitor).toEqual(
+        expect.objectContaining({
+          id: expect.any(String),
+          name: "test-shell-monitor",
+          monitorType: "shell",
+          schedule: "* * * * *",
+          status: "active",
+          config: {
+            command: "echo 'test'",
+          },
+          createdAt: expect.any(String),
+          updatedAt: expect.any(String),
+        }),
+      );
+    });
+
+    it("should reject http config fields for shell monitor", async () => {
+      const response = await server.inject({
+        method: "POST",
+        url: "/monitors",
+        payload: {
+          name: "test-shell-monitor-reject-http",
+          monitorType: "shell",
+          schedule: "* * * * *",
+          status: "active",
+          config: {
+            command: "echo 'test'",
+            url: "https://example.com", // This should be rejected
+            method: "GET", // This should be rejected
+          },
+        },
+        headers: getAuthHeaders(userId),
+      });
+
+      expect(response.statusCode).toBe(400);
+      const error: ErrorResponse = JSON.parse(response.payload);
+      expect(error.message).toBe(ApiErrorsEnum.ValidationFailed);
+      expect(error.validationMessages).toEqual(
+        expect.arrayContaining([
+          expect.objectContaining({
+            message: '"config.url" is not allowed',
+          }),
+          expect.objectContaining({
+            message: '"config.method" is not allowed',
+          }),
+        ]),
+      );
+    });
+
+    it("should reject shell config fields for http monitor", async () => {
+      const response = await server.inject({
+        method: "POST",
+        url: "/monitors",
+        payload: {
+          name: "test-http-monitor-reject-shell",
+          monitorType: "http",
+          schedule: "* * * * *",
+          status: "active",
+          config: {
+            url: "https://example.com",
+            method: "GET",
+            command: "echo 'test'", // This should be rejected
+          },
+        },
+        headers: getAuthHeaders(userId),
+      });
+
+      expect(response.statusCode).toBe(400);
+      const error: ErrorResponse = JSON.parse(response.payload);
+      expect(error.message).toBe(ApiErrorsEnum.ValidationFailed);
+      expect(error.validationMessages).toEqual(
+        expect.arrayContaining([
+          expect.objectContaining({
+            message: '"config.command" is not allowed',
+          }),
+        ]),
+      );
     });
   });
 

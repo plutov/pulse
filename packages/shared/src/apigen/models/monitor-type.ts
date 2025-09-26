@@ -21,7 +21,8 @@
  */
 
 export enum MonitorType {
-    http = 'http'
+    http = 'http',
+    shell = 'shell'
 }
 
 

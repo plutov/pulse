@@ -1,7 +1,14 @@
 import { Knex } from "knex";
 import { getDb } from "../connection";
 import Monitors, { MonitorsInitializer } from "../types/public/Monitors";
-import { CreateMonitorPayload, HttpConfig, Monitor } from "@pulse/shared";
+import {
+  CreateMonitorPayload,
+  HttpConfig,
+  Monitor,
+  MonitorConfig,
+  MonitorStatus,
+  ShellConfig,
+} from "@pulse/shared";
 
 export interface MonitorWithAuthor extends Monitors {
   author_username: string;
@@ -25,7 +32,7 @@ export class MonitorRepository {
       .join("users", "monitors.author", "users.id");
 
     if (options.active) {
-      q.where("monitors.status", "active");
+      q.where("monitors.status", MonitorStatus.active);
     }
     q.orderBy("monitors.created_at", "desc");
     return q;
@@ -67,9 +74,13 @@ export class MonitorRepository {
 }
 
 export function convertMonitorRowToApi(row: MonitorWithAuthor): Monitor {
+  const { id, name, schedule, status } = row;
+
   const res: Monitor = {
-    id: row.id,
-    name: row.name,
+    id,
+    name,
+    schedule,
+    status,
     monitorType: row.monitor_type,
     createdAt: row.created_at.toISOString(),
     updatedAt: row.updated_at.toISOString(),
@@ -77,10 +88,18 @@ export function convertMonitorRowToApi(row: MonitorWithAuthor): Monitor {
       id: row.author,
       username: row.author_username,
     },
-    schedule: row.schedule,
-    status: row.status,
-    config: row.config as HttpConfig,
+    config: {} as MonitorConfig,
   };
+  switch (row.monitor_type) {
+    case "http":
+      res.config = row.config as HttpConfig;
+      break;
+    case "shell":
+      res.config = row.config as ShellConfig;
+      break;
+    default:
+      throw new Error(`Unknown monitor type: ${row.monitor_type}`);
+  }
   return res;
 }
 
@@ -93,13 +112,15 @@ export function convertCreateMonitorPayloadToDb(
   authorId: string,
   id: string,
 ): MonitorsInitializer {
+  const { name, schedule, status, config } = payload;
+
   return {
     id,
+    name,
+    schedule,
+    status,
+    config,
     author: authorId,
     monitor_type: payload.monitorType,
-    name: payload.name,
-    schedule: payload.schedule,
-    status: payload.status,
-    config: payload.config,
   };
 }

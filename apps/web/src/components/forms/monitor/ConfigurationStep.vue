@@ -25,6 +25,20 @@
       />
     </div>
 
+    <div v-else-if="props.modelValue.monitorType === 'shell'">
+      <q-input
+        v-model="localData.config.command"
+        label="Command"
+        outlined
+        placeholder="echo 'Hello World'"
+        type="textarea"
+        rows="3"
+        :error="hasError('config.command')"
+        :error-message="getError('config.command')"
+        @blur="updateData"
+      />
+    </div>
+
     <div v-else class="text-grey-7">
       <q-icon name="info" class="q-mr-sm" />
       Configuration options will appear here based on the monitor type selected.
@@ -34,7 +48,11 @@
 
 <script setup lang="ts">
 import { ref, watch } from "vue";
-import { HttpConfigMethodEnum, type CreateMonitorPayload } from "@pulse/shared";
+import {
+  HttpMethod,
+  MonitorType,
+  type CreateMonitorPayload,
+} from "@pulse/shared";
 
 interface Props {
   modelValue: Partial<CreateMonitorPayload>;
@@ -48,23 +66,45 @@ const emit = defineEmits<{
 
 const localData = ref({
   config: {
-    url: props.modelValue.config?.url || "",
-    method: props.modelValue.config?.method || HttpConfigMethodEnum.get,
+    url:
+      ((props.modelValue.config as Record<string, unknown>)?.url as string) ||
+      "",
+    method:
+      ((props.modelValue.config as Record<string, unknown>)
+        ?.method as HttpMethod) || HttpMethod.get,
+    command:
+      ((props.modelValue.config as Record<string, unknown>)
+        ?.command as string) || "",
   },
 });
 
 const httpMethods = [
-  { label: "GET", value: HttpConfigMethodEnum.get },
-  { label: "POST", value: HttpConfigMethodEnum.post },
-  { label: "PUT", value: HttpConfigMethodEnum.put },
-  { label: "DELETE", value: HttpConfigMethodEnum.delete },
-  { label: "HEAD", value: HttpConfigMethodEnum.head },
-  { label: "OPTIONS", value: HttpConfigMethodEnum.options },
-  { label: "PATCH", value: HttpConfigMethodEnum.patch },
+  { label: "GET", value: HttpMethod.get },
+  { label: "POST", value: HttpMethod.post },
+  { label: "PUT", value: HttpMethod.put },
+  { label: "DELETE", value: HttpMethod.delete },
+  { label: "HEAD", value: HttpMethod.head },
+  { label: "OPTIONS", value: HttpMethod.options },
+  { label: "PATCH", value: HttpMethod.patch },
 ];
 
 const updateData = () => {
-  emit("update:modelValue", { config: { ...localData.value.config } });
+  let config: Record<string, unknown>;
+
+  if (props.modelValue.monitorType === MonitorType.http) {
+    config = {
+      url: localData.value.config.url,
+      method: localData.value.config.method,
+    };
+  } else if (props.modelValue.monitorType === MonitorType.shell) {
+    config = {
+      command: localData.value.config.command,
+    };
+  } else {
+    config = {};
+  }
+
+  emit("update:modelValue", { config });
 };
 
 const hasError = (field: string) => {
@@ -80,8 +120,14 @@ watch(
   (newValue) => {
     localData.value = {
       config: {
-        url: newValue.config?.url || "",
-        method: newValue.config?.method || HttpConfigMethodEnum.get,
+        url:
+          ((newValue.config as Record<string, unknown>)?.url as string) || "",
+        method:
+          ((newValue.config as Record<string, unknown>)
+            ?.method as HttpMethod) || HttpMethod.get,
+        command:
+          ((newValue.config as Record<string, unknown>)?.command as string) ||
+          "",
       },
     };
   },

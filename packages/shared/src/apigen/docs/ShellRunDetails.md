@@ -1,21 +1,19 @@
-# HttpConfig
+# ShellRunDetails
 
 
 ## Properties
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**url** | **string** |  | [default to undefined]
-**method** | [**HttpMethod**](HttpMethod.md) |  | [default to undefined]
+**code** | **number** |  | [default to undefined]
 
 ## Example
 
 ```typescript
-import { HttpConfig } from '@pulse/shared';
+import { ShellRunDetails } from '@pulse/shared';
 
-const instance: HttpConfig = {
-    url,
-    method,
+const instance: ShellRunDetails = {
+    code,
 };
 ```
 

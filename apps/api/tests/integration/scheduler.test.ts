@@ -3,11 +3,7 @@ import { describe, it, expect, beforeEach, afterAll, beforeAll } from "vitest";
 import { MonitorScheduler } from "../../src/services/scheduler";
 import { closeTestDb, getTestDb } from "../setup/database";
 import { createTestUser } from "../utils/auth";
-import {
-  HttpRunDetails,
-  MonitorStatus,
-  HttpConfigMethodEnum,
-} from "@pulse/shared";
+import { HttpMethod, HttpRunDetails, MonitorStatus } from "@pulse/shared";
 import { MonitorRepository } from "../../src/models/repositories/monitors";
 import { RunRepository } from "../../src/models/repositories/runs";
 import { UserRepository } from "../../src/models/repositories/users";
@@ -69,7 +65,7 @@ describe("Monitor Scheduler", () => {
         name: "failure-test",
         config: {
           url: server.info.uri + "/invalid-uri",
-          method: HttpConfigMethodEnum.get,
+          method: HttpMethod.get,
         },
       });
 

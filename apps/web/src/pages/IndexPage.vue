@@ -61,13 +61,15 @@ import { ref, computed, onMounted } from "vue";
 import { monitorApi } from "src/boot/axios";
 import { type Monitor, ChartInterval } from "@pulse/shared";
 import TimeSeriesChart from "src/components/ui/TimeSeriesChart.vue";
-import { notifyOnError } from "src/composables/notify";
+import { useNotify } from "src/composables/notify";
 
 const selectedMonitors = ref<Monitor[]>([]);
 const monitors = ref<Monitor[]>([]);
 const loadingMonitors = ref(false);
 const selectedInterval = ref<ChartInterval>(ChartInterval._5m);
 const selectedTimeRange = ref<ChartInterval>(ChartInterval._1h);
+
+const { notifyOnError } = useNotify();
 
 const monitorOptions = computed(() => monitors.value);
 

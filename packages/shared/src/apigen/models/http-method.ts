@@ -13,21 +13,22 @@
  */
 
 
-// May contain unused imports in some cases
-// @ts-ignore
-import type { MonitorRunDetails } from './monitor-run-details';
 
 /**
  * 
  * @export
- * @interface WithMonitorRunDetails
+ * @enum {string}
  */
-export interface WithMonitorRunDetails {
-    /**
-     * 
-     * @type {MonitorRunDetails}
-     * @memberof WithMonitorRunDetails
-     */
-    'details': MonitorRunDetails;
+
+export enum HttpMethod {
+    get = 'GET',
+    post = 'POST',
+    put = 'PUT',
+    delete = 'DELETE',
+    head = 'HEAD',
+    options = 'OPTIONS',
+    patch = 'PATCH'
 }
+
+
 

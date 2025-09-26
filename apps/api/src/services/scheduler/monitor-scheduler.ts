@@ -12,6 +12,7 @@ import MonitorStatus from "../../models/types/public/MonitorStatus";
 import { randomUUID } from "crypto";
 import { logger } from "../../logging";
 import { HttpMonitorRunner } from "./runners/http";
+import { ShellMonitorRunner } from "./runners/shell";
 
 export class MonitorScheduler {
   private jobs: Map<string, SchedulerJob> = new Map();
@@ -20,6 +21,7 @@ export class MonitorScheduler {
 
   private runners: Map<MonitorType, MonitorRunner> = new Map([
     [MonitorType.http, new HttpMonitorRunner()],
+    [MonitorType.shell, new ShellMonitorRunner()],
   ]);
 
   constructor(db?: Knex) {
@@ -93,7 +95,7 @@ export class MonitorScheduler {
     logger.info(`executing monitor ${monitor.id}`);
 
     let dbStatus: RunStatus = RunStatus.failure;
-    let resultDetails = { statusCode: 0 };
+    let resultDetails = {};
 
     try {
       const runner = this.runners.get(monitor.monitorType);

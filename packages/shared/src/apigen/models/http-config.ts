@@ -13,6 +13,9 @@
  */
 
 
+// May contain unused imports in some cases
+// @ts-ignore
+import type { HttpMethod } from './http-method';
 
 /**
  * 
@@ -28,24 +31,11 @@ export interface HttpConfig {
     'url': string;
     /**
      * 
-     * @type {string}
+     * @type {HttpMethod}
      * @memberof HttpConfig
      */
-    'method': HttpConfigMethodEnum;
+    'method': HttpMethod;
 }
 
-/**
-    * @export
-    * @enum {string}
-    */
-export enum HttpConfigMethodEnum {
-    get = 'GET',
-    post = 'POST',
-    put = 'PUT',
-    delete = 'DELETE',
-    head = 'HEAD',
-    options = 'OPTIONS',
-    patch = 'PATCH'
-}
 
 

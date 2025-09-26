@@ -2,7 +2,7 @@ import { ref } from "vue";
 import { useQuasar } from "quasar";
 import { useRouter } from "vue-router";
 import type { ValidationMessage } from "@pulse/shared";
-import { notifyOnError } from "./notify";
+import { useNotify } from "./notify";
 
 interface UseFormSubmissionOptions<T> {
   submitFn: (data: T) => Promise<unknown>;
@@ -20,6 +20,7 @@ export function useFormSubmission<T>(options: UseFormSubmissionOptions<T>) {
   } = options;
   const $q = useQuasar();
   const router = useRouter();
+  const { notifyOnError } = useNotify();
 
   const loading = ref(false);
   const validationErrors = ref<Record<string, string>>({});

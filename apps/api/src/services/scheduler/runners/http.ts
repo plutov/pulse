@@ -1,4 +1,4 @@
-import { Monitor, HttpConfig } from "@pulse/shared";
+import { Monitor, HttpConfig, HttpRunDetails } from "@pulse/shared";
 import { MonitorRunner, MonitorRunResult } from "../types";
 import RunStatus from "../../../models/types/public/RunStatus";
 
@@ -26,7 +26,7 @@ export class HttpMonitorRunner implements MonitorRunner {
         durationMs: durationMs,
         details: {
           statusCode: response.status,
-        },
+        } as HttpRunDetails,
       };
     } catch (error) {
       const durationMs = Date.now() - startTime;
@@ -38,7 +38,7 @@ export class HttpMonitorRunner implements MonitorRunner {
         durationMs,
         details: {
           statusCode: 0,
-        },
+        } as HttpRunDetails,
       };
     }
   }

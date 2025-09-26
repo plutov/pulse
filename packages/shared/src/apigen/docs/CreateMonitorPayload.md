@@ -9,7 +9,7 @@ Name | Type | Description | Notes
 **monitorType** | [**MonitorType**](MonitorType.md) |  | [default to undefined]
 **schedule** | **string** | Cron-like schedule string | [default to undefined]
 **status** | [**MonitorStatus**](MonitorStatus.md) |  | [default to undefined]
-**config** | [**HttpConfig**](HttpConfig.md) |  | [default to undefined]
+**config** | [**MonitorConfig**](MonitorConfig.md) |  | [default to undefined]
 
 ## Example
 

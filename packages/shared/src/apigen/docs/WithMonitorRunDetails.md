@@ -5,7 +5,7 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**details** | [**HttpRunDetails**](HttpRunDetails.md) |  | [default to undefined]
+**details** | [**MonitorRunDetails**](MonitorRunDetails.md) |  | [default to undefined]
 
 ## Example
 

@@ -15,10 +15,10 @@
 
 // May contain unused imports in some cases
 // @ts-ignore
-import type { HttpRunDetails } from './http-run-details';
+import type { MonitorMinimal } from './monitor-minimal';
 // May contain unused imports in some cases
 // @ts-ignore
-import type { MonitorMinimal } from './monitor-minimal';
+import type { MonitorRunDetails } from './monitor-run-details';
 // May contain unused imports in some cases
 // @ts-ignore
 import type { RunStatus } from './run-status';

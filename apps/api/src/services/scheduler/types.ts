@@ -1,12 +1,11 @@
 import * as cron from "node-cron";
 
-import { Monitor, type RunStatus, HttpRunDetails } from "@pulse/shared";
+import type { Monitor, MonitorRun } from "@pulse/shared";
 
-export interface MonitorRunResult {
-  status: RunStatus;
-  durationMs: number;
-  details: HttpRunDetails;
-}
+export type MonitorRunResult = Pick<
+  MonitorRun,
+  "status" | "durationMs" | "details"
+>;
 
 export interface MonitorRunner {
   run(monitor: Monitor): Promise<MonitorRunResult>;

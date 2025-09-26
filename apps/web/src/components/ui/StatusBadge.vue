@@ -5,13 +5,7 @@
 <script setup lang="ts">
 defineProps<Props>();
 
-type Status =
-  | "active"
-  | "success"
-  | "failure"
-  | "timeout"
-  | "paused"
-  | undefined;
+type Status = "active" | "success" | "failure" | "timeout" | "paused";
 
 interface Props {
   value: Status;
@@ -29,6 +23,7 @@ const getBadgeColor = (status: Status): string => {
     case "paused":
       return "orange";
     default:
+      status satisfies never;
       return "grey";
   }
 };

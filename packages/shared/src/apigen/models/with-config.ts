@@ -15,7 +15,7 @@
 
 // May contain unused imports in some cases
 // @ts-ignore
-import type { HttpConfig } from './http-config';
+import type { MonitorConfig } from './monitor-config';
 
 /**
  * 
@@ -25,9 +25,9 @@ import type { HttpConfig } from './http-config';
 export interface WithConfig {
     /**
      * 
-     * @type {HttpConfig}
+     * @type {MonitorConfig}
      * @memberof WithConfig
      */
-    'config': HttpConfig;
+    'config': MonitorConfig;
 }
 

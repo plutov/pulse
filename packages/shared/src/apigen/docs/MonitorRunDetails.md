@@ -1,21 +1,21 @@
-# HttpConfig
+# MonitorRunDetails
 
 
 ## Properties
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**url** | **string** |  | [default to undefined]
-**method** | [**HttpMethod**](HttpMethod.md) |  | [default to undefined]
+**statusCode** | **number** |  | [default to undefined]
+**code** | **number** |  | [default to undefined]
 
 ## Example
 
 ```typescript
-import { HttpConfig } from '@pulse/shared';
+import { MonitorRunDetails } from '@pulse/shared';
 
-const instance: HttpConfig = {
-    url,
-    method,
+const instance: MonitorRunDetails = {
+    statusCode,
+    code,
 };
 ```
 

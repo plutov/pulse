@@ -50,9 +50,10 @@ import DataTable from "src/components/DataTable.vue";
 import { date } from "quasar";
 import { useDataTable } from "src/composables/useDataTable";
 import RunDetails from "src/components/ui/table/RunDetails.vue";
-import { notifyOnError } from "src/composables/notify";
+import { useNotify } from "src/composables/notify";
 
 const $route = useRoute();
+const { notifyOnError } = useNotify();
 
 const selectedMonitorId = ref<string | null>(null);
 const monitorOptions = ref<Monitor[]>([]);

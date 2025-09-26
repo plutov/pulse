@@ -37,9 +37,9 @@
 <script setup lang="ts">
 import { ref, onMounted, watch, nextTick } from "vue";
 import { chartsApi } from "src/boot/axios";
-import {
-  type TimeSeriesChartPayload,
-  type TimeSeriesChartData,
+import type {
+  TimeSeriesChartPayload,
+  TimeSeriesChartData,
   ChartInterval,
 } from "@pulse/shared";
 import {

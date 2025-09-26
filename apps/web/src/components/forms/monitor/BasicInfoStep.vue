@@ -39,7 +39,11 @@
 
 <script setup lang="ts">
 import { ref, watch } from "vue";
-import { MonitorType, type CreateMonitorPayload } from "@pulse/shared";
+import {
+  MonitorType,
+  MonitorStatus,
+  type CreateMonitorPayload,
+} from "@pulse/shared";
 
 interface Props {
   modelValue: Partial<CreateMonitorPayload>;
@@ -54,14 +58,17 @@ const emit = defineEmits<{
 const localData = ref({
   name: props.modelValue.name || "",
   monitorType: props.modelValue.monitorType || MonitorType.http,
-  status: props.modelValue.status || "active",
+  status: props.modelValue.status || MonitorStatus.active,
 });
 
-const monitorTypeOptions = [{ label: "HTTP", value: MonitorType.http }];
+const monitorTypeOptions = [
+  { label: "HTTP", value: MonitorType.http },
+  { label: "Shell", value: MonitorType.shell },
+];
 
 const statusOptions = [
-  { label: "Active", value: "active" },
-  { label: "Paused", value: "paused" },
+  { label: "Active", value: MonitorStatus.active },
+  { label: "Paused", value: MonitorStatus.paused },
 ];
 
 const updateData = () => {
@@ -82,7 +89,7 @@ watch(
     localData.value = {
       name: newValue.name || "",
       monitorType: newValue.monitorType || MonitorType.http,
-      status: newValue.status || "active",
+      status: newValue.status || MonitorStatus.active,
     };
   },
   { deep: true },

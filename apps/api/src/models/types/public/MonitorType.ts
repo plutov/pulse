@@ -4,6 +4,7 @@
 /** Represents the enum public.monitor_type */
 enum MonitorType {
   http = 'http',
+  shell = 'shell',
 };
 
 export default MonitorType;

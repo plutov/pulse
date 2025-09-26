@@ -13,21 +13,18 @@
  */
 
 
-// May contain unused imports in some cases
-// @ts-ignore
-import type { MonitorRunDetails } from './monitor-run-details';
 
 /**
  * 
  * @export
- * @interface WithMonitorRunDetails
+ * @interface ShellRunDetails
  */
-export interface WithMonitorRunDetails {
+export interface ShellRunDetails {
     /**
      * 
-     * @type {MonitorRunDetails}
-     * @memberof WithMonitorRunDetails
+     * @type {number}
+     * @memberof ShellRunDetails
      */
-    'details': MonitorRunDetails;
+    'code': number;
 }
 

@@ -20,7 +20,7 @@ export async function up(knex: Knex): Promise<void> {
       .inTable("users")
       .onDelete("CASCADE");
     table
-      .enu("monitor_type", ["http"], {
+      .enu("monitor_type", ["http", "shell"], {
         useNative: true,
         enumName: "monitor_type",
       })

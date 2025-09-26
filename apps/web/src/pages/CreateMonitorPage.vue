@@ -27,7 +27,12 @@
 import { ref } from "vue";
 import { useRouter } from "vue-router";
 import { getMonitorApi } from "boot/axios";
-import { MonitorType, type CreateMonitorPayload } from "@pulse/shared";
+import {
+  MonitorType,
+  MonitorStatus,
+  HttpMethod,
+  type CreateMonitorPayload,
+} from "@pulse/shared";
 import { useFormSubmission } from "../composables/useFormSubmission";
 import FormStepper from "components/FormStepper.vue";
 import BasicInfoStep from "components/forms/monitor/BasicInfoStep.vue";
@@ -39,11 +44,11 @@ const $router = useRouter();
 const formData = ref<Partial<CreateMonitorPayload>>({
   name: "",
   monitorType: MonitorType.http,
-  status: "active",
+  status: MonitorStatus.active,
   schedule: "* * * * *",
   config: {
     url: "",
-    method: "GET",
+    method: HttpMethod.get,
   },
 });
 
@@ -73,7 +78,12 @@ const steps = [
     component: ConfigurationStep,
     isValid: (data: Partial<CreateMonitorPayload>) => {
       if (data.monitorType === MonitorType.http) {
-        return !!(data.config?.url && data.config?.method);
+        const config = data.config as Record<string, unknown>;
+        return !!(config?.url && config?.method);
+      }
+      if (data.monitorType === MonitorType.shell) {
+        const config = data.config as Record<string, unknown>;
+        return !!config?.command;
       }
       return true;
     },

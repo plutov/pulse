@@ -45,16 +45,18 @@ import { ref } from "vue";
 import { useRouter } from "vue-router";
 import { useQuasar } from "quasar";
 import { getMonitorApi } from "boot/axios";
-import { MonitorType, type Monitor } from "@pulse/shared";
+import type { HttpConfig, Monitor, ShellConfig } from "@pulse/shared";
+import { MonitorType } from "@pulse/shared";
 import { useDataTable } from "../composables/useDataTable";
 import DataTable from "../components/DataTable.vue";
 import StatusBadge from "src/components/ui/StatusBadge.vue";
 import ConfirmDialog from "src/components/ui/ConfirmDialog.vue";
 import { date } from "quasar";
-import { notifyOnError } from "src/composables/notify";
+import { useNotify } from "src/composables/notify";
 
 const $router = useRouter();
 const $q = useQuasar();
+const { notifyOnError } = useNotify();
 
 const monitorTableColumns = [
   {
@@ -102,14 +104,26 @@ const monitorTableColumns = [
       date.formatDate(new Date(row.createdAt), "YYYY-MM-DD HH:mm"),
   },
   {
-    name: "httpConfig",
+    name: "config",
     required: false,
     label: "Config",
     align: "left" as const,
-    field: (row: Monitor) =>
-      row.monitorType === MonitorType.http && row.config
-        ? `${row.config.method} ${row.config.url}`
-        : "N/A",
+    field: (row: Monitor) => {
+      switch (row.monitorType) {
+        case MonitorType.http: {
+          const httpConfig = row.config as HttpConfig;
+          return `${httpConfig.method} ${httpConfig.url}`;
+        }
+        case MonitorType.shell: {
+          const shellConfig = row.config as ShellConfig;
+          return shellConfig.command.length > 10
+            ? shellConfig.command.substring(0, 10) + "..."
+            : shellConfig.command;
+        }
+        default:
+          return "N/A";
+      }
+    },
   },
 ];
 

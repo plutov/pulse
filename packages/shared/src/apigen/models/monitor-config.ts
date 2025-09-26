@@ -15,19 +15,18 @@
 
 // May contain unused imports in some cases
 // @ts-ignore
-import type { MonitorRunDetails } from './monitor-run-details';
+import type { HttpConfig } from './http-config';
+// May contain unused imports in some cases
+// @ts-ignore
+import type { HttpMethod } from './http-method';
+// May contain unused imports in some cases
+// @ts-ignore
+import type { ShellConfig } from './shell-config';
 
 /**
- * 
+ * @type MonitorConfig
  * @export
- * @interface WithMonitorRunDetails
  */
-export interface WithMonitorRunDetails {
-    /**
-     * 
-     * @type {MonitorRunDetails}
-     * @memberof WithMonitorRunDetails
-     */
-    'details': MonitorRunDetails;
-}
+export type MonitorConfig = HttpConfig | ShellConfig;
+
 

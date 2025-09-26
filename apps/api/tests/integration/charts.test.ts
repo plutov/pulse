@@ -41,7 +41,6 @@ describe("Charts API", () => {
       expect(monitorResponse).toHaveProperty("id");
       const monitor = monitorResponse as Monitor;
 
-      // Create test runs for the monitor
       await createTestRun({
         monitorId: monitor.id,
         status: RunStatus.success,

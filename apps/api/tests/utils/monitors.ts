@@ -3,10 +3,11 @@ import {
   CreateMonitorPayload,
   ErrorResponse,
   HttpConfig,
-  HttpConfigMethodEnum,
+  HttpMethod,
   Monitor,
   MonitorType,
   MonitorStatus,
+  MonitorConfig,
 } from "@pulse/shared";
 import { getAuthHeaders } from "./auth";
 import { randomUUID } from "crypto";
@@ -16,7 +17,7 @@ interface TestMonitorData {
   monitorType?: MonitorType;
   schedule?: string;
   status?: MonitorStatus;
-  config?: HttpConfig;
+  config?: MonitorConfig;
 }
 
 export const createTestMonitor = async (
@@ -39,10 +40,12 @@ export const createTestMonitorOrFail = async (
     monitorType: data.monitorType || MonitorType.http,
     schedule: data.schedule || "* * * * *",
     status: data.status || MonitorStatus.active,
-    config: data.config || {
-      url: "https://example.com",
-      method: HttpConfigMethodEnum.get,
-    },
+    config:
+      data.config ||
+      ({
+        url: "https://example.com",
+        method: HttpMethod.get,
+      } as HttpConfig),
   };
   const response = await server.inject({
     method: "POST",

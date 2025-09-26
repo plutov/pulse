@@ -10,7 +10,7 @@ Name | Type | Description | Notes
 **monitor** | [**MonitorMinimal**](MonitorMinimal.md) |  | [default to undefined]
 **status** | [**RunStatus**](RunStatus.md) |  | [default to undefined]
 **durationMs** | **number** |  | [default to undefined]
-**details** | [**HttpRunDetails**](HttpRunDetails.md) |  | [default to undefined]
+**details** | [**MonitorRunDetails**](MonitorRunDetails.md) |  | [default to undefined]
 
 ## Example
 

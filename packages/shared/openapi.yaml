@@ -216,6 +216,7 @@ components:
       type: string
       enum:
         - http
+        - shell
     WithMonitorType:
       required:
         - monitorType
@@ -253,6 +254,17 @@ components:
     MonitorConfig:
       oneOf:
         - $ref: "#/components/schemas/HttpConfig"
+        - $ref: "#/components/schemas/ShellConfig"
+    HttpMethod:
+      type: string
+      enum:
+        - GET
+        - POST
+        - PUT
+        - DELETE
+        - HEAD
+        - OPTIONS
+        - PATCH
     HttpConfig:
       required:
         - url
@@ -262,15 +274,14 @@ components:
         url:
           type: string
         method:
+          $ref: "#/components/schemas/HttpMethod"
+    ShellConfig:
+      required:
+        - command
+      type: object
+      properties:
+        command:
           type: string
-          enum:
-            - GET
-            - POST
-            - PUT
-            - DELETE
-            - HEAD
-            - OPTIONS
-            - PATCH
     WithConfig:
       type: object
       required:
@@ -418,11 +429,18 @@ components:
     MonitorRunDetails:
       oneOf:
         - $ref: "#/components/schemas/HttpRunDetails"
+        - $ref: "#/components/schemas/ShellRunDetails"
     HttpRunDetails:
       required:
         - statusCode
       properties:
         statusCode:
+          type: integer
+    ShellRunDetails:
+      required:
+        - code
+      properties:
+        code:
           type: integer
     MonitorRun:
       allOf:

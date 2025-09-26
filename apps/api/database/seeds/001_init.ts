@@ -59,5 +59,17 @@ export async function seed(knex: Knex): Promise<void> {
         method: "GET",
       },
     },
+    {
+      id: randomUUID(),
+      author: userId,
+      name: "ls -la",
+      description: "",
+      monitor_type: MonitorType.shell,
+      status: MonitorStatus.active,
+      schedule: "* * * * *",
+      config: {
+        command: "ls -la",
+      },
+    },
   ]);
 }
