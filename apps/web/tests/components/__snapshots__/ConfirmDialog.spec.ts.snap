@@ -1,0 +1,31 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`ConfirmDialog.vue > renders with custom props 1`] = `
+"<q-dialog model-value="true" persistent="">
+  <q-card style="min-width: 350px;">
+    <q-card-section>
+      <div class="text-h6">Custom Title</div>
+    </q-card-section>
+    <q-card-section class="q-pt-none">Custom Message</q-card-section>
+    <q-card-actions align="right" class="text-primary">
+      <q-btn flat="" label="No"></q-btn>
+      <q-btn flat="" label="Yes" color="positive" loading="true"></q-btn>
+    </q-card-actions>
+  </q-card>
+</q-dialog>"
+`;
+
+exports[`ConfirmDialog.vue > renders with default props 1`] = `
+"<q-dialog model-value="true" persistent="">
+  <q-card style="min-width: 350px;">
+    <q-card-section>
+      <div class="text-h6">Test Title</div>
+    </q-card-section>
+    <q-card-section class="q-pt-none">Test Message</q-card-section>
+    <q-card-actions align="right" class="text-primary">
+      <q-btn flat="" label="Cancel"></q-btn>
+      <q-btn flat="" label="Confirm" color="negative" loading="false"></q-btn>
+    </q-card-actions>
+  </q-card>
+</q-dialog>"
+`;
