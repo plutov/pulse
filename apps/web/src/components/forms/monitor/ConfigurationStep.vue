@@ -50,6 +50,7 @@
 import { ref, watch } from "vue";
 import {
   HttpMethod,
+  MonitorConfig,
   MonitorType,
   type CreateMonitorPayload,
 } from "@pulse/shared";
@@ -67,14 +68,17 @@ const emit = defineEmits<{
 const localData = ref({
   config: {
     url:
-      ((props.modelValue.config as Record<string, unknown>)?.url as string) ||
-      "",
+      props.modelValue.config && "url" in props.modelValue.config
+        ? props.modelValue.config.url
+        : "",
     method:
-      ((props.modelValue.config as Record<string, unknown>)
-        ?.method as HttpMethod) || HttpMethod.get,
+      props.modelValue.config && "method" in props.modelValue.config
+        ? props.modelValue.config.method
+        : HttpMethod.get,
     command:
-      ((props.modelValue.config as Record<string, unknown>)
-        ?.command as string) || "",
+      props.modelValue.config && "command" in props.modelValue.config
+        ? props.modelValue.config.command
+        : "",
   },
 });
 
@@ -89,7 +93,7 @@ const httpMethods = [
 ];
 
 const updateData = () => {
-  let config: Record<string, unknown>;
+  let config: MonitorConfig;
 
   if (props.modelValue.monitorType === MonitorType.http) {
     config = {
@@ -101,7 +105,7 @@ const updateData = () => {
       command: localData.value.config.command,
     };
   } else {
-    config = {};
+    throw new Error("Unsupported monitor type");
   }
 
   emit("update:modelValue", { config });
@@ -121,13 +125,17 @@ watch(
     localData.value = {
       config: {
         url:
-          ((newValue.config as Record<string, unknown>)?.url as string) || "",
+          newValue.config && "url" in newValue.config
+            ? newValue.config.url
+            : "",
         method:
-          ((newValue.config as Record<string, unknown>)
-            ?.method as HttpMethod) || HttpMethod.get,
+          newValue.config && "method" in newValue.config
+            ? newValue.config.method
+            : HttpMethod.get,
         command:
-          ((newValue.config as Record<string, unknown>)?.command as string) ||
-          "",
+          newValue.config && "command" in newValue.config
+            ? newValue.config.command
+            : "",
       },
     };
   },

@@ -41,7 +41,7 @@ export default defineConfig(() => {
         dark: true,
       },
       iconSet: "material-icons",
-      plugins: ["Notify"],
+      plugins: ["Notify", "LocalStorage"],
     },
     animations: [],
   };

@@ -2,6 +2,7 @@ import { defineStore } from "pinia";
 import { ref, computed } from "vue";
 import type { LoginPayload, User } from "@pulse/shared";
 import { authApi } from "boot/axios";
+import { LocalStorage } from "quasar";
 
 export const useAuthStore = defineStore("auth", () => {
   const token = ref<string>("");
@@ -16,7 +17,7 @@ export const useAuthStore = defineStore("auth", () => {
       if (response.data) {
         token.value = response.data.token;
         user.value = response.data.user;
-        localStorage.setItem("auth_token", response.data.token);
+        LocalStorage.setItem("auth_token", response.data.token);
         return response.data.user;
       }
     } catch {
@@ -29,12 +30,12 @@ export const useAuthStore = defineStore("auth", () => {
   const logout = () => {
     token.value = "";
     user.value = null;
-    localStorage.removeItem("auth_token");
+    LocalStorage.removeItem("auth_token");
   };
 
   const initializeAuth = () => {
-    const savedToken = localStorage.getItem("auth_token");
-    if (savedToken) {
+    const savedToken = LocalStorage.getItem("auth_token");
+    if (savedToken && typeof savedToken === "string") {
       token.value = savedToken;
     }
   };
