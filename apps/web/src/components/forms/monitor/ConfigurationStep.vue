@@ -47,7 +47,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, watch } from "vue";
+import { ref, watch, computed } from "vue";
 import {
   HttpMethod,
   MonitorConfig,
@@ -65,50 +65,38 @@ const emit = defineEmits<{
   "update:modelValue": [value: Partial<CreateMonitorPayload>];
 }>();
 
-const localData = ref({
-  config: {
-    url:
-      props.modelValue.config && "url" in props.modelValue.config
-        ? props.modelValue.config.url
-        : "",
-    method:
-      props.modelValue.config && "method" in props.modelValue.config
-        ? props.modelValue.config.method
-        : HttpMethod.get,
-    command:
-      props.modelValue.config && "command" in props.modelValue.config
-        ? props.modelValue.config.command
-        : "",
-  },
+const extractConfig = (config?: MonitorConfig) => ({
+  url: config && "url" in config ? config.url : "",
+  method: config && "method" in config ? config.method : HttpMethod.get,
+  command: config && "command" in config ? config.command : "",
 });
 
-const httpMethods = [
-  { label: "GET", value: HttpMethod.get },
-  { label: "POST", value: HttpMethod.post },
-  { label: "PUT", value: HttpMethod.put },
-  { label: "DELETE", value: HttpMethod.delete },
-  { label: "HEAD", value: HttpMethod.head },
-  { label: "OPTIONS", value: HttpMethod.options },
-  { label: "PATCH", value: HttpMethod.patch },
-];
+const localData = ref({
+  config: extractConfig(props.modelValue.config),
+});
 
-const updateData = () => {
-  let config: MonitorConfig;
+const httpMethods = Object.keys(HttpMethod).map((key: string) => ({
+  label: key.toUpperCase(),
+  value: HttpMethod[key as keyof typeof HttpMethod],
+}));
 
+const builtConfig = computed<MonitorConfig>(() => {
   if (props.modelValue.monitorType === MonitorType.http) {
-    config = {
+    return {
       url: localData.value.config.url,
       method: localData.value.config.method,
     };
   } else if (props.modelValue.monitorType === MonitorType.shell) {
-    config = {
+    return {
       command: localData.value.config.command,
     };
   } else {
     throw new Error("Unsupported monitor type");
   }
+});
 
-  emit("update:modelValue", { config });
+const updateData = () => {
+  emit("update:modelValue", { config: builtConfig.value });
 };
 
 const hasError = (field: string) => {
@@ -120,24 +108,9 @@ const getError = (field: string) => {
 };
 
 watch(
-  () => props.modelValue,
-  (newValue) => {
-    localData.value = {
-      config: {
-        url:
-          newValue.config && "url" in newValue.config
-            ? newValue.config.url
-            : "",
-        method:
-          newValue.config && "method" in newValue.config
-            ? newValue.config.method
-            : HttpMethod.get,
-        command:
-          newValue.config && "command" in newValue.config
-            ? newValue.config.command
-            : "",
-      },
-    };
+  () => props.modelValue.config,
+  (newConfig) => {
+    localData.value.config = extractConfig(newConfig);
   },
   { deep: true },
 );
