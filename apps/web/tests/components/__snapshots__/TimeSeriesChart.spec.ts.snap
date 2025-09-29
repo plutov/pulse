@@ -1,0 +1,22 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`TimeSeriesChart.vue > renders with default props 1`] = `
+"<div class="time-series-chart">
+  <q-card>
+    <q-card-section>
+      <div class="row items-center justify-between">
+        <div>
+          <div class="text-h6">Test Chart</div>
+          <div class="text-subtitle2 text-grey"> Showing results over 1d (1h intervals) </div>
+        </div>
+        <q-btn icon="refresh" round="" flat="" loading="false" disable="false">
+          <q-tooltip>Refresh chart</q-tooltip>
+        </q-btn>
+      </div>
+    </q-card-section>
+    <q-card-section>
+      <!--v-if--><canvas id="chartCanvas"></canvas>
+    </q-card-section>
+  </q-card>
+</div>"
+`;

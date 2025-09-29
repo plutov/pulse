@@ -56,6 +56,7 @@ import {
 } from "chart.js";
 import "chartjs-adapter-date-fns";
 import { chartColors } from "./colors";
+import { DateTimeFormat } from "src/api/time";
 
 Chart.register(
   CategoryScale,
@@ -176,14 +177,6 @@ const createChart = (data: TimeSeriesChartData) => {
       scales: {
         x: {
           type: "time",
-          time: {
-            parser: "YYYY-MM-DDTHH:mm:ss.SSSZ",
-            displayFormats: {
-              hour: "HH:mm",
-              day: "MMM dd",
-              minute: "HH:mm",
-            },
-          },
           title: {
             display: true,
             text: "Time",

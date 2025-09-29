@@ -53,6 +53,7 @@ import StatusBadge from "src/components/ui/StatusBadge.vue";
 import ConfirmDialog from "src/components/ui/ConfirmDialog.vue";
 import { date } from "quasar";
 import { useNotify } from "src/composables/notify";
+import { DateTimeFormat } from "src/api/time";
 
 const $router = useRouter();
 const $q = useQuasar();
@@ -101,7 +102,7 @@ const monitorTableColumns = [
     label: "Created",
     align: "left" as const,
     field: (row: Monitor) =>
-      date.formatDate(new Date(row.createdAt), "YYYY-MM-DD HH:mm"),
+      date.formatDate(new Date(row.createdAt), DateTimeFormat),
   },
   {
     name: "config",

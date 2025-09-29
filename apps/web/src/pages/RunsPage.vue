@@ -51,6 +51,7 @@ import { date } from "quasar";
 import { useDataTable } from "src/composables/useDataTable";
 import RunDetails from "src/components/ui/table/RunDetails.vue";
 import { useNotify } from "src/composables/notify";
+import { DateTimeFormat } from "src/api/time";
 
 const $route = useRoute();
 const { notifyOnError } = useNotify();
@@ -120,7 +121,7 @@ const runsTableColumns = [
     label: "Run Time",
     align: "left" as const,
     field: (row: MonitorRun) =>
-      date.formatDate(new Date(row.createdAt), "YYYY-MM-DD HH:mm:ss"),
+      date.formatDate(new Date(row.createdAt), DateTimeFormat),
     sortable: false,
   },
 ];
