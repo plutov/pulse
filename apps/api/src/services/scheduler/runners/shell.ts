@@ -10,6 +10,11 @@ interface ErrnoException extends Error {
   killed?: boolean;
 }
 
+interface ExecResult {
+  code: number;
+  signal?: NodeJS.Signals;
+}
+
 export class ShellMonitorRunner implements MonitorRunner {
   async run(monitor: Monitor): Promise<MonitorRunResult> {
     const startTime = Date.now();
@@ -19,25 +24,25 @@ export class ShellMonitorRunner implements MonitorRunner {
       const controller = new AbortController();
       const timeoutId = setTimeout(() => controller.abort(), timeoutMs);
 
-      const execPromise = new Promise<{
-        code: number | null;
-        signal: NodeJS.Signals | null;
-      }>((resolve) => {
+      const execPromise = new Promise<ExecResult>((resolve) => {
         exec(
           config.command,
           { signal: controller.signal },
           (error: Error | ErrnoException | null) => {
+            const res: ExecResult = { code: 1 };
             if (error) {
               if ("killed" in error && error.killed) {
-                resolve({ code: null, signal: "SIGTERM" });
+                res.signal = "SIGTERM";
               } else if ("code" in error && error.code !== undefined) {
-                resolve({ code: parseInt(error.code, 10), signal: null });
+                res.code = error.code === null ? 1 : parseInt(error.code, 10);
               } else {
-                resolve({ code: 1, signal: null });
+                res.code = 1;
               }
             } else {
-              resolve({ code: 0, signal: null });
+              res.code = 0;
             }
+
+            resolve(res);
           },
         );
       });
@@ -56,7 +61,7 @@ export class ShellMonitorRunner implements MonitorRunner {
               : RunStatus.failure,
         durationMs: durationMs,
         details: {
-          code: result.code !== null ? result.code : -1,
+          code: result.code,
         } as ShellRunDetails,
       };
     } catch {

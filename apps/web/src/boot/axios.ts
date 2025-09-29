@@ -1,15 +1,8 @@
 import { defineBoot } from "#q-app/wrappers";
-import axios, { type AxiosInstance } from "axios";
 import { AuthApi, MonitorApi, ChartsApi, Configuration } from "@pulse/shared";
 import { useAuthStore } from "stores/auth";
 import { unref } from "vue";
-
-declare module "vue" {
-  interface ComponentCustomProperties {
-    $axios: AxiosInstance;
-    $api: AxiosInstance;
-  }
-}
+import axios from "axios";
 
 const createConfig = () => {
   return new Configuration({
@@ -26,10 +19,20 @@ export const authApi = new AuthApi(createConfig());
 export const monitorApi = new MonitorApi(createConfig());
 export const chartsApi = new ChartsApi(createConfig());
 
-export default defineBoot(({ app }) => {
+export default defineBoot(({ app, router }) => {
   const authStore = useAuthStore();
   authStore.initializeAuth();
 
   app.config.globalProperties.$authStore = authStore;
-  app.config.globalProperties.$axios = axios;
+
+  axios.interceptors.response.use(
+    (response) => response,
+    (error) => {
+      if (error.response?.status === 401) {
+        authStore.logout();
+        router.push("/login");
+      }
+      return Promise.reject(error);
+    },
+  );
 });
